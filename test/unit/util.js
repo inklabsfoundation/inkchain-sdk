@@ -114,14 +114,14 @@ var	tlsOptions = {
 	verify: false
 };
 
-function getMember(username, password, client, t, userOrg) {
+function getMember(username, password, client, userOrg) {
 	var caUrl = ORGS[userOrg].ca.url;
 
 	return client.getUserContext(username, true)
 	.then((user) => {
 		return new Promise((resolve, reject) => {
 			if (user && user.isEnrolled()) {
-				t.pass('Successfully loaded member from persistence');
+				logger.debug('Successfully loaded member from persistence');
 				return resolve(user);
 			}
 
@@ -143,7 +143,7 @@ function getMember(username, password, client, t, userOrg) {
 				enrollmentID: username,
 				enrollmentSecret: password
 			}).then((enrollment) => {
-				t.pass('Successfully enrolled user \'' + username + '\'');
+				logger.debug('Successfully enrolled user \'' + username + '\'');
 
 				return member.setEnrollment(enrollment.key, enrollment.certificate, ORGS[userOrg].mspid);
 			}).then(() => {
@@ -155,14 +155,13 @@ function getMember(username, password, client, t, userOrg) {
 			}).then(() => {
 				return resolve(member);
 			}).catch((err) => {
-				t.fail('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
-				t.end();
+				logger.debug('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
 			});
 		});
 	});
 }
 
-function getAdmin(client, t, userOrg) {
+function getAdmin(client, userOrg) {
 	var keyPath = path.join(__dirname, util.format('../fixtures/channel/crypto-config/peerOrganizations/%s.example.com/users/Admin@%s.example.com/keystore', userOrg, userOrg));
 	var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
 	var certPath = path.join(__dirname, util.format('../fixtures/channel/crypto-config/peerOrganizations/%s.example.com/users/Admin@%s.example.com/signcerts', userOrg, userOrg));
@@ -184,7 +183,7 @@ function getAdmin(client, t, userOrg) {
 	}));
 }
 
-function getOrdererAdmin(client, t) {
+function getOrdererAdmin(client) {
 	var keyPath = path.join(__dirname, '../fixtures/channel/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/keystore');
 	var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
 	var certPath = path.join(__dirname, '../fixtures/channel/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/signcerts');
@@ -223,13 +222,12 @@ function readAllFiles(dir) {
 	return certs;
 }
 
-module.exports.getOrderAdminSubmitter = function(client, test) {
-	return getOrdererAdmin(client, test);
+module.exports.getOrderAdminSubmitter = function(client) {
+	return getOrdererAdmin(client);
 };
 
-module.exports.getSubmitter = function(client, test, peerOrgAdmin, org) {
+module.exports.getSubmitter = function(client, peerOrgAdmin, org) {
 	if (arguments.length < 2) throw new Error('"client" and "test" are both required parameters');
-
 	var peerAdmin, userOrg;
 	if (typeof peerOrgAdmin === 'boolean') {
 		peerAdmin = peerOrgAdmin;
@@ -247,10 +245,9 @@ module.exports.getSubmitter = function(client, test, peerOrgAdmin, org) {
 			userOrg = 'org1';
 		}
 	}
-
 	if (peerAdmin) {
-		return getAdmin(client, test, userOrg);
+		return getAdmin(client, userOrg);
 	} else {
-		return getMember('admin', 'adminpw', client, test, userOrg);
+		return getMember('admin', 'adminpw', client, userOrg);
 	}
 };

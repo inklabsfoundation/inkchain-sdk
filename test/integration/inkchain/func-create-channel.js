@@ -119,7 +119,7 @@ test('\n\n***** SDK Built config update  create flow  *****\n\n', function(t) {
 		cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(org)}));
 		client.setCryptoSuite(cryptoSuite);
 
-		return testUtil.getOrderAdminSubmitter(client, t);
+		return testUtil.getOrderAdminSubmitter(client);
 	}).then((admin) =>{
 		t.pass('Successfully enrolled user \'admin\' for orderer');
 
@@ -129,7 +129,7 @@ test('\n\n***** SDK Built config update  create flow  *****\n\n', function(t) {
 		t.pass('Successfull extracted the config update from the configtx envelope');
 
 		client._userContext = null;
-		return testUtil.getSubmitter(client, t, true /*get the org admin*/, 'org1');
+		return testUtil.getSubmitter(client, true /*get the org admin*/, 'org1');
 	}).then((admin) => {
 		t.pass('Successfully enrolled user \'admin\' for org1');
 
@@ -148,7 +148,7 @@ test('\n\n***** SDK Built config update  create flow  *****\n\n', function(t) {
 
 		// make sure we do not reuse the user
 		client._userContext = null;
-		return testUtil.getSubmitter(client, t, true /*get the org admin*/, 'org2');
+		return testUtil.getSubmitter(client, true /*get the org admin*/, 'org2');
 	}).then((admin) => {
 		t.pass('Successfully enrolled user \'admin\' for org2');
 
@@ -165,7 +165,7 @@ test('\n\n***** SDK Built config update  create flow  *****\n\n', function(t) {
 
 		// make sure we do not reuse the user
 		client._userContext = null;
-		return testUtil.getOrderAdminSubmitter(client, t);
+		return testUtil.getOrderAdminSubmitter(client);
 	}).then((admin) => {
 		t.pass('Successfully enrolled user \'admin\' for orderer');
 		the_user = admin;

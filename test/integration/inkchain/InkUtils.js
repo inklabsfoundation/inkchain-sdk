@@ -81,7 +81,7 @@ function installChaincode(org, chaincode_id, chaincode_path, version, t, get_adm
         client.setStateStore(store);
 
         // get the peer org's admin required to send install chaincode requests
-        return testUtil.getSubmitter(client, t, get_admin /* get peer org admin */, org);
+        return testUtil.getSubmitter(client, get_admin /* get peer org admin */, org);
     }).then((admin) => {
             t.pass('Successfully enrolled user \'admin\'');
             the_user = admin;
@@ -187,7 +187,7 @@ function instantiateChaincode(userOrg, chaincode_id, chaincode_path, version, up
     }).then((store) => {
 
         client.setStateStore(store);
-        return testUtil.getSubmitter(client, t, true /* use peer org admin*/, userOrg);
+        return testUtil.getSubmitter(client, true /* use peer org admin*/, userOrg);
 
     }).then((admin) => {
 
@@ -498,7 +498,7 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
         if (store) {
             client.setStateStore(store);
         }
-        return testUtil.getSubmitter(client, t, userOrg);
+        return testUtil.getSubmitter(client, userOrg);
     }).then((admin) => {
 
         t.pass('Successfully enrolled user \'admin\'');
@@ -692,11 +692,10 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
 
 module.exports.invokeChaincode = invokeChaincode;
 
-function queryChaincode(org,ccId, version, func, args, transientMap) {
+function queryChaincode(org,ccId, func, args, transientMap) {
     init();
-
     Client.setConfigSetting('request-timeout', 60000);
-    var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', testUtil.END2END.channel);
+    var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
 
     // this is a transaction, will just use org's identity to
     // submit the request. intentionally we are using a different org
@@ -724,17 +723,14 @@ function queryChaincode(org,ccId, version, func, args, transientMap) {
             channel.addPeer(peer);
         }
     }
-
     return Client.newDefaultKeyValueStore({
         path: testUtil.storePathForOrg(orgName)
     }).then((store) => {
-
         client.setStateStore(store);
-        return testUtil.getSubmitter(client, t, org);
+        return testUtil.getSubmitter(client, org);
 
     }).then((admin) => {
             the_user = admin;
-
             // send query
             var request = {
                 chaincodeId : ccId,
@@ -747,7 +743,6 @@ function queryChaincode(org,ccId, version, func, args, transientMap) {
                 request.transientMap = transientMap;
                 request.fcn = 'testTransient';
             }
-
             return channel.queryByChaincode(request);
         },
         (err) => {
@@ -769,6 +764,77 @@ function queryChaincode(org,ccId, version, func, args, transientMap) {
 
 module.exports.queryChaincode = queryChaincode;
 
+
+const TOKEN_ID = "token";
+const GET_BLANCE_FUNC = "getBalance";
+
+function getBalance(org, args, transientMap) {
+    init();
+    Client.setConfigSetting('request-timeout', 60000);
+    var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
+
+    var client = new Client();
+    var channel = client.newChannel(channel_name);
+
+    var orgName = ORGS[org].name;
+    var cryptoSuite = Client.newCryptoSuite();
+    cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
+    client.setCryptoSuite(cryptoSuite);
+    var targets = [];
+    // set up the channel to use each org's 'peer1' for
+    // both requests and events
+    for (let key in ORGS) {
+        if (ORGS.hasOwnProperty(key) && typeof ORGS[key].peer1 !== 'undefined') {
+            let data = fs.readFileSync(path.join(__dirname, ORGS[key].peer1['tls_cacerts']));
+            let peer = client.newPeer(
+                ORGS[key].peer1.requests,
+                {
+                    pem: Buffer.from(data).toString(),
+                    'ssl-target-name-override': ORGS[key].peer1['server-hostname']
+                });
+            channel.addPeer(peer);
+        }
+    }
+    return Client.newDefaultKeyValueStore({
+        path: testUtil.storePathForOrg(orgName)
+    }).then((store) => {
+        client.setStateStore(store);
+        return testUtil.getSubmitter(client, org);
+
+    }).then((admin) => {
+            the_user = admin;
+            // send query
+            var request = {
+                chaincodeId : TOKEN_ID,
+                txId: tx_id,
+                fcn: GET_BLANCE_FUNC,
+                args: args
+            };
+
+            if (transientMap) {
+                request.transientMap = transientMap;
+                request.fcn = 'testTransient';
+            }
+            return channel.queryByChaincode(request);
+        },
+        (err) => {
+            logger.debug('Failed to get submitter \'admin\'. Error: ' + err.stack ? err.stack : err );
+            throw new Error('Failed to get submitter');
+        }).then((response_payloads) => {
+            if (response_payloads) {
+                return response_payloads;
+            } else {
+                logger.debug('response_payloads is null');
+                throw new Error('Failed to get response on query');
+            }
+        },
+        (err) => {
+            logger.debug('Failed to send query due to error: ' + err.stack ? err.stack : err);
+            throw new Error('Failed, got error on query');
+        });
+};
+
+module.exports.getBalance = getBalance;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

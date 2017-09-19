@@ -133,7 +133,7 @@ function joinChannel(org, t) {
 		// get the peer org's admin required to send join channel requests
 		client._userContext = null;
 
-		return testUtil.getSubmitter(client, t, true /* get peer org admin */, org);
+		return testUtil.getSubmitter(client, true /* get peer org admin */, org);
 	}).then((admin) => {
 		t.pass('Successfully enrolled org:' + org + ' \'admin\'');
 		the_user = admin;
