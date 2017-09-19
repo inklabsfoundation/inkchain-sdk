@@ -431,7 +431,7 @@ function buildChaincodeProposal(client, the_user, chaincode_id, chaincode_path, 
 module.exports.instantiateChaincode = instantiateChaincode;
 
 
-function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
+function invokeChaincode(userOrg, ccId, version, func, args, useStore){
     init();
 
     logger.debug('invokeChaincode begin');
@@ -441,21 +441,6 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
     var targets = [],
         eventhubs = [];
     var pass_results = null;
-
-    // override t.end function so it'll always disconnect the event hub
-    t.end = ((context, ehs, f) => {
-        return function() {
-            for(var key in ehs) {
-                var eventhub = ehs[key];
-                if (eventhub && eventhub.isconnected()) {
-                    logger.debug('Disconnecting the event hub');
-                    eventhub.disconnect();
-                }
-            }
-
-            f.apply(context, arguments);
-        };
-    })(t, eventhubs, t.end);
 
     // this is a transaction, will just use org's identity to
     // submit the request. intentionally we are using a different org
@@ -501,7 +486,7 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
         return testUtil.getSubmitter(client, userOrg);
     }).then((admin) => {
 
-        t.pass('Successfully enrolled user \'admin\'');
+        logger.debug('Successfully enrolled user \'admin\'');
         the_user = admin;
 
         // set up the channel to use each org's 'peer1' for
@@ -554,7 +539,7 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
 
     }, (err) => {
 
-        t.fail('Failed to enroll user \'admin\'. ' + err);
+        logger.debug('Failed to enroll user \'admin\'. ' + err);
         throw new Error('Failed to enroll user \'admin\'. ' + err);
     }).then((results) =>{
         pass_results = results;
@@ -566,9 +551,9 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
                 sleep_time = process.argv[2].split('=')[1];
             }
         }
-        t.comment('*****************************************************************************');
-        t.comment('stop and start the peer event hub ---- N  O  W ----- you have ' + sleep_time + ' millis');
-        t.comment('*****************************************************************************');
+        logger.debug('*****************************************************************************');
+        logger.debug('stop and start the peer event hub ---- N  O  W ----- you have ' + sleep_time + ' millis');
+        logger.debug('*****************************************************************************');
         return sleep(sleep_time);
     }).then((nothing) => {
 
@@ -580,13 +565,13 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
             let one_good = false;
             let proposal_response = proposalResponses[i];
             if( proposal_response.response && proposal_response.response.status === 200) {
-                t.pass('transaction proposal has response status of good');
+                logger.debug('transaction proposal has response status of good');
                 one_good = channel.verifyProposalResponse(proposal_response);
                 if(one_good) {
-                    t.pass(' transaction proposal signature and endorser are valid');
+                    logger.debug(' transaction proposal signature and endorser are valid');
                 }
             } else {
-                t.fail('transaction proposal was bad');
+                logger.debug('transaction proposal was bad');
             }
             all_good = all_good & one_good;
         }
@@ -594,17 +579,17 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
             // check all the read/write sets to see if the same, verify that each peer
             // got the same results on the proposal
             all_good = channel.compareProposalResponseResults(proposalResponses);
-            t.pass('compareProposalResponseResults exection did not throw an error');
+            logger.debug('compareProposalResponseResults exection did not throw an error');
             if(all_good){
-                t.pass(' All proposals have a matching read/writes sets');
+                logger.debug(' All proposals have a matching read/writes sets');
             }
             else {
-                t.fail(' All proposals do not have matching read/write sets');
+                logger.debug(' All proposals do not have matching read/write sets');
             }
         }
         if (all_good) {
             // check to see if all the results match
-            t.pass('Successfully sent Proposal and received ProposalResponse');
+            logger.debug('Successfully sent Proposal and received ProposalResponse');
             logger.debug(util.format('Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s", metadata - "%s", endorsement signature: %s', proposalResponses[0].response.status, proposalResponses[0].response.message, proposalResponses[0].response.payload, proposalResponses[0].endorsement.signature));
             var request = {
                 proposalResponses: proposalResponses,
@@ -627,16 +612,16 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
                             eh.unregisterTxEvent(deployId);
 
                             if (code !== 'VALID') {
-                                t.fail('The balance transfer transaction was invalid, code = ' + code);
+                                logger.debug('The balance transfer transaction was invalid, code = ' + code);
                                 reject();
                             } else {
-                                t.pass('The balance transfer transaction has been committed on peer '+ eh.getPeerAddr());
+                                logger.debug('The balance transfer transaction has been committed on peer '+ eh.getPeerAddr());
                                 resolve();
                             }
                         },
                         (err) => {
                             clearTimeout(handle);
-                            t.pass('Successfully received notification of the event call back being cancelled for '+ deployId);
+                            logger.debug('Successfully received notification of the event call back being cancelled for '+ deployId);
                             resolve();
                         }
                     );
@@ -654,37 +639,37 @@ function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
 
                 }).catch((err) => {
 
-                    t.fail('Failed to send transaction and get notifications within the timeout period.');
+                    logger.debug('Failed to send transaction and get notifications within the timeout period.');
                     throw new Error('Failed to send transaction and get notifications within the timeout period.');
 
                 });
 
         } else {
-            t.fail('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+            logger.debug('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
             throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
         }
     }, (err) => {
 
-        t.fail('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
+        logger.debug('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
         throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
 
     }).then((response) => {
 
         if (response.status === 'SUCCESS') {
-            t.pass('Successfully sent transaction to the orderer.');
-            t.comment('******************************************************************');
-            t.comment('To manually run /test/integration/query.js, set the following environment variables:');
-            t.comment('export E2E_TX_ID='+'\''+tx_id.getTransactionID()+'\'');
-            t.comment('******************************************************************');
+            logger.pass('Successfully sent transaction to the orderer.');
+            logger.debug('******************************************************************');
+            logger.debug('To manually run /test/integration/query.js, set the following environment variables:');
+            logger.debug('export E2E_TX_ID='+'\''+tx_id.getTransactionID()+'\'');
+            logger.debug('******************************************************************');
             logger.debug('invokeChaincode end');
             return true;
         } else {
-            t.fail('Failed to order the transaction. Error code: ' + response.status);
+            logger.debug('Failed to order the transaction. Error code: ' + response.status);
             throw new Error('Failed to order the transaction. Error code: ' + response.status);
         }
     }, (err) => {
 
-        t.fail('Failed to send transaction due to error: ' + err.stack ? err.stack : err);
+        logger.debug('Failed to send transaction due to error: ' + err.stack ? err.stack : err);
         throw new Error('Failed to send transaction due to error: ' + err.stack ? err.stack : err);
 
     });

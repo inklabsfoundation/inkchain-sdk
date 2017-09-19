@@ -73,6 +73,19 @@ message ChaincodeSpec {
     int32 timeout = 4;
 }
 
+message SenderSpec {
+    bytes sender = 1;
+    uint64 counter = 2;
+    bytes ink_limit = 3;
+    bytes msg = 4;
+}
+
+message SignContent {
+    ChaincodeSpec chaincode_spec = 1;
+    string id_generation_alg = 2;
+    SenderSpec sender_spec = 3;
+}
+
 // Specify the deployment of a chaincode.
 // TODO: Define `codePackage`.
 message ChaincodeDeploymentSpec {
@@ -102,4 +115,8 @@ message ChaincodeInvocationSpec {
     //  2, a decoding used to decode user (string) input to bytes
     // Currently, SHA256 with BASE64 is supported (e.g. idGenerationAlg='sha256base64')
     string id_generation_alg = 2;
+
+    SenderSpec sender_spec = 3;
+
+    bytes sig = 4;
 }

@@ -9,7 +9,7 @@ var test = _test(tape);
 var inkUtils = require('./inkUtils.js');
 
 test('\n\n***** End-to-end flow: invoke transaction to issue token *****\n\n', (t) => {
-    inkUtils.invokeChaincode('org1', 'tscc','1.0','registerAndIssueToken', ['CCToken','1000000000','18','4230a12f5b0693dd88bb35c79d7e56a68614b199'], t, false/*useStore*/)
+    inkUtils.invokeChaincode('org1', 'tscc','1.0','registerAndIssueToken', ['CCToken','1000000000','18','4230a12f5b0693dd88bb35c79d7e56a68614b199'], false/*useStore*/)
         .then((result) => {
             if(result){
                 t.pass('Successfully invoke transaction chaincode on channel');
