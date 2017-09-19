@@ -430,6 +430,346 @@ function buildChaincodeProposal(client, the_user, chaincode_id, chaincode_path, 
 
 module.exports.instantiateChaincode = instantiateChaincode;
 
+
+function invokeChaincode(userOrg, ccId, version, func, args, t, useStore){
+    init();
+
+    logger.debug('invokeChaincode begin');
+    Client.setConfigSetting('request-timeout', 60000);
+    var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
+
+    var targets = [],
+        eventhubs = [];
+    var pass_results = null;
+
+    // override t.end function so it'll always disconnect the event hub
+    t.end = ((context, ehs, f) => {
+        return function() {
+            for(var key in ehs) {
+                var eventhub = ehs[key];
+                if (eventhub && eventhub.isconnected()) {
+                    logger.debug('Disconnecting the event hub');
+                    eventhub.disconnect();
+                }
+            }
+
+            f.apply(context, arguments);
+        };
+    })(t, eventhubs, t.end);
+
+    // this is a transaction, will just use org's identity to
+    // submit the request. intentionally we are using a different org
+    // than the one that instantiated the chaincode, although either org
+    // should work properly
+    var client = new Client();
+    var channel = client.newChannel(channel_name);
+
+    var orgName = ORGS[userOrg].name;
+    var cryptoSuite = Client.newCryptoSuite();
+    if (useStore) {
+        cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
+        client.setCryptoSuite(cryptoSuite);
+    }
+
+    var caRootsPath = ORGS.orderer.tls_cacerts;
+    let data = fs.readFileSync(path.join(__dirname, caRootsPath));
+    let caroots = Buffer.from(data).toString();
+
+    channel.addOrderer(
+        client.newOrderer(
+            ORGS.orderer.url,
+            {
+                'pem': caroots,
+                'ssl-target-name-override': ORGS.orderer['server-hostname']
+            }
+        )
+    );
+
+    var orgName = ORGS[userOrg].name;
+
+    var promise;
+    if (useStore) {
+        promise = Client.newDefaultKeyValueStore({
+            path: testUtil.storePathForOrg(orgName)});
+    } else {
+        promise = Promise.resolve(useStore);
+    }
+    return promise.then((store) => {
+        if (store) {
+            client.setStateStore(store);
+        }
+        return testUtil.getSubmitter(client, t, userOrg);
+    }).then((admin) => {
+
+        t.pass('Successfully enrolled user \'admin\'');
+        the_user = admin;
+
+        // set up the channel to use each org's 'peer1' for
+        // both requests and events
+        for (let key in ORGS) {
+            if (ORGS.hasOwnProperty(key) && typeof ORGS[key].peer1 !== 'undefined') {
+                let data = fs.readFileSync(path.join(__dirname, ORGS[key].peer1['tls_cacerts']));
+                let peer = client.newPeer(
+                    ORGS[key].peer1.requests,
+                    {
+                        pem: Buffer.from(data).toString(),
+                        'ssl-target-name-override': ORGS[key].peer1['server-hostname']
+                    }
+                );
+                channel.addPeer(peer);
+            }
+        }
+
+        // an event listener can only register with a peer in its own org
+        let data = fs.readFileSync(path.join(__dirname, ORGS[userOrg].peer1['tls_cacerts']));
+        let eh = client.newEventHub();
+        eh.setPeerAddr(
+            ORGS[userOrg].peer1.events,
+            {
+                pem: Buffer.from(data).toString(),
+                'ssl-target-name-override': ORGS[userOrg].peer1['server-hostname'],
+                'grpc.http2.keepalive_time' : 15
+            }
+        );
+        eh.connect();
+        eventhubs.push(eh);
+
+        return channel.initialize();
+
+    }).then((nothing) => {
+        logger.debug(' orglist:: ', channel.getOrganizations());
+
+        tx_id = client.newTransactionID();
+        utils.setConfigSetting('E2E_TX_ID', tx_id.getTransactionID());
+        logger.debug('setConfigSetting("E2E_TX_ID") = %s', tx_id.getTransactionID());
+
+        // send proposal to endorser
+        var request = {
+            chaincodeId : ccId,
+            fcn: func,
+            args: args,
+            txId: tx_id,
+        };
+        return channel.sendTransactionProposal(request);
+
+    }, (err) => {
+
+        t.fail('Failed to enroll user \'admin\'. ' + err);
+        throw new Error('Failed to enroll user \'admin\'. ' + err);
+    }).then((results) =>{
+        pass_results = results;
+        var sleep_time = 0;
+        // can use "sleep=30000" to give some time to manually stop and start
+        // the peer so the event hub will also stop and start
+        if (process.argv.length > 2) {
+            if (process.argv[2].indexOf('sleep=') === 0) {
+                sleep_time = process.argv[2].split('=')[1];
+            }
+        }
+        t.comment('*****************************************************************************');
+        t.comment('stop and start the peer event hub ---- N  O  W ----- you have ' + sleep_time + ' millis');
+        t.comment('*****************************************************************************');
+        return sleep(sleep_time);
+    }).then((nothing) => {
+
+        var proposalResponses = pass_results[0];
+
+        var proposal = pass_results[1];
+        var all_good = true;
+        for(var i in proposalResponses) {
+            let one_good = false;
+            let proposal_response = proposalResponses[i];
+            if( proposal_response.response && proposal_response.response.status === 200) {
+                t.pass('transaction proposal has response status of good');
+                one_good = channel.verifyProposalResponse(proposal_response);
+                if(one_good) {
+                    t.pass(' transaction proposal signature and endorser are valid');
+                }
+            } else {
+                t.fail('transaction proposal was bad');
+            }
+            all_good = all_good & one_good;
+        }
+        if (all_good) {
+            // check all the read/write sets to see if the same, verify that each peer
+            // got the same results on the proposal
+            all_good = channel.compareProposalResponseResults(proposalResponses);
+            t.pass('compareProposalResponseResults exection did not throw an error');
+            if(all_good){
+                t.pass(' All proposals have a matching read/writes sets');
+            }
+            else {
+                t.fail(' All proposals do not have matching read/write sets');
+            }
+        }
+        if (all_good) {
+            // check to see if all the results match
+            t.pass('Successfully sent Proposal and received ProposalResponse');
+            logger.debug(util.format('Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s", metadata - "%s", endorsement signature: %s', proposalResponses[0].response.status, proposalResponses[0].response.message, proposalResponses[0].response.payload, proposalResponses[0].endorsement.signature));
+            var request = {
+                proposalResponses: proposalResponses,
+                proposal: proposal
+            };
+
+            // set the transaction listener and set a timeout of 30sec
+            // if the transaction did not get committed within the timeout period,
+            // fail the test
+            var deployId = tx_id.getTransactionID();
+
+            var eventPromises = [];
+            eventhubs.forEach((eh) => {
+                let txPromise = new Promise((resolve, reject) => {
+                    let handle = setTimeout(reject, 120000);
+
+                    eh.registerTxEvent(deployId.toString(),
+                        (tx, code) => {
+                            clearTimeout(handle);
+                            eh.unregisterTxEvent(deployId);
+
+                            if (code !== 'VALID') {
+                                t.fail('The balance transfer transaction was invalid, code = ' + code);
+                                reject();
+                            } else {
+                                t.pass('The balance transfer transaction has been committed on peer '+ eh.getPeerAddr());
+                                resolve();
+                            }
+                        },
+                        (err) => {
+                            clearTimeout(handle);
+                            t.pass('Successfully received notification of the event call back being cancelled for '+ deployId);
+                            resolve();
+                        }
+                    );
+                });
+
+                eventPromises.push(txPromise);
+            });
+
+            var sendPromise = channel.sendTransaction(request);
+            return Promise.all([sendPromise].concat(eventPromises))
+                .then((results) => {
+
+                    logger.debug(' event promise all complete and testing complete');
+                    return results[0]; // the first returned value is from the 'sendPromise' which is from the 'sendTransaction()' call
+
+                }).catch((err) => {
+
+                    t.fail('Failed to send transaction and get notifications within the timeout period.');
+                    throw new Error('Failed to send transaction and get notifications within the timeout period.');
+
+                });
+
+        } else {
+            t.fail('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+            throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+        }
+    }, (err) => {
+
+        t.fail('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
+        throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
+
+    }).then((response) => {
+
+        if (response.status === 'SUCCESS') {
+            t.pass('Successfully sent transaction to the orderer.');
+            t.comment('******************************************************************');
+            t.comment('To manually run /test/integration/query.js, set the following environment variables:');
+            t.comment('export E2E_TX_ID='+'\''+tx_id.getTransactionID()+'\'');
+            t.comment('******************************************************************');
+            logger.debug('invokeChaincode end');
+            return true;
+        } else {
+            t.fail('Failed to order the transaction. Error code: ' + response.status);
+            throw new Error('Failed to order the transaction. Error code: ' + response.status);
+        }
+    }, (err) => {
+
+        t.fail('Failed to send transaction due to error: ' + err.stack ? err.stack : err);
+        throw new Error('Failed to send transaction due to error: ' + err.stack ? err.stack : err);
+
+    });
+};
+
+module.exports.invokeChaincode = invokeChaincode;
+
+function queryChaincode(org,ccId, version, func, args, transientMap) {
+    init();
+
+    Client.setConfigSetting('request-timeout', 60000);
+    var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', testUtil.END2END.channel);
+
+    // this is a transaction, will just use org's identity to
+    // submit the request. intentionally we are using a different org
+    // than the one that submitted the "move" transaction, although either org
+    // should work properly
+    var client = new Client();
+    var channel = client.newChannel(channel_name);
+
+    var orgName = ORGS[org].name;
+    var cryptoSuite = Client.newCryptoSuite();
+    cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
+    client.setCryptoSuite(cryptoSuite);
+    var targets = [];
+    // set up the channel to use each org's 'peer1' for
+    // both requests and events
+    for (let key in ORGS) {
+        if (ORGS.hasOwnProperty(key) && typeof ORGS[key].peer1 !== 'undefined') {
+            let data = fs.readFileSync(path.join(__dirname, ORGS[key].peer1['tls_cacerts']));
+            let peer = client.newPeer(
+                ORGS[key].peer1.requests,
+                {
+                    pem: Buffer.from(data).toString(),
+                    'ssl-target-name-override': ORGS[key].peer1['server-hostname']
+                });
+            channel.addPeer(peer);
+        }
+    }
+
+    return Client.newDefaultKeyValueStore({
+        path: testUtil.storePathForOrg(orgName)
+    }).then((store) => {
+
+        client.setStateStore(store);
+        return testUtil.getSubmitter(client, t, org);
+
+    }).then((admin) => {
+            the_user = admin;
+
+            // send query
+            var request = {
+                chaincodeId : ccId,
+                txId: tx_id,
+                fcn: func,
+                args: args
+            };
+
+            if (transientMap) {
+                request.transientMap = transientMap;
+                request.fcn = 'testTransient';
+            }
+
+            return channel.queryByChaincode(request);
+        },
+        (err) => {
+            logger.debug('Failed to get submitter \'admin\'. Error: ' + err.stack ? err.stack : err );
+            throw new Error('Failed to get submitter');
+        }).then((response_payloads) => {
+            if (response_payloads) {
+                return response_payloads;
+            } else {
+                logger.debug('response_payloads is null');
+                throw new Error('Failed to get response on query');
+            }
+        },
+        (err) => {
+            logger.debug('Failed to send query due to error: ' + err.stack ? err.stack : err);
+            throw new Error('Failed, got error on query');
+        });
+};
+
+module.exports.queryChaincode = queryChaincode;
+
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
