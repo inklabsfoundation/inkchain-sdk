@@ -13,7 +13,7 @@ test('\n\n***** End-to-end flow: invoke transaction to issue token *****\n\n', (
         .then((result) => {
             if(result){
                 t.pass('Successfully invoke transaction chaincode on channel');
-                return sleep(5000);
+                return sleep(1000);
             }
             else {
                 t.fail('Failed to invoke transaction chaincode ');

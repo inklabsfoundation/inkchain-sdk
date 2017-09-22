@@ -4,7 +4,8 @@
 'use strict';
 var utils = require('fabric-client/lib/utils.js');
 var logger = utils.getLogger('inkchain testing');
-
+const Long = require('long');
+var ethUtils = require('ethereumjs-util');
 const CHANNEL_NAME = "mychannel";
 module.exports.CHANNEL_NAME = CHANNEL_NAME;
 
@@ -431,8 +432,39 @@ function buildChaincodeProposal(client, the_user, chaincode_id, chaincode_path, 
 module.exports.instantiateChaincode = instantiateChaincode;
 
 
-function invokeChaincode(userOrg, ccId, version, func, args, useStore){
+function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey) {
     init();
+
+    let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex"));
+    let promise = Promise.resolve();
+    return promise.then(()=>{
+        queryChaincode('org1', 'token', 'counter', [senderAddress.toString("hex")]).then((counter)=>{
+            let senderSpec = {
+                sender:Buffer.from(senderAddress.toString("hex")),
+                counter:Long.fromString(counter[0].toString()),
+                ink_limit:Buffer.from(inkLimit),
+                msg:Buffer.from(msg)
+            };
+            return invokeChaincode(userOrg,ccId,version,func,args,false,senderSpec,priKey);
+        });
+    }, (err) => {
+        console.log('Failed to query chaincode on the channel. ' + err.stack ? err.stack : err);
+        throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
+    }).catch((err) => {
+        console.log('Test failed due to unexpected reasons. ' + err.stack ? err.stack : err);
+        throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
+    });
+
+}
+module.exports.invokeChaincodeSigned = invokeChaincodeSigned;
+
+function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpec, priKey){
+    init();
+
+    if(arguments.length < 7) {
+        senderSpec = null;
+        priKey = null;
+    }
 
     logger.debug('invokeChaincode begin');
     Client.setConfigSetting('request-timeout', 60000);
@@ -534,6 +566,8 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore){
             fcn: func,
             args: args,
             txId: tx_id,
+            senderSpec:senderSpec,
+            priKey:priKey
         };
         return channel.sendTransactionProposal(request);
 
@@ -556,7 +590,6 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore){
         logger.debug('*****************************************************************************');
         return sleep(sleep_time);
     }).then((nothing) => {
-
         var proposalResponses = pass_results[0];
 
         var proposal = pass_results[1];
@@ -629,16 +662,19 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore){
 
                 eventPromises.push(txPromise);
             });
-
             var sendPromise = channel.sendTransaction(request);
             return Promise.all([sendPromise].concat(eventPromises))
                 .then((results) => {
-
                     logger.debug(' event promise all complete and testing complete');
                     return results[0]; // the first returned value is from the 'sendPromise' which is from the 'sendTransaction()' call
-
                 }).catch((err) => {
-
+                    for(var key in eventhubs) {
+                        var event = eventhubs[key];
+                        if (event && event.isconnected()) {
+                            logger.debug('Disconnecting the event hub');
+                            event.disconnect();
+                        }
+                    }
                     logger.debug('Failed to send transaction and get notifications within the timeout period.');
                     throw new Error('Failed to send transaction and get notifications within the timeout period.');
 
@@ -654,9 +690,15 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore){
         throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
 
     }).then((response) => {
-
+        for(var key in eventhubs) {
+            var event = eventhubs[key];
+            if (event && event.isconnected()) {
+                logger.debug('Disconnecting the event hub');
+                event.disconnect();
+            }
+        }
         if (response.status === 'SUCCESS') {
-            logger.pass('Successfully sent transaction to the orderer.');
+            logger.debug('Successfully sent transaction to the orderer.');
             logger.debug('******************************************************************');
             logger.debug('To manually run /test/integration/query.js, set the following environment variables:');
             logger.debug('export E2E_TX_ID='+'\''+tx_id.getTransactionID()+'\'');

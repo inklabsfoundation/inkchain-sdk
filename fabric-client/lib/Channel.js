@@ -1343,7 +1343,7 @@ var Channel = class {
 			request.chaincodeId
 			);
 		header = clientUtils.buildHeader(userContext.getIdentity(), channelHeader, request.txId.getNonce());
-		proposal = clientUtils.buildProposal(invokeSpec, header, request.transientMap);
+		proposal = clientUtils.buildProposal(invokeSpec, header, request.transientMap, request.senderSpec, request.priKey);
 		let signed_proposal = clientUtils.signProposal(userContext.getSigningIdentity(), proposal);
 
 		return clientUtils.sendPeersProposal(request.targets, signed_proposal)

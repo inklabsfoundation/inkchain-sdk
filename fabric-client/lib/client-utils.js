@@ -27,6 +27,8 @@ var utils = require('./utils.js');
 var logger = utils.getLogger('client-utils.js');
 var Config = require('./Config.js');
 
+var ethUtils = require('ethereumjs-util');
+
 var grpc = require('grpc');
 var _commonProto = grpc.load(__dirname + '/protos/common/common.proto').common;
 var _proposalProto = grpc.load(__dirname + '/protos/peer/proposal.proto').protos;
@@ -36,11 +38,25 @@ var _timestampProto = grpc.load(__dirname + '/protos/google/protobuf/timestamp.p
 /*
  * This function will build the proposal
  */
-module.exports.buildProposal = function(invokeSpec, header, transientMap) {
+module.exports.buildProposal = function(invokeSpec, header, transientMap, senderSpec, priKey) {
 	// construct the ChaincodeInvocationSpec
 	let cciSpec = new _ccProto.ChaincodeInvocationSpec();
 	cciSpec.setChaincodeSpec(invokeSpec);
-
+    if (senderSpec != null) {
+        let signContent = new _ccProto.SignContent();
+        signContent.setChaincodeSpec(invokeSpec);
+        signContent.setSenderSpec(senderSpec);
+        signContent.id_generation_alg = cciSpec.id_generation_alg;
+        let signHash = ethUtils.sha256(signContent.toBuffer());
+        let sigrsv = ethUtils.ecsign(signHash, new Buffer(priKey, "hex"));
+        let signature = Buffer.concat([
+            ethUtils.setLengthLeft(sigrsv.r, 32),
+            ethUtils.setLengthLeft(sigrsv.s, 32),
+            ethUtils.toBuffer(sigrsv.v - 27)
+        ]);
+        cciSpec.setSenderSpec(senderSpec);
+        cciSpec.sig = signature;
+    }
 	let cc_payload = new _proposalProto.ChaincodeProposalPayload();
 	cc_payload.setInput(cciSpec.toBuffer());
 
