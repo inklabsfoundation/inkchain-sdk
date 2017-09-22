@@ -12,8 +12,8 @@
 package main
 
 import (
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
+	"github.com/inkchain/inkchain/core/chaincode/shim"
+	pb "github.com/inkchain/inkchain/protos/peer"
 	"fmt"
 	"strings"
 	"encoding/json"
