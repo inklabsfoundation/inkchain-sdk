@@ -1,6 +1,6 @@
 ## inkchainx related
 * run `npm install fabric-client`    to invoke building fabric-client.
-* `node test/integration/inkchain/init.js`   initialization and issue CCToken
+* `node test/integration/inkchain/init.js`   initialize channel and issue CCToken
 * test/integration/inkchain/example_*.js
 
 ## Hyperledger Fabric Client SDK for Node.js
