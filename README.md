@@ -4,7 +4,7 @@
 * run `(sudo) npm install sleep`
 * run `npm install fabric-client`    to invoke building fabric-client.
 * run `(sudo) gulp watch`
-* cd test/fixtures & docker-compose -f docker-compose-inkchain.yaml up
+* cd test/fixtures && docker-compose -f docker-compose-inkchain.yaml up
 * `node test/integration/inkchain/init.js`   initialize channel and issue CCToken
 * node test/integration/inkchain/example_get_balance.js
 * node test/integration/inkchain/example_query.js
