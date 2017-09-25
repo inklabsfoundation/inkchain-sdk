@@ -24,7 +24,7 @@ services:
     container_name: ca_peerOrg1
 
   ca1:
-    image: hyperledger/fabric-ca
+    image: inkchain/inkchain-ca
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-org2
@@ -97,7 +97,7 @@ services:
 
   peer0.org2.example.com:
     container_name: peer0.org2.example.com
-    image: inkchain/inkchain-peer:test
+    image: inkchain/inkchain-peer
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_PEER_ID=peer0.org2.example.com
