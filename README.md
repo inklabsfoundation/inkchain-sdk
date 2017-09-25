@@ -1,7 +1,13 @@
 ## inkchainx related
-* run `npm install fabric-client`    to invoke building fabric-client.
+* run `(sudo) npm install -g gulp (--registry=https://registry.npm.taobao.org)`
+* run `(sudo) npm install (--registry=https://registry.npm.taobao.org)`
+* run `(sudo) gulp watch`
+* run `(sudo) npm install fabric-client`    to invoke building fabric-client.
 * `node test/integration/inkchain/init.js`   initialize channel and issue CCToken
-* test/integration/inkchain/example_*.js
+* node test/integration/inkchain/example_get_balance.js
+* node test/integration/inkchain/example_query.js
+* node test/integration/inkchain/example_invoke.js
+* node test/integration/inkchain/example_query.js
 
 ## Hyperledger Fabric Client SDK for Node.js
 
