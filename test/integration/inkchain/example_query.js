@@ -9,7 +9,7 @@ var test = _test(tape);
 var inkUtils = require('./inkUtils.js');
 
 test('\n\n***** End-to-end flow: query chaincode *****\n\n', (t) => {
-    inkUtils.queryChaincode('org1', 'token', 'getBalance', ["4230a12f5b0693dd88bb35c79d7e56a68614b199","CCToken"])
+    inkUtils.queryChaincode('org1', 'token', 'getBalance', ["411b6f8f24F28CaAFE514c16E11800167f8EBd89","CCCToken"])
         .then((result) => {
             t.pass('Successfully query chaincode on the channel. Response:' + result);
             t.end();
