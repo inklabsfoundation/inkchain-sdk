@@ -43,6 +43,7 @@ var _identityProto = grpc.load(path.join(__dirname, '/protos/msp/identities.prot
 var _rwsetProto = grpc.load(path.join(__dirname, '/protos/ledger/rwset/rwset.proto')).rwset;
 var _kv_rwsetProto = grpc.load(path.join(__dirname, '/protos/ledger/rwset/kvrwset/kv_rwset.proto')).kvrwset;
 
+var _ledgerSetProto = grpc.load(path.join(__dirname, '/protos/ledger/ledgerset/ledgerset.proto')).ledgerset;
 
 /**
  * Utility class to convert a protobuf encoded byte array of a Hyperledger Fabric block
@@ -1151,12 +1152,21 @@ function decodeProposalResponsePayload(proposal_response_payload_bytes) {
 function decodeChaincodeAction(action_bytes) {
 	var chaincode_action = {};
 	var proto_chaincode_action = _proposalProto.ChaincodeAction.decode(action_bytes);
-	chaincode_action.results = decodeReadWriteSets(proto_chaincode_action.getResults());
+	chaincode_action.results = decodeLedgerSets(proto_chaincode_action.getResults());
 	chaincode_action.events = decodeChaincodeEvents(proto_chaincode_action.getEvents());
 	chaincode_action.response = decodeResponse(proto_chaincode_action.getResponse());
 
 	return chaincode_action;
 };
+
+function decodeLedgerSets(ledger_bytes) {
+	var ledgerset = {};
+	var ledgerSetProto = _ledgerSetProto.LedgerSet.decode(ledger_bytes);
+	ledgerset.TxRwSet = decodeReadWriteSets(ledgerSetProto.getRwset());
+	ledgerset.Transet = ledgerSetProto.getTranset();
+
+	return ledgerset;
+}
 
 function decodeChaincodeEvents(event_bytes) {
 	var events = {};
