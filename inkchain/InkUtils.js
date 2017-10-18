@@ -867,6 +867,76 @@ function getBalance(org, args, transientMap) {
 
 module.exports.getBalance = getBalance;
 
+const GET_ACCOUNT_FUNC = "getAccount";
+
+function getAccount(org, args, transientMap) {
+    init();
+    Client.setConfigSetting('request-timeout', 60000);
+    var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
+
+    var client = new Client();
+    var channel = client.newChannel(channel_name);
+
+    var orgName = ORGS[org].name;
+    var cryptoSuite = Client.newCryptoSuite();
+    cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
+    client.setCryptoSuite(cryptoSuite);
+    var targets = [];
+    // set up the channel to use each org's 'peer1' for
+    // both requests and events
+    for (let key in ORGS) {
+        if (ORGS.hasOwnProperty(key) && typeof ORGS[key].peer1 !== 'undefined') {
+            let data = fs.readFileSync(path.join(__dirname, ORGS[key].peer1['tls_cacerts']));
+            let peer = client.newPeer(
+                ORGS[key].peer1.requests,
+                {
+                    pem: Buffer.from(data).toString(),
+                    'ssl-target-name-override': ORGS[key].peer1['server-hostname']
+                });
+            channel.addPeer(peer);
+        }
+    }
+    return Client.newDefaultKeyValueStore({
+        path: testUtil.storePathForOrg(orgName)
+    }).then((store) => {
+        client.setStateStore(store);
+        return testUtil.getSubmitter(client, org);
+
+    }).then((admin) => {
+            the_user = admin;
+            // send query
+            var request = {
+                chaincodeId : TOKEN_ID,
+                txId: tx_id,
+                fcn: GET_ACCOUNT_FUNC,
+                args: args
+            };
+
+            if (transientMap) {
+                request.transientMap = transientMap;
+                request.fcn = 'testTransient';
+            }
+            return channel.queryByChaincode(request);
+        },
+        (err) => {
+            logger.debug('Failed to get submitter \'admin\'. Error: ' + err.stack ? err.stack : err );
+            throw new Error('Failed to get submitter');
+        }).then((response_payloads) => {
+            if (response_payloads) {
+                return response_payloads;
+            } else {
+                logger.debug('response_payloads is null');
+                throw new Error('Failed to get response on query');
+            }
+        },
+        (err) => {
+            logger.debug('Failed to send query due to error: ' + err.stack ? err.stack : err);
+            throw new Error('Failed, got error on query');
+        });
+};
+
+module.exports.getAccount = getAccount;
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
