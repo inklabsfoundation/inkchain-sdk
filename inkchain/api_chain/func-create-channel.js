@@ -15,7 +15,7 @@
  */
 'use strict';
 
-let inkUtils = require('../inkUtils.js');
+let inkUtils = require('../InkUtils.js');
 
 
 var utils = require('fabric-client/lib/utils.js');
