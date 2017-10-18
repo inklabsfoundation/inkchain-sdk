@@ -3,7 +3,7 @@
 ## 安装
 将fabric-client拷贝到项目文件夹下，并在npm中将其加入编译目录中。当fabric-client有更新时：
 
-```javascript 1.8
+```javascript
 npm install fabric-client
 ```
 
