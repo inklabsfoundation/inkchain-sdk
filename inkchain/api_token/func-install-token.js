@@ -31,7 +31,7 @@ var inkUtils = require('./../InkUtils.js');
 
 const TOKEN_CHAINCODE_PATH = 'github.com/token';
 const TOKEN_CHAINCODE_ID = 'token';
-const TOKEN_VERSION = 'v0';
+const TOKEN_VERSION = '1.0';
 
 var sleep = require('sleep');
 
