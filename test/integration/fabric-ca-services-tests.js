@@ -17,10 +17,10 @@
 
 /////////////////////////////////////////////////////////////////
 // ---------------------- IMPORTANT ----------------------------
-// this test is meant to test the fabric-ca-client
-// package ALONE! do not require anything from the fabric-client
+// this test is meant to test the inkchain-ca-client
+// package ALONE! do not require anything from the inkchain-client
 // package. If anything is required but missing, add them to
-// the fabric-ca-client package by editing build/tasks/ca.js
+// the inkchain-ca-client package by editing build/tasks/ca.js
 /////////////////////////////////////////////////////////////////
 
 var tape = require('tape');
@@ -34,23 +34,23 @@ var fs = require('fs-extra');
 var path = require('path');
 var testUtil = require('../unit/util.js');
 
-var LocalMSP = require('fabric-ca-client/lib/msp/msp.js');
-var idModule = require('fabric-ca-client/lib/msp/identity.js');
+var LocalMSP = require('inkchain-ca-client/lib/msp/msp.js');
+var idModule = require('inkchain-ca-client/lib/msp/identity.js');
 var SigningIdentity = idModule.SigningIdentity;
 var Signer = idModule.Signer;
-var User = require('fabric-ca-client/lib/User.js');
+var User = require('inkchain-ca-client/lib/User.js');
 
 var keyValStorePath = testUtil.KVS;
 
-var FabricCAServices = require('fabric-ca-client');
-var FabricCAClient = FabricCAServices.FabricCAClient;
+var inkchainCAServices = require('inkchain-ca-client');
+var inkchainCAClient = inkchainCAServices.inkchainCAClient;
 
 var enrollmentID = 'testUser';
 var enrollmentSecret;
-var csr = fs.readFileSync(path.resolve(__dirname, '../fixtures/fabricca/enroll-csr.pem'));
+var csr = fs.readFileSync(path.resolve(__dirname, '../fixtures/inkchainca/enroll-csr.pem'));
 
 var userOrg = 'org1';
-var ORGS, fabricCAEndpoint;
+var ORGS, inkchainCAEndpoint;
 
 var	tlsOptions = {
 	trustedRoots: [],
@@ -58,21 +58,21 @@ var	tlsOptions = {
 };
 
 /**
- * FabricCAServices class tests
+ * inkchainCAServices class tests
  */
 
 //run the enroll test
 
-test('\n\n ** FabricCAServices: Test enroll() With Dynamic CSR **\n\n', function (t) {
+test('\n\n ** inkchainCAServices: Test enroll() With Dynamic CSR **\n\n', function (t) {
 	testUtil.resetDefaults();
-	FabricCAServices.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
-	ORGS = FabricCAServices.getConfigSetting('test-network');
-	fabricCAEndpoint = ORGS[userOrg].ca.url;
+	inkchainCAServices.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
+	ORGS = inkchainCAServices.getConfigSetting('test-network');
+	inkchainCAEndpoint = ORGS[userOrg].ca.url;
 
-	FabricCAServices.getConfigSetting('crypto-keysize', '256');//force for gulp test
-	FabricCAServices.setConfigSetting('crypto-hash-algo', 'SHA2');//force for gulp test
+	inkchainCAServices.getConfigSetting('crypto-keysize', '256');//force for gulp test
+	inkchainCAServices.setConfigSetting('crypto-hash-algo', 'SHA2');//force for gulp test
 
-	var caService = new FabricCAServices(fabricCAEndpoint, tlsOptions, ORGS[userOrg].ca.name);
+	var caService = new inkchainCAServices(inkchainCAEndpoint, tlsOptions, ORGS[userOrg].ca.name);
 
 	var req = {
 		enrollmentID: 'admin',
@@ -88,7 +88,7 @@ test('\n\n ** FabricCAServices: Test enroll() With Dynamic CSR **\n\n', function
 			//check that we got back the expected certificate
 			var subject;
 			try {
-				subject = X509.getSubject(FabricCAServices.normalizeX509(enrollment.certificate));
+				subject = X509.getSubject(inkchainCAServices.normalizeX509(enrollment.certificate));
 			} catch(err) {
 				t.fail(util.format('Failed to parse enrollment cert\n%s\n. Error: %s', enrollment.certificate, err));
 			}
@@ -110,7 +110,7 @@ test('\n\n ** FabricCAServices: Test enroll() With Dynamic CSR **\n\n', function
 
 			var signingIdentity = new SigningIdentity(eResult.certificate, pubKey, msp.getId(), msp.cryptoSuite,
 				new Signer(msp.cryptoSuite, eResult.key));
-			return caService._fabricCAClient.register(enrollmentID, null, 'client', userOrg, 1, [], signingIdentity);
+			return caService._inkchainCAClient.register(enrollmentID, null, 'client', userOrg, 1, [], signingIdentity);
 		},(err) => {
 			t.fail('Failed to import the public key from the enrollment certificate. ' + err.stack ? err.stack : err);
 			t.end();
@@ -128,7 +128,7 @@ test('\n\n ** FabricCAServices: Test enroll() With Dynamic CSR **\n\n', function
 		}).then(() => {
 
 			// now test being able to save user to persistence store
-			return FabricCAServices.newDefaultKeyValueStore({
+			return inkchainCAServices.newDefaultKeyValueStore({
 				path: testUtil.KVS
 			});
 		},(err) => {
@@ -137,7 +137,7 @@ test('\n\n ** FabricCAServices: Test enroll() With Dynamic CSR **\n\n', function
 		}).then((store) => {
 			return store.setValue(member.getName(), member.toString());
 		}, (err) => {
-			t.fail('Failed to obtain a state store from the fabric-ca-client');
+			t.fail('Failed to obtain a state store from the inkchain-ca-client');
 			t.end();
 		}).then(() => {
 			t.pass('Successfully saved user to state store');
@@ -172,7 +172,7 @@ test('\n\n ** FabricCAServices: Test enroll() With Dynamic CSR **\n\n', function
 
 			var cert;
 			try {
-				cert = X509.parseCert(FabricCAServices.normalizeX509(enrollment.certificate));
+				cert = X509.parseCert(inkchainCAServices.normalizeX509(enrollment.certificate));
 			} catch(err) {
 				t.fail(util.format('Failed to parse enrollment cert\n%s\n. Error: %s', enrollment.certificate, err));
 			}
@@ -241,9 +241,9 @@ test('\n\n ** FabricCAServices: Test enroll() With Dynamic CSR **\n\n', function
 		});
 });
 
-test('\n\n ** FabricCAClient: Test enroll With Static CSR **\n\n', function (t) {
-	var endpoint = FabricCAServices._parseURL(fabricCAEndpoint);
-	var client = new FabricCAClient({
+test('\n\n ** inkchainCAClient: Test enroll With Static CSR **\n\n', function (t) {
+	var endpoint = inkchainCAServices._parseURL(inkchainCAEndpoint);
+	var client = new inkchainCAClient({
 		protocol: endpoint.protocol,
 		hostname: endpoint.hostname,
 		port: endpoint.port,
@@ -257,7 +257,7 @@ test('\n\n ** FabricCAClient: Test enroll With Static CSR **\n\n', function (t) 
 			//check that we got back the expected certificate
 			var subject;
 			try {
-				subject = X509.getSubject(FabricCAServices.normalizeX509(enrollResponse.enrollmentCert));
+				subject = X509.getSubject(inkchainCAServices.normalizeX509(enrollResponse.enrollmentCert));
 			} catch(err) {
 				t.fail(util.format('Failed to parse enrollment cert\n%s\n. Error: %s', enrollResponse.enrollmentCert, err));
 			}

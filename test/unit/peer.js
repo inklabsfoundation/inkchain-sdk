@@ -18,13 +18,13 @@ var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
-var hfc = require('fabric-client');
-var sdkUtil = require('fabric-client/lib/utils.js');
+var hfc = require('inkchain-client');
+var sdkUtil = require('inkchain-client/lib/utils.js');
 var util = require('util');
 var fs = require('fs');
 var testUtil = require('./util.js');
 
-var Peer = require('fabric-client/lib/Peer.js');
+var Peer = require('inkchain-client/lib/Peer.js');
 
 test('Peer test', function(t) {
 	var peer = new Peer('grpc://127.0.0.1:5005');

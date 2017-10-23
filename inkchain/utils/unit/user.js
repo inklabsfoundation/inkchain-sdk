@@ -21,8 +21,8 @@ var _test = require('tape-promise');
 var test = _test(tape);
 
 var testutil = require('./util.js');
-var User = require('fabric-client/lib/User.js');
-var utils = require('fabric-client/lib/utils.js');
+var User = require('inkchain-client/lib/User.js');
+var utils = require('inkchain-client/lib/utils.js');
 
 var memberName = 'Donald T. Duck';
 var enrollmentID = 123454321;

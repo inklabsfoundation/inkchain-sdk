@@ -18,21 +18,21 @@
 let inkUtils = require('../InkUtils.js');
 
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('inkchain create-channel');
 
 var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var util = require('util');
 var fs = require('fs');
 var path = require('path');
 var grpc = require('grpc');
 
-var _commonProto = grpc.load(path.join(inkUtils.WORK_PATH,'fabric-client/lib/protos/common/common.proto')).common;
-var _configtxProto = grpc.load(path.join(inkUtils.WORK_PATH, 'fabric-client/lib/protos/common/configtx.proto')).common;
+var _commonProto = grpc.load(path.join(inkUtils.WORK_PATH,'inkchain-client/lib/protos/common/common.proto')).common;
+var _configtxProto = grpc.load(path.join(inkUtils.WORK_PATH, 'inkchain-client/lib/protos/common/configtx.proto')).common;
 
 var testUtil = require(path.join(inkUtils.WORK_PATH,'inkchain/utils/unit/util.js'));
 
@@ -112,7 +112,7 @@ test('\n\n***** SDK Built config update  create flow  *****\n\n', function(t) {
     // Acting as a client in org1 when creating the channel
     var org = ORGS.org1.name;
 
-    utils.setConfigSetting('key-value-store', 'fabric-client/lib/impl/FileKeyValueStore.js');
+    utils.setConfigSetting('key-value-store', 'inkchain-client/lib/impl/FileKeyValueStore.js');
 
     return Client.newDefaultKeyValueStore({
         path: testUtil.storePathForOrg(org)
@@ -139,7 +139,7 @@ test('\n\n***** SDK Built config update  create flow  *****\n\n', function(t) {
         // sign the config
         var signature = client.signChannelConfig(config);
         // convert signature to a storable string
-        // fabric-client SDK will convert back during create
+        // inkchain-client SDK will convert back during create
         var string_signature = signature.toBuffer().toString('hex');
         t.pass('Successfully signed config update');
         // collect signature from org1 admin

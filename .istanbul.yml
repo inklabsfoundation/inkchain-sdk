@@ -4,4 +4,4 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 instrumentation:
-    root: ./node_modules/fabric-client
+    root: ./node_modules/inkchain-client

@@ -22,8 +22,8 @@ var test = _test(tape);
 
 var testutil = require('./util.js');
 
-var EventHub = require('fabric-client/lib/EventHub.js');
-var sdkUtils = require('fabric-client/lib/utils.js');
+var EventHub = require('inkchain-client/lib/EventHub.js');
+var sdkUtils = require('inkchain-client/lib/utils.js');
 
 test('\n\n** EventHub tests\n\n', (t) => {
 	testutil.resetDefaults();

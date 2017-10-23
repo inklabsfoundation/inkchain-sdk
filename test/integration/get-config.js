@@ -14,11 +14,11 @@
  *  limitations under the License.
  */
 
-// This is an end-to-end test that focuses on exercising all parts of the fabric APIs
+// This is an end-to-end test that focuses on exercising all parts of the inkchain APIs
 // in a happy-path scenario
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('get-config');
 
 var tape = require('tape');
@@ -29,21 +29,21 @@ var path = require('path');
 var fs = require('fs');
 var util = require('util');
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var testUtil = require('../unit/util.js');
-var Peer = require('fabric-client/lib/Peer.js');
-var Orderer = require('fabric-client/lib/Orderer.js');
+var Peer = require('inkchain-client/lib/Peer.js');
+var Orderer = require('inkchain-client/lib/Orderer.js');
 
 // Get the proto bufs
 var grpc = require('grpc');
-var _eventsProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/peer/events.proto').protos;
-var _commonProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/common/common.proto').common;
-var _conigtxProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/common/configtx.proto').common;
-var _ccTransProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/peer/transaction.proto').protos;
-var _transProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/peer/transaction.proto').protos;
-var _responseProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/peer/proposal_response.proto').protos;
-var _ccProposalProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/peer/proposal.proto').protos;
-var _ccEventProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/peer/chaincode_event.proto').protos;
+var _eventsProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/peer/events.proto').protos;
+var _commonProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/common/common.proto').common;
+var _conigtxProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/common/configtx.proto').common;
+var _ccTransProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/peer/transaction.proto').protos;
+var _transProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/peer/transaction.proto').protos;
+var _responseProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/peer/proposal_response.proto').protos;
+var _ccProposalProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/peer/proposal.proto').protos;
+var _ccEventProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/peer/chaincode_event.proto').protos;
 
 var client = new Client();
 // IMPORTANT ------>>>>> MUST RUN e2e/create-channel.js FIRST

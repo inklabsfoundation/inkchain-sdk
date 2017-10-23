@@ -24,8 +24,8 @@ var path = require('path');
 var fs = require('fs');
 var util = require('util');
 
-var Client = require('fabric-client');
-var utils = require('fabric-client/lib/utils.js');
+var Client = require('inkchain-client');
+var utils = require('inkchain-client/lib/utils.js');
 var e2eUtils = require('./e2e/e2eUtils.js');
 var testUtil = require('../unit/util.js');
 var logger = utils.getLogger('instantiate-chaincode');

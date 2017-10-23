@@ -16,7 +16,7 @@
 
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('integration.client');
 
 var tape = require('tape');
@@ -26,8 +26,8 @@ var util = require('util');
 var path = require('path');
 var fs = require('fs-extra');
 
-var Client = require('fabric-client');
-var User = require('fabric-client/lib/User.js');
+var Client = require('inkchain-client');
+var User = require('inkchain-client/lib/User.js');
 var testUtil = require('../unit/util.js');
 var couchdbUtil = require('./couchdb-util.js');
 
@@ -40,7 +40,7 @@ test('\n\n ** createUser happy path - file store **\n\n', function (t) {
 	Client.addConfigFile(path.join(__dirname, '../fixtures/caimport.json'));
 	caImport = utils.getConfigSetting('ca-import', 'notfound');
 
-	utils.setConfigSetting('key-value-store', 'fabric-client/lib/impl/FileKeyValueStore.js');
+	utils.setConfigSetting('key-value-store', 'inkchain-client/lib/impl/FileKeyValueStore.js');
 	utils.setConfigSetting('crypto-keysize', 256);
 	var userOrg = 'org1';
 
@@ -93,7 +93,7 @@ test('\n\n ** createUser happy path - CouchDB **\n\n', function (t) {
 	// Use the CouchDB specific config file
 	Client.addConfigFile('test/fixtures/couchdb.json');
 	utils.setConfigSetting('crypto-keysize', 256);
-	utils.setConfigSetting('key-value-store','fabric-client/lib/impl/CouchDBKeyValueStore.js');//override
+	utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/CouchDBKeyValueStore.js');//override
 	var couchdbIPAddr = Client.getConfigSetting('couchdb-ip-addr', 'notfound');
 	var couchdbPort = Client.getConfigSetting('couchdb-port', 'notfound');
 	var keyValStorePath = couchdbIPAddr + ':' + couchdbPort;
@@ -145,7 +145,7 @@ test('\n\n ** createUser happy path - Cloudant  **\n\n', function (t) {
 	// Use the Cloudant specific config file
 	Client.addConfigFile('test/fixtures/cloudant.json');
 	utils.setConfigSetting('crypto-keysize', 256);
-	utils.setConfigSetting('key-value-store','fabric-client/lib/impl/CouchDBKeyValueStore.js');//override
+	utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/CouchDBKeyValueStore.js');//override
 	var cloudantUsername = Client.getConfigSetting('cloudant-username', 'notfound');
 	var cloudantPassword = Client.getConfigSetting('cloudant-password', 'notfound');
 	var cloudantBluemix = Client.getConfigSetting('cloudant-bluemix', 'notfound');
@@ -197,7 +197,7 @@ test('\n\n ** createUser happy path - Cloudant - PEM Strings  **\n\n', function 
 	// Use the Cloudant specific config file
 	Client.addConfigFile('test/fixtures/cloudant.json');
 	utils.setConfigSetting('crypto-keysize', 256);
-	utils.setConfigSetting('key-value-store','fabric-client/lib/impl/CouchDBKeyValueStore.js');//override
+	utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/CouchDBKeyValueStore.js');//override
 	var cloudantUsername = Client.getConfigSetting('cloudant-username', 'notfound');
 	var cloudantPassword = Client.getConfigSetting('cloudant-password', 'notfound');
 	var cloudantBluemix = Client.getConfigSetting('cloudant-bluemix', 'notfound');

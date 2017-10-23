@@ -1,10 +1,10 @@
 # ink-sdk 使用方法
 
 ## 安装
-将fabric-client拷贝到项目文件夹下，并在npm中将其加入编译目录中。当fabric-client有更新时：
+将inkchain-client拷贝到项目文件夹下，并在npm中将其加入编译目录中。当inkchain-client有更新时：
 
 ```javascript
-npm install fabric-client
+npm install inkchain-client
 ```
 
 将inkchain目录下的`utils`目录，`config.json`, `inkUtils.js`, `wallet.js` 拷贝到工程目录下即可使用。使用方法见其他四个文件夹中的示例。
@@ -16,7 +16,7 @@ npm install fabric-client
 此目录下包括了对链码的操作，`func-install-cc.js`,`func-instantiate-cc.js`中是对链码的安装和初始化；
 
 另外两个是sdk最重要的方法，链码的invode和query。要注意的是除非是管理员调用特殊的系统链码，
-否则所有的invoke都需要用户进行签名。这是ink sdk与fabric sdk最大的区别。
+否则所有的invoke都需要用户进行签名。这是ink sdk与inkchain sdk最大的区别。
 
 ## api_token
 

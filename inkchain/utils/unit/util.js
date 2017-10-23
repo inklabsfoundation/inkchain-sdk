@@ -22,15 +22,15 @@ var util = require('util');
 var jsrsa = require('jsrsasign');
 var KEYUTIL = jsrsa.KEYUTIL;
 
-var Client = require('fabric-client');
-var copService = require('fabric-ca-client/lib/FabricCAClientImpl.js');
-var User = require('fabric-client/lib/User.js');
-var CryptoSuite = require('fabric-client/lib/impl/CryptoSuite_ECDSA_AES.js');
-var KeyStore = require('fabric-client/lib/impl/CryptoKeyStore.js');
-var ecdsaKey = require('fabric-client/lib/impl/ecdsa/key.js');
+var Client = require('inkchain-client');
+var copService = require('inkchain-ca-client/lib/inkchainCAClientImpl.js');
+var User = require('inkchain-client/lib/User.js');
+var CryptoSuite = require('inkchain-client/lib/impl/CryptoSuite_ECDSA_AES.js');
+var KeyStore = require('inkchain-client/lib/impl/CryptoKeyStore.js');
+var ecdsaKey = require('inkchain-client/lib/impl/ecdsa/key.js');
 var Constants = require('./constants.js');
 
-var logger = require('fabric-client/lib/utils.js').getLogger('TestUtil');
+var logger = require('inkchain-client/lib/utils.js').getLogger('TestUtil');
 
 module.exports.CHAINCODE_PATH = 'github.com/example_cc';
 module.exports.CHAINCODE_UPGRADE_PATH = 'github.com/example_cc1';
@@ -116,7 +116,6 @@ var	tlsOptions = {
 
 function getMember(username, password, client, userOrg) {
 	var caUrl = ORGS[userOrg].ca.url;
-
 	return client.getUserContext(username, true)
 	.then((user) => {
 		return new Promise((resolve, reject) => {
@@ -138,13 +137,11 @@ function getMember(username, password, client, userOrg) {
 
 			// need to enroll it with CA server
 			var cop = new copService(caUrl, tlsOptions, ORGS[userOrg].ca.name, cryptoSuite);
-
 			return cop.enroll({
 				enrollmentID: username,
 				enrollmentSecret: password
 			}).then((enrollment) => {
 				logger.debug('Successfully enrolled user \'' + username + '\'');
-
 				return member.setEnrollment(enrollment.key, enrollment.certificate, ORGS[userOrg].mspid);
 			}).then(() => {
 				var skipPersistence = false;
@@ -155,6 +152,7 @@ function getMember(username, password, client, userOrg) {
 			}).then(() => {
 				return resolve(member);
 			}).catch((err) => {
+                console.log('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
 				logger.debug('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
 			});
 		});
@@ -234,7 +232,6 @@ module.exports.getSubmitter = function(client, peerOrgAdmin, org) {
 	} else {
 		peerAdmin = false;
 	}
-
 	// if the 3rd argument was skipped
 	if (typeof peerOrgAdmin === 'string') {
 		userOrg = peerOrgAdmin;

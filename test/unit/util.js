@@ -22,15 +22,15 @@ var util = require('util');
 var jsrsa = require('jsrsasign');
 var KEYUTIL = jsrsa.KEYUTIL;
 
-var Client = require('fabric-client');
-var copService = require('fabric-ca-client/lib/FabricCAClientImpl.js');
-var User = require('fabric-client/lib/User.js');
-var CryptoSuite = require('fabric-client/lib/impl/CryptoSuite_ECDSA_AES.js');
-var KeyStore = require('fabric-client/lib/impl/CryptoKeyStore.js');
-var ecdsaKey = require('fabric-client/lib/impl/ecdsa/key.js');
+var Client = require('inkchain-client');
+var copService = require('inkchain-ca-client/lib/inkchainCAClientImpl.js');
+var User = require('inkchain-client/lib/User.js');
+var CryptoSuite = require('inkchain-client/lib/impl/CryptoSuite_ECDSA_AES.js');
+var KeyStore = require('inkchain-client/lib/impl/CryptoKeyStore.js');
+var ecdsaKey = require('inkchain-client/lib/impl/ecdsa/key.js');
 var Constants = require('./constants.js');
 
-var logger = require('fabric-client/lib/utils.js').getLogger('TestUtil');
+var logger = require('inkchain-client/lib/utils.js').getLogger('TestUtil');
 
 module.exports.CHAINCODE_PATH = 'github.com/example_cc';
 module.exports.CHAINCODE_UPGRADE_PATH = 'github.com/example_cc1';

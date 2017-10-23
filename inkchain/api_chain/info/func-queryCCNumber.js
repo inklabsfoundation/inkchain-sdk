@@ -5,7 +5,7 @@
 
 
 var path = require('path');
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('query');
 
 var tape = require('tape');
@@ -14,9 +14,9 @@ var test = _test(tape);
 
 var org = 'org1';
 var orgName;
-var Client = require('fabric-client');
-var Peer = require('fabric-client/lib/Peer.js');
-var Orderer = require('fabric-client/lib/Orderer.js');
+var Client = require('inkchain-client');
+var Peer = require('inkchain-client/lib/Peer.js');
+var Orderer = require('inkchain-client/lib/Orderer.js');
 
 var inkUtils = require('../../InkUtils.js');
 var channel_name = inkUtils.CHANNEL_NAME;
@@ -69,7 +69,7 @@ test('  ---->>>>> Query channel working <<<<<-----', function(t) {
     channel.addPeer(peer0);
     channel.addPeer(peer1);
 
-    utils.setConfigSetting('key-value-store','fabric-client/lib/impl/FileKeyValueStore.js');
+    utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/FileKeyValueStore.js');
     var cryptoSuite = Client.newCryptoSuite();
     cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
     client.setCryptoSuite(cryptoSuite);

@@ -21,14 +21,14 @@ var _test = require('tape-promise');
 var test = _test(tape);
 
 var testutil = require('./util.js');
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
 var rewire = require('rewire');
 
-var FabricCAServices = rewire('fabric-ca-client/lib/FabricCAClientImpl');
-var FabricCAClient = FabricCAServices.FabricCAClient;
+var inkchainCAServices = rewire('inkchain-ca-client/lib/inkchainCAClientImpl');
+var inkchainCAClient = inkchainCAServices.inkchainCAClient;
 
 const SAMPLE_PEM_ENCODED_CERTIFICATE = '-----BEGIN CERTIFICATE-----' +
 	'MIIBbDCCARKgAwIBAwICA+gwCgYIKoZIzj0EAwIwEzERMA8GA1UEAwwIcGVlck9y' +
@@ -42,17 +42,17 @@ const SAMPLE_PEM_ENCODED_CERTIFICATE = '-----BEGIN CERTIFICATE-----' +
 	'-----END CERTIFICATE-----';
 
 /**
- * FabricCAClient class tests
+ * inkchainCAClient class tests
  */
 //test constructor
-test('FabricCAClient: Test constructor', function (t) {
+test('inkchainCAClient: Test constructor', function (t) {
 	testutil.resetDefaults();
 
 	var connectOpts = {};
 
 	t.throws(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'Throw error for missing protocol'
@@ -62,7 +62,7 @@ test('FabricCAClient: Test constructor', function (t) {
 
 	t.throws(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'Throw error for invalid protocol'
@@ -73,7 +73,7 @@ test('FabricCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'HTTP is a valid protocol'
@@ -83,7 +83,7 @@ test('FabricCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'HTTPS is a valid protocol'
@@ -93,7 +93,7 @@ test('FabricCAClient: Test constructor', function (t) {
 
 	t.throws(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Hostname must be set/,
 		'Throw error for missing hostname'
@@ -103,7 +103,7 @@ test('FabricCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Port must be an integer/,
 		'Should not throw error if port is not set'
@@ -113,7 +113,7 @@ test('FabricCAClient: Test constructor', function (t) {
 
 	t.throws(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Port must be an integer/,
 		'Throw error for invalid port'
@@ -123,7 +123,7 @@ test('FabricCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-			let client = new FabricCAClient(connectOpts);
+			let client = new inkchainCAClient(connectOpts);
 		},
 		/Invalid connection options.  Port must be an integer/,
 		'Integer is a valid type for port'
@@ -135,7 +135,7 @@ test('FabricCAClient: Test constructor', function (t) {
 		let client = null;
 		t.doesNotThrow(
 			function () {
-				client = new FabricCAClient(connectOpts);
+				client = new inkchainCAClient(connectOpts);
 			},
 			/Invalid connection options. /,
 			'Add tlsOptions to client connect_opts -- all default values'
@@ -151,7 +151,7 @@ test('FabricCAClient: Test constructor', function (t) {
 		let client = null;
 		t.doesNotThrow(
 			function () {
-				client = new FabricCAClient(connectOpts);
+				client = new inkchainCAClient(connectOpts);
 			},
 			/Invalid connection options. /,
 			'Add tlsOptions to client connect_opts -- non default values'
@@ -168,7 +168,7 @@ test('FabricCAClient: Test constructor', function (t) {
 		let client = null;
 		t.doesNotThrow(
 			function () {
-				client = new FabricCAClient(connectOpts);
+				client = new inkchainCAClient(connectOpts);
 			},
 			/Invalid connection options. /,
 			'Add tlsOptions to client connect_opts -- non default values'
@@ -183,24 +183,24 @@ test('FabricCAClient: Test constructor', function (t) {
 
 });
 
-//FabricCAClient _pemToDER tests
-var ecertPEM = fs.readFileSync(path.resolve(__dirname, '../fixtures/fabricca/ecert.pem'));
+//inkchainCAClient _pemToDER tests
+var ecertPEM = fs.readFileSync(path.resolve(__dirname, '../fixtures/inkchainca/ecert.pem'));
 
-test('FabricCAClient: Test _pemToDer static method',function(t){
+test('inkchainCAClient: Test _pemToDer static method',function(t){
 
 	t.plan(2);
 
 	//call function with garbage
 	t.throws(
 		function(){
-			var hex = FabricCAClient.pemToDER('garbage');
+			var hex = inkchainCAClient.pemToDER('garbage');
 		},
 		/Input parameter does not appear to be PEM-encoded./,
 		'Throw an error when input is not PEM-encoded'
 	);
 
 	try {
-		var hex = FabricCAClient.pemToDER(ecertPEM.toString());
+		var hex = inkchainCAClient.pemToDER(ecertPEM.toString());
 		t.pass('Sucessfully converted ecert from PEM to DER');
 	} catch(err) {
 		t.fail('Failed to convert PEM to DER due to ' + err);
@@ -210,12 +210,12 @@ test('FabricCAClient: Test _pemToDer static method',function(t){
 });
 
 // Test newCryptoSuite() function
-test('FabricCAServices:  Test newCryptoSuite() function', function(t) {
+test('inkchainCAServices:  Test newCryptoSuite() function', function(t) {
 	var	tlsOptions = {
 		trustedRoots: [],
 		verify: false
 	};
-	var CAClient = require('fabric-ca-client');
+	var CAClient = require('inkchain-ca-client');
 
  	var crypto = CAClient.newCryptoSuite({software: true, keysize: 384});
 
@@ -234,12 +234,12 @@ test('FabricCAServices:  Test newCryptoSuite() function', function(t) {
 });
 
 // Test newCryptoKeyStore() function
-test('FabricCAServices:  Test newCryptoKeyStore() function', function(t) {
+test('inkchainCAServices:  Test newCryptoKeyStore() function', function(t) {
 	var	tlsOptions = {
 		trustedRoots: [],
 		verify: false
 	};
-	var CAClient = require('fabric-ca-client');
+	var CAClient = require('inkchain-ca-client');
 
  	var crypto = CAClient.newCryptoSuite({software: true, keysize: 384});
 	var keyValStorePath = path.join(testutil.getTempDir(), 'kvsTemp');
@@ -271,8 +271,8 @@ test('FabricCAServices:  Test newCryptoKeyStore() function', function(t) {
 });
 
 // Test getCryptoSuite() function
-test('FabricCAServices:  Test getCryptoSuite() function', function(t) {
-	var ca = new FabricCAServices('http://localhost:7054');
+test('inkchainCAServices:  Test getCryptoSuite() function', function(t) {
+	var ca = new inkchainCAServices('http://localhost:7054');
 	var crypto = ca.getCryptoSuite();
 
 	if (crypto) {
@@ -284,8 +284,8 @@ test('FabricCAServices:  Test getCryptoSuite() function', function(t) {
 	t.end();
 });
 
-test('FabricCAServices: Test register() function', function(t) {
-	var cop = new FabricCAServices('http://localhost:7054');
+test('inkchainCAServices: Test register() function', function(t) {
+	var cop = new inkchainCAServices('http://localhost:7054');
 
 	t.throws(
 		() => {
@@ -338,11 +338,11 @@ test('FabricCAServices: Test register() function', function(t) {
 
 /*
 **
- * FabricCAServices enroll tests
+ * inkchainCAServices enroll tests
  */
-test('FabricCAServices: Test enroll with missing parameters', function (t) {
+test('inkchainCAServices: Test enroll with missing parameters', function (t) {
 
-	var ca = new FabricCAServices('http://localhost:7054');
+	var ca = new inkchainCAServices('http://localhost:7054');
 	var req = null;
 
 	ca.enroll()
@@ -397,8 +397,8 @@ test('FabricCAServices: Test enroll with missing parameters', function (t) {
 	});
 });
 
-test('FabricCAServices: Test revoke() function', function(t) {
-	var cop = new FabricCAServices('http://localhost:7054');
+test('inkchainCAServices: Test revoke() function', function(t) {
+	var cop = new inkchainCAServices('http://localhost:7054');
 	t.throws(
 		() => {
 			cop.revoke();
@@ -528,8 +528,8 @@ var VALID_CERT2 = '-----BEGIN CERTIFICATE-----\n' +
 'jTSXP2wxocvyk8upDrUD9XI=\n' +
 '-----END CERTIFICATE-----\n';
 
-test('FabricCAServices: Test reenroll() function', function(t) {
-	var cop = new FabricCAServices('http://localhost_bad:7054');
+test('inkchainCAServices: Test reenroll() function', function(t) {
+	var cop = new inkchainCAServices('http://localhost_bad:7054');
 
 	t.throws(
 		() => {
@@ -568,7 +568,7 @@ test('FabricCAServices: Test reenroll() function', function(t) {
 		'Must throw error when current user enrollment certificate does not have a "CN" value'
 	);
 
-	var getSubjectCommonName = FabricCAServices.__get__('getSubjectCommonName');
+	var getSubjectCommonName = inkchainCAServices.__get__('getSubjectCommonName');
 
 	t.throws(
 		() => {
@@ -610,7 +610,7 @@ test('FabricCAServices: Test reenroll() function', function(t) {
 	t.end();
 });
 
-test('FabricCAServices: Test static method normalizeX509()', function (t) {
+test('inkchainCAServices: Test static method normalizeX509()', function (t) {
 	testNormalizer(VALID_CERT, t);
 	testNormalizer(VALID_CERT1, t);
 	testNormalizer(VALID_CERT2, t);
@@ -618,14 +618,14 @@ test('FabricCAServices: Test static method normalizeX509()', function (t) {
 });
 
 function testNormalizer(cert, t) {
-	var normalized = FabricCAServices.normalizeX509(cert);
+	var normalized = inkchainCAServices.normalizeX509(cert);
 	var matches = normalized.match(/\-\-\-\-\-\s*BEGIN ?[^-]+?\-\-\-\-\-\n/);
 	t.equals(matches.length, 1, 'Check that the normalized CERT has the standalone start line');
 	matches = normalized.match(/\n\-\-\-\-\-\s*END ?[^-]+?\-\-\-\-\-/);
 	t.equals(matches.length, 1, 'Check that the normalized CERT has the standalone end line');
 }
 
-test('FabricCAServices: Test _parseURL() function', function (t) {
+test('inkchainCAServices: Test _parseURL() function', function (t) {
 
 	var goodHost = 'www.example.com';
 	var goodPort = 7054;
@@ -644,24 +644,24 @@ test('FabricCAServices: Test _parseURL() function', function (t) {
 	t.plan(12);
 
 	//valid http endpoint
-	var endpointGood = FabricCAServices._parseURL(goodURL);
+	var endpointGood = inkchainCAServices._parseURL(goodURL);
 	t.equals(endpointGood.protocol, 'http', 'Check that protocol is set correctly to \'http\'');
 	t.equals(endpointGood.hostname, goodHost, 'Check that hostname is set correctly');
 	t.equals(endpointGood.port, goodPort, 'Check that port is set correctly');
 
 	//valid https endpoint
-	var endpointGoodSecure = FabricCAServices._parseURL(goodURLSecure);
+	var endpointGoodSecure = inkchainCAServices._parseURL(goodURLSecure);
 	t.equals(endpointGoodSecure.protocol, 'https', 'Check that protocol is set correctly to \'https\'');
 	t.equals(endpointGoodSecure.hostname, goodHost, 'Check that hostname is set correctly');
 	t.equals(endpointGoodSecure.port, goodPort, 'Check that port is set correctly');
 
-	var endpointGoodUrlNoPort = FabricCAServices._parseURL(goodUrlNoPort);
+	var endpointGoodUrlNoPort = inkchainCAServices._parseURL(goodUrlNoPort);
 	t.notOk(endpointGoodUrlNoPort.port, 'Check default port value');
 
 	//check invalid endpoints
 	t.throws(
 		function () {
-			FabricCAServices._parseURL(badURL);
+			inkchainCAServices._parseURL(badURL);
 		},
 		/InvalidURL: missing hostname./,
 		'Throw error for missing hostname'
@@ -669,7 +669,7 @@ test('FabricCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-			FabricCAServices._parseURL(badURL2);
+			inkchainCAServices._parseURL(badURL2);
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for invalid protocol'
@@ -677,7 +677,7 @@ test('FabricCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-			FabricCAServices._parseURL(badURL3);
+			inkchainCAServices._parseURL(badURL3);
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for invalid protocol'
@@ -685,7 +685,7 @@ test('FabricCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-			FabricCAServices._parseURL(badURL3);
+			inkchainCAServices._parseURL(badURL3);
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for missing protocol'
@@ -693,7 +693,7 @@ test('FabricCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-			FabricCAServices._parseURL(badURL5);
+			inkchainCAServices._parseURL(badURL5);
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for invalid protocol'
@@ -702,8 +702,8 @@ test('FabricCAServices: Test _parseURL() function', function (t) {
 	t.end();
 });
 
-test('FabricCAServices: Test toString() function', function(t) {
-	var ca = new FabricCAServices('http://localhost:7054');
+test('inkchainCAServices: Test toString() function', function(t) {
+	var ca = new inkchainCAServices('http://localhost:7054');
 	var printableCa = ca.toString();
 
 	if ((typeof printableCa == 'string') && (printableCa.length > 1)) {
@@ -716,11 +716,11 @@ test('FabricCAServices: Test toString() function', function(t) {
 });
 
 /**
- * FabricCAClient enroll tests
+ * inkchainCAClient enroll tests
  */
-test('FabricCAClient: Test enroll with missing parameters', function (t) {
+test('inkchainCAClient: Test enroll with missing parameters', function (t) {
 
-	var client = new FabricCAClient({
+	var client = new inkchainCAClient({
 		protocol: 'http',
 		hostname: '127.0.0.1',
 		port: 7054
@@ -743,11 +743,11 @@ test('FabricCAClient: Test enroll with missing parameters', function (t) {
 });
 
 /**
- * FabricCAClient register tests
+ * inkchainCAClient register tests
  */
-test('FabricCAClient: Test register with missing parameters', function (t) {
+test('inkchainCAClient: Test register with missing parameters', function (t) {
 
-	var client = new FabricCAClient({
+	var client = new inkchainCAClient({
 		protocol: 'http',
 		hostname: '127.0.0.1',
 		port: 7054
@@ -765,11 +765,11 @@ test('FabricCAClient: Test register with missing parameters', function (t) {
 });
 
 /**
- * FabricCAClient revoke tests
+ * inkchainCAClient revoke tests
  */
-test('FabricCAClient: Test revoke with missing parameters', function (t) {
+test('inkchainCAClient: Test revoke with missing parameters', function (t) {
 
-	var client = new FabricCAClient({
+	var client = new inkchainCAClient({
 		protocol: 'http',
 		hostname: '127.0.0.1',
 		port: 7054

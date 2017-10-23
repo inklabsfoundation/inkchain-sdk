@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-var utils = require('fabric-client/lib/utils.js');
-var logger = utils.getLogger('fileKeyValStore-fabricca');
+var utils = require('inkchain-client/lib/utils.js');
+var logger = utils.getLogger('fileKeyValStore-inkchainca');
 
 var tape = require('tape');
 var _test = require('tape-promise');
@@ -25,10 +25,10 @@ var testUtil = require('../unit/util.js');
 var fs = require('fs-extra');
 
 var path = require('path');
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 
-var User = require('fabric-client/lib/User.js');
-var FabricCAServices = require('fabric-ca-client/lib/FabricCAClientImpl');
+var User = require('inkchain-client/lib/User.js');
+var inkchainCAServices = require('inkchain-ca-client/lib/inkchainCAClientImpl');
 
 var userOrg = 'org1';
 var ORGS;
@@ -36,18 +36,18 @@ var ORGS;
 
 // This test first checks to see if a user has already been enrolled. If so,
 // the test terminates. If the user is not yet enrolled, the test uses the
-// FabricCAClientImpl to enroll a user, and saves the enrollment materials into the
+// inkchainCAClientImpl to enroll a user, and saves the enrollment materials into the
 // File KeyValueStore. Then the test uses the Client class to load the member
 // from the key value store.
-test('Use FabricCAServices with a File KeyValueStore', function(t) {
+test('Use inkchainCAServices with a File KeyValueStore', function(t) {
 	testUtil.resetDefaults();
 	Client.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
 	ORGS = Client.getConfigSetting('test-network');
-	var fabricCAEndpoint = ORGS[userOrg].ca.url;
+	var inkchainCAEndpoint = ORGS[userOrg].ca.url;
 
 	// Set the relevant configuration values
 	utils.setConfigSetting('crypto-keysize', 256);
-	utils.setConfigSetting('key-value-store','fabric-client/lib/impl/FileKeyValueStore.js');
+	utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/FileKeyValueStore.js');
 
 	var keyValueStore = Client.getConfigSetting('key-value-store');
 	var keyValStorePath = path.join(testUtil.getTempDir(), 'customKeyValStorePath');
@@ -82,7 +82,7 @@ test('Use FabricCAServices with a File KeyValueStore', function(t) {
 				t.end();
 				process.exit(1);
 			}
-			return new FabricCAServices(fabricCAEndpoint, tlsOptions, ORGS[userOrg].ca.name,
+			return new inkchainCAServices(inkchainCAEndpoint, tlsOptions, ORGS[userOrg].ca.name,
 				cryptoSuite);
 		},
 		function(err) {
@@ -93,7 +93,7 @@ test('Use FabricCAServices with a File KeyValueStore', function(t) {
 		})
 	.then(
 		function(caService) {
-			t.pass('Successfully initialized the Fabric CA service.');
+			t.pass('Successfully initialized the inkchain CA service.');
 
 			return caService.enroll({
 				enrollmentID: 'admin',
@@ -101,7 +101,7 @@ test('Use FabricCAServices with a File KeyValueStore', function(t) {
 			});
 		},
 		function(err) {
-			t.fail('Failed to initialize the Fabric CA service. Error:');
+			t.fail('Failed to initialize the inkchain CA service. Error:');
 			logger.error(err.stack ? err.stack : err);
 			t.end();
 		}
@@ -158,7 +158,7 @@ test('Use FabricCAServices with a File KeyValueStore', function(t) {
 		}
 	).catch(
 		function(err) {
-			t.fail('Failed fileKeyValueStore-fabricca-test with error:');
+			t.fail('Failed fileKeyValueStore-inkchainca-test with error:');
 			logger.error(err.stack ? err.stack : err);
 			t.end();
 		}

@@ -33,7 +33,7 @@ var crypto = require('crypto');
 var util = require('util');
 var path = require('path');
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var testutil = require('./util.js');
 
 var libpath;
@@ -42,7 +42,7 @@ var slot = 0;
 var cryptoUtils;
 
 // Common locations of the PKCS11 library.
-// Based on findPKCS11Lib() in fabric/bccsp/pkcs11/impl_test.go
+// Based on findPKCS11Lib() in inkchain/bccsp/pkcs11/impl_test.go
 var common_pkcs_pathnames = [
 	'/usr/lib/softhsm/libsofthsm2.so',								// Ubuntu
 	'/usr/lib/x86_64-linux-gnu/softhsm/libsofthsm2.so',				// Ubuntu  apt-get install

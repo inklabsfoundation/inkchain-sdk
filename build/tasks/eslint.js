@@ -9,13 +9,13 @@ var eslint = require('gulp-eslint');
 gulp.task('lint', function () {
 	return gulp.src([
 		'**/*.js',
-		'fabric-client/**/*.js',
-		'fabric-ca-client/lib/*.js',
+		'inkchain-client/**/*.js',
+		'inkchain-ca-client/lib/*.js',
 		'examples/**/*.js',
 		'!examples/balance-transfer/node_modules/**',
 		'!node_modules/**',
-		'!fabric-client/node_modules/**',
-		'!fabric-ca-client/node_modules/**',
+		'!inkchain-client/node_modules/**',
+		'!inkchain-ca-client/node_modules/**',
 		'!docs/**',
 		'!coverage/**',
 		'!tmp/**'

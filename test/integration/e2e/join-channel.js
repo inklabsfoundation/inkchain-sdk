@@ -15,7 +15,7 @@
  */
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('E2E join-channel');
 
 var tape = require('tape');
@@ -26,7 +26,7 @@ var util = require('util');
 var path = require('path');
 var fs = require('fs');
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 
 var testUtil = require('../../unit/util.js');
 

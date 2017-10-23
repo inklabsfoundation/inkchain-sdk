@@ -21,8 +21,8 @@ var _test = require('tape-promise');
 var test = _test(tape);
 
 var testutil = require('./util.js');
-var utils = require('fabric-client/lib/utils.js');
-var ecdsaKey = require('fabric-client/lib/impl/ecdsa/key.js');
+var utils = require('inkchain-client/lib/utils.js');
+var ecdsaKey = require('inkchain-client/lib/impl/ecdsa/key.js');
 
 var jsrsa = require('jsrsasign');
 var KEYUTIL = jsrsa.KEYUTIL;

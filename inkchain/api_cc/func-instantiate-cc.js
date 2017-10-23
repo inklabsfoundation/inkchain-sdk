@@ -14,11 +14,11 @@
  *  limitations under the License.
  */
 
-// This is an end-to-end test that focuses on exercising all parts of the fabric APIs
+// This is an end-to-end test that focuses on exercising all parts of the inkchain APIs
 // in a happy-path scenario
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('E2E install-chaincode');
 
 var tape = require('tape');

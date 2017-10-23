@@ -21,11 +21,11 @@ var _test = require('tape-promise');
 var test = _test(tape);
 
 var testutil = require('./util.js');
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 
-var Remote = require('fabric-client/lib/Remote.js');
-var Peer = require('fabric-client/lib/Peer.js');
-var Orderer = require('fabric-client/lib/Orderer.js');
+var Remote = require('inkchain-client/lib/Remote.js');
+var Peer = require('inkchain-client/lib/Peer.js');
+var Orderer = require('inkchain-client/lib/Orderer.js');
 var aPem = '-----BEGIN CERTIFICATE-----' +
 	'MIIBwTCCAUegAwIBAgIBATAKBggqhkjOPQQDAzApMQswCQYDVQQGEwJVUzEMMAoG' +
 	'A1UEChMDSUJNMQwwCgYDVQQDEwNPQkMwHhcNMTYwMTIxMjI0OTUxWhcNMTYwNDIw' +
@@ -226,12 +226,12 @@ test('\n\n ** Remote node tests **\n\n', function (t) {
 		'PEM encoded certificate is required.'
 	);
 
-	require('fabric-client/lib/Client.js');
+	require('inkchain-client/lib/Client.js');
 	t.equal(process.env.GRPC_SSL_CIPHER_SUITES, defaultCiphers, 'Test default ssl cipher suites are properly set');
 
 	utils.setConfigSetting('grpc-ssl-cipher-suites', 'HIGH+ECDSA');
-	delete require.cache[require.resolve('fabric-client/lib/Client.js')];
-	require('fabric-client/lib/Client.js');
+	delete require.cache[require.resolve('inkchain-client/lib/Client.js')];
+	require('inkchain-client/lib/Client.js');
 	t.equal(process.env.GRPC_SSL_CIPHER_SUITES, 'HIGH+ECDSA', 'Test overriden cipher suites');
 
 	t.end();

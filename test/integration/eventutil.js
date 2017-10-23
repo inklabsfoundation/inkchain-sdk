@@ -16,7 +16,7 @@
 
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var util = require('util');
 
 module.exports.registerTxEvent = function(eh, txid, timeout) {

@@ -5,7 +5,7 @@
 var path = require('path');
 module.exports.WORK_PATH = path.join(__dirname,'../');
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('inkchain testing');
 const Long = require('long');
 var ethUtils = require('ethereumjs-util');
@@ -14,7 +14,7 @@ module.exports.CHANNEL_NAME = CHANNEL_NAME;
 
 
 var ORGS;
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var testUtil = require('./utils/unit/util.js');
 var fs = require('fs');
 var util = require('util');
@@ -468,7 +468,6 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
         senderSpec = null;
         priKey = null;
     }
-
     logger.debug('invokeChaincode begin');
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
@@ -520,10 +519,8 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
         }
         return testUtil.getSubmitter(client, userOrg);
     }).then((admin) => {
-
         logger.debug('Successfully enrolled user \'admin\'');
         the_user = admin;
-
         // set up the channel to use each org's 'peer1' for
         // both requests and events
         for (let key in ORGS) {

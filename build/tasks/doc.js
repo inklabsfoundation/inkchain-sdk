@@ -25,13 +25,13 @@ gulp.task('clean', function(){
 gulp.task('doc', ['clean'], function () {
 	gulp.src([
 		'docs/index.md',
-		'fabric-client/index.js',
-		'fabric-client/lib/**/*.js',
-		'!fabric-client/lib/protos/**',
-		'!fabric-client/lib/hash.js',
-		'!fabric-client/lib/utils.js',
-		'fabric-ca-client/index.js',
-		'fabric-ca-client/lib/FabricCAClientImpl.js'
+		'inkchain-client/index.js',
+		'inkchain-client/lib/**/*.js',
+		'!inkchain-client/lib/protos/**',
+		'!inkchain-client/lib/hash.js',
+		'!inkchain-client/lib/utils.js',
+		'inkchain-ca-client/index.js',
+		'inkchain-ca-client/lib/inkchainCAClientImpl.js'
 	], { read: false })
 	.pipe(jsdoc({
 		opts: {
@@ -39,7 +39,7 @@ gulp.task('doc', ['clean'], function () {
 			destination: './docs/gen'
 		},
 		templates: {
-			systemName: 'Hyperledger Fabric SDK for node.js',
+			systemName: 'Hyperledger inkchain SDK for node.js',
 			theme: 'cosmo' //cerulean, cosmo, cyborg, flatly, journal, lumen, paper, readable, sandstone, simplex, slate, spacelab, superhero, united, yeti
 		}
 	}));

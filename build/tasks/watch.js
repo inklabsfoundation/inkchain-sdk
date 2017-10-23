@@ -9,17 +9,17 @@ var gulp = require('gulp'),
 	ca = require('./ca.js');
 
 gulp.task('watch', function () {
-	watch(ca.DEPS, { ignoreInitial: false, base: 'fabric-client/' })
+	watch(ca.DEPS, { ignoreInitial: false, base: 'inkchain-client/' })
 	.pipe(debug())
-	.pipe(gulp.dest('fabric-ca-client/'));
+	.pipe(gulp.dest('inkchain-ca-client/'));
 
 	watch([
-		'fabric-client/index.js',
-		'fabric-client/config/**/*',
-		'fabric-client/lib/**/*',
-		'fabric-ca-client/index.js',
-		'fabric-ca-client/config/**/*',
-		'fabric-ca-client/lib/**/*'
+		'inkchain-client/index.js',
+		'inkchain-client/config/**/*',
+		'inkchain-client/lib/**/*',
+		'inkchain-ca-client/index.js',
+		'inkchain-ca-client/config/**/*',
+		'inkchain-ca-client/lib/**/*'
 	], { ignoreInitial: false, base: './' })
 	.pipe(debug())
 	.pipe(gulp.dest('node_modules'));

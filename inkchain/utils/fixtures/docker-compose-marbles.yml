@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 orderer:
-  image: hyperledger/fabric-orderer
+  image: hyperledger/inkchain-orderer
   environment:
     - ORDERER_GENERAL_LEDGERTYPE=ram
     - ORDERER_GENERAL_BATCHTIMEOUT=10s
@@ -13,7 +13,7 @@ orderer:
     - ORDERER_GENERAL_ORDERERTYPE=solo
     - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
     - ORDERER_RAMLEDGER_HISTORY_SIZE=100
-  working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
+  working_dir: /opt/gopath/src/github.com/hyperledger/inkchain/orderer
   command: orderer
   ports:
     - 7050:7050
@@ -29,7 +29,7 @@ couchdb1:
   command: tini -- /docker-entrypoint.sh /opt/couchdb/bin/couchdb
 
 vp0:
-  image: hyperledger/fabric-peer
+  image: hyperledger/inkchain-peer
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true
     - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
@@ -51,7 +51,7 @@ vp0:
     - couchdb0
 
 vp1:
-  image: hyperledger/fabric-peer
+  image: hyperledger/inkchain-peer
   environment:
     - CORE_PEER_ADDRESSAUTODETECT=true
     - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock

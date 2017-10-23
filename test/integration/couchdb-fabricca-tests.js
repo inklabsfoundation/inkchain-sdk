@@ -14,18 +14,18 @@
  *  limitations under the License.
  */
 
-var utils = require('fabric-client/lib/utils.js');
-var logger = utils.getLogger('couchdb-fabricca');
+var utils = require('inkchain-client/lib/utils.js');
+var logger = utils.getLogger('couchdb-inkchainca');
 
 var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
 var path = require('path');
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 
-var User = require('fabric-client/lib/User.js');
-var FabricCAServices = require('fabric-ca-client/lib/FabricCAClientImpl');
+var User = require('inkchain-client/lib/User.js');
+var inkchainCAServices = require('inkchain-ca-client/lib/inkchainCAClientImpl');
 var testUtil = require('../unit/util.js');
 
 var couchdbUtil = require('./couchdb-util.js');
@@ -40,10 +40,10 @@ var	tlsOptions = {
 
 // This test first checks to see if a user has already been enrolled. If so,
 // the test terminates. If the user is not yet enrolled, the test uses the
-// FabricCAClientImpl to enroll a user, and saves the enrollment materials into the
+// inkchainCAClientImpl to enroll a user, and saves the enrollment materials into the
 // CouchDB KeyValueStore. Then the test uses the Client class to load the member
 // from the key value store.
-test('Use FabricCAServices with a CouchDB KeyValueStore', function(t) {
+test('Use inkchainCAServices with a CouchDB KeyValueStore', function(t) {
 	testUtil.resetDefaults();
 	Client.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
 	ORGS = Client.getConfigSetting('test-network');
@@ -51,7 +51,7 @@ test('Use FabricCAServices with a CouchDB KeyValueStore', function(t) {
 	// Use the CouchDB specific config file
 	Client.addConfigFile('test/fixtures/couchdb.json');
 
-	var fabricCAEndpoint = ORGS[userOrg].ca.url;
+	var inkchainCAEndpoint = ORGS[userOrg].ca.url;
 	var keyValueStore = Client.getConfigSetting('key-value-store');
 	logger.info('couchdb Key Value Store = ' + keyValueStore);
 
@@ -74,7 +74,7 @@ test('Use FabricCAServices with a CouchDB KeyValueStore', function(t) {
 
 	// Set the relevant configuration values
 	utils.setConfigSetting('crypto-keysize', 256);
-	utils.setConfigSetting('key-value-store','fabric-client/lib/impl/CouchDBKeyValueStore.js');
+	utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/CouchDBKeyValueStore.js');
 
 	// Clean up the couchdb test database
 	var dbname = 'my_member_db';
@@ -101,7 +101,7 @@ test('Use FabricCAServices with a CouchDB KeyValueStore', function(t) {
 					t.end();
 					process.exit(1);
 				}
-				return new FabricCAServices(fabricCAEndpoint, tlsOptions, ORGS[userOrg].ca.name,
+				return new inkchainCAServices(inkchainCAEndpoint, tlsOptions, ORGS[userOrg].ca.name,
 					cryptoSuite);
 			},
 			function(err) {
@@ -113,7 +113,7 @@ test('Use FabricCAServices with a CouchDB KeyValueStore', function(t) {
 		.then(
 			function(caService) {
 				logger.info('ADD: caService - ' + caService);
-				t.pass('Successfully initialized the Fabric CA service.');
+				t.pass('Successfully initialized the inkchain CA service.');
 
 				return caService.enroll({
 					enrollmentID: 'admin',
@@ -121,7 +121,7 @@ test('Use FabricCAServices with a CouchDB KeyValueStore', function(t) {
 				});
 			},
 			function(err) {
-				t.fail('Failed to initialize the Fabric CA service. Error:');
+				t.fail('Failed to initialize the inkchain CA service. Error:');
 				logger.error(err.stack ? err.stack : err);
 				t.end();
 			}
@@ -178,7 +178,7 @@ test('Use FabricCAServices with a CouchDB KeyValueStore', function(t) {
 			}
 		).catch(
 			function(err) {
-				t.fail('Failed couchdb-fabricca-test with error:');
+				t.fail('Failed couchdb-inkchainca-test with error:');
 				 logger.error(err.stack ? err.stack : err);
 				t.end();
 			}

@@ -20,9 +20,9 @@ var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var testutil = require('./util.js');
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var path = require('path');
 var fs = require('fs-extra');
 var util = require('util');
@@ -32,15 +32,15 @@ var jsrsa = require('jsrsasign');
 var KEYUTIL = jsrsa.KEYUTIL;
 var ECDSA = jsrsa.ECDSA;
 
-var CouchDBKeyValueStore = require('fabric-client/lib/impl/CouchDBKeyValueStore.js');
-var CryptoSuite_ECDSA_AES = require('fabric-client/lib/impl/CryptoSuite_ECDSA_AES.js');
-var ecdsaKey = require('fabric-client/lib/impl/ecdsa/key.js');
-var api = require('fabric-client/lib/api.js');
-var User = require('fabric-client/lib/User.js');
+var CouchDBKeyValueStore = require('inkchain-client/lib/impl/CouchDBKeyValueStore.js');
+var CryptoSuite_ECDSA_AES = require('inkchain-client/lib/impl/CryptoSuite_ECDSA_AES.js');
+var ecdsaKey = require('inkchain-client/lib/impl/ecdsa/key.js');
+var api = require('inkchain-client/lib/api.js');
+var User = require('inkchain-client/lib/User.js');
 var elliptic = require('elliptic');
 var BN = require('bn.js');
 var Signature = require('elliptic/lib/elliptic/ec/signature.js');
-var PKCS11 = require('fabric-client/lib/impl/bccsp_pkcs11.js');
+var PKCS11 = require('inkchain-client/lib/impl/bccsp_pkcs11.js');
 
 var keyValStorePath = path.join(testutil.getTempDir(), 'keyValStore1');
 
@@ -232,7 +232,7 @@ test('\n\n ** CryptoSuite_ECDSA_AES - function tests **\n\n', function (t) {
 
     //reset to default key size
 	utils.setConfigSetting('crypto-keysize', 256);
-	utils.setConfigSetting('key-value-store','fabric-client/lib/impl/FileKeyValueStore.js');//force for gulp test
+	utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/FileKeyValueStore.js');//force for gulp test
 	cryptoUtils = utils.newCryptoSuite();
 	cryptoUtils.setCryptoKeyStore(utils.newCryptoKeyStore());
 

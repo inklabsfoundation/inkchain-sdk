@@ -1,4 +1,4 @@
-from hyperledger/fabric-ccenv
+from hyperledger/inkchain-ccenv
 COPY . $GOPATH/src/build-chaincode/
 WORKDIR $GOPATH
 

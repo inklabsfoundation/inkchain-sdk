@@ -23,16 +23,16 @@ var rewire = require('rewire');
 
 var path = require('path');
 var grpc = require('grpc');
-var utils = rewire('fabric-client/lib/utils.js');
+var utils = rewire('inkchain-client/lib/utils.js');
 var testutil = require('./util.js');
-var MSP = require('fabric-client/lib/msp/msp.js');
-var MSPM = require('fabric-client/lib/msp/msp-manager.js');
-var idModule = require('fabric-client/lib/msp/identity.js');
+var MSP = require('inkchain-client/lib/msp/msp.js');
+var MSPM = require('inkchain-client/lib/msp/msp-manager.js');
+var idModule = require('inkchain-client/lib/msp/identity.js');
 var Identity = idModule.Identity;
 
-var mspProto = grpc.load(path.join(__dirname, '../../fabric-client/lib/protos/msp/msp_config.proto')).msp;
+var mspProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/msp/msp_config.proto')).msp;
 
-const FABRIC = 0;
+const inkchain = 0;
 const TEST_CERT_PEM = '-----BEGIN CERTIFICATE-----' +
 'MIIDVDCCAvqgAwIBAgIBATAKBggqhkjOPQQDAjBOMRMwEQYDVQQKDArOoyBBY21l' +
 'IENvMRkwFwYDVQQDExB0ZXN0LmV4YW1wbGUuY29tMQ8wDQYDVQQqEwZHb3BoZXIx' +
@@ -86,7 +86,7 @@ test('\n\n** MSP Tests **\n\n', (t) => {
 			}]);
 		},
 		/MSP Configuration object missing the payload in the "Config" property/,
-		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid FabricMSPConfig'
+		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid inkchainMSPConfig'
 	);
 
 	t.throws(
@@ -97,7 +97,7 @@ test('\n\n** MSP Tests **\n\n', (t) => {
 			}]);
 		},
 		/MSP Configuration object missing the payload in the "Config" property/,
-		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid FabricMSPConfig'
+		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid inkchainMSPConfig'
 	);
 
 	loadMSPConfig('peerOrg0', 'org0')
@@ -168,9 +168,9 @@ function loadMSPConfig(name, org) {
 
 	return new Promise((resolve, reject) => {
 		mspConfig = new mspProto.MSPConfig();
-		mspConfig.setType(FABRIC); // type: FABRIC
+		mspConfig.setType(inkchain); // type: inkchain
 
-		fConfig = new mspProto.FabricMSPConfig();
+		fConfig = new mspProto.inkchainMSPConfig();
 		fConfig.setName(name);
 
 		return testutil.readFile(path.join(__dirname, '../fixtures/msp', org, 'cacerts/org_ca.pem'))

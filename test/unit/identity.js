@@ -21,19 +21,19 @@ var _test = require('tape-promise');
 var test = _test(tape);
 
 var testutil = require('./util.js');
-var utils = require('fabric-client/lib/utils.js');
-var api = require('fabric-client/lib/api.js');
+var utils = require('inkchain-client/lib/utils.js');
+var api = require('inkchain-client/lib/api.js');
 var fs = require('fs');
 var path = require('path');
 
 var jsrsa = require('jsrsasign');
 var KEYUTIL = jsrsa.KEYUTIL;
-var idModule = require('fabric-client/lib/msp/identity.js');
+var idModule = require('inkchain-client/lib/msp/identity.js');
 var Identity = idModule.Identity;
 var Signer = idModule.Signer;
 var SigningIdentity = idModule.SigningIdentity;
-var MSP = require('fabric-client/lib/msp/msp.js');
-var ecdsaKey = require('fabric-client/lib/impl/ecdsa/key.js');
+var MSP = require('inkchain-client/lib/msp/msp.js');
+var ecdsaKey = require('inkchain-client/lib/impl/ecdsa/key.js');
 
 var TEST_MSG = 'this is a test message';
 

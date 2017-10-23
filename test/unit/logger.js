@@ -20,9 +20,9 @@ var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
-var hfc = require('fabric-client');
+var hfc = require('inkchain-client');
 var testutil = require('./util.js');
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 
 var bunyan = require('bunyan');
 var log4js = require('log4js');

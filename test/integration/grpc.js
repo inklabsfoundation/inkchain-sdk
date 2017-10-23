@@ -16,7 +16,7 @@
 
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('query');
 
 var tape = require('tape');
@@ -30,7 +30,7 @@ var crypto = require('crypto');
 
 var e2eUtils = require('./e2e/e2eUtils.js');
 var testUtil = require('../unit/util.js');
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 
 var e2e = testUtil.END2END;
 

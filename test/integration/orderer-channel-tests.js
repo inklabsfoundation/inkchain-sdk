@@ -15,7 +15,7 @@
  */
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('orderer-channel');
 
 
@@ -29,9 +29,9 @@ var path = require('path');
 
 var testUtil = require('../unit/util.js');
 
-var Client = require('fabric-client');
-var Orderer = require('fabric-client/lib/Orderer.js');
-var Channel = require('fabric-client/lib/Channel.js');
+var Client = require('inkchain-client');
+var Orderer = require('inkchain-client/lib/Orderer.js');
+var Channel = require('inkchain-client/lib/Channel.js');
 
 var keyValStorePath = testUtil.KVS;
 var ORGS;
@@ -48,7 +48,7 @@ var org = 'org1';
 //
 test('\n\n** TEST ** orderer via member missing orderer', function(t) {
 	testUtil.resetDefaults();
-	utils.setConfigSetting('key-value-store', 'fabric-ca-client/lib/impl/FileKeyValueStore.js');//force for 'gulp test'
+	utils.setConfigSetting('key-value-store', 'inkchain-ca-client/lib/impl/FileKeyValueStore.js');//force for 'gulp test'
 	Client.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
 	ORGS = Client.getConfigSetting('test-network');
 	let orgName = ORGS[org].name;

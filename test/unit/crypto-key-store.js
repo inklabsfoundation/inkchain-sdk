@@ -25,7 +25,7 @@ var test = _test(tape);
 
 var util = require('util');
 var testutil = require('./util.js');
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var fs = require('fs-extra');
 var path = require('path');
 var os = require('os');
@@ -34,9 +34,9 @@ var KEYUTIL = jsrsa.KEYUTIL;
 var CouchdbMock = require('mock-couch');
 var nano = require('nano');
 
-var ecdsaKey = require('fabric-client/lib/impl/ecdsa/key.js');
-var CKS = require('fabric-client/lib/impl/CryptoKeyStore.js');
-var CouchDBKeyValueStore = require('fabric-client/lib/impl/CouchDBKeyValueStore.js');
+var ecdsaKey = require('inkchain-client/lib/impl/ecdsa/key.js');
+var CKS = require('inkchain-client/lib/impl/CryptoKeyStore.js');
+var CouchDBKeyValueStore = require('inkchain-client/lib/impl/CouchDBKeyValueStore.js');
 
 var TEST_KEY_PRIVATE_PEM = '-----BEGIN PRIVATE KEY-----' +
 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgZYMvf3w5VkzzsTQY' +
@@ -128,7 +128,7 @@ test('\n\n** CryptoKeyStore tests **\n\n', function(t) {
 
 
 test('\n\n** CryptoKeyStore tests - couchdb based store tests - use configSetting **\n\n', function(t) {
-	utils.setConfigSetting('key-value-store', 'fabric-client/lib/impl/CouchDBKeyValueStore.js');
+	utils.setConfigSetting('key-value-store', 'inkchain-client/lib/impl/CouchDBKeyValueStore.js');
 
 	var couchdb = CouchdbMock.createServer();
 	couchdb.listen(5985);
@@ -241,7 +241,7 @@ function testKeyStore(store, t) {
 };
 
 test('\n\n** CryptoKeyStore tests - newCryptoKeyStore tests **\n\n', function(t) {
-	utils.setConfigSetting('key-value-store', 'fabric-ca-client/lib/impl/FileKeyValueStore.js');//force for 'gulp test'
+	utils.setConfigSetting('key-value-store', 'inkchain-ca-client/lib/impl/FileKeyValueStore.js');//force for 'gulp test'
 	let keyValStorePath = 'tmp/keyValStore1';
 	let config = { path: keyValStorePath };
 	let cs = utils.newCryptoKeyStore(config);

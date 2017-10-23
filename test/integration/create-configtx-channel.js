@@ -15,14 +15,14 @@
  */
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('E2E create-channel');
 
 var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var util = require('util');
 var fs = require('fs');
 var path = require('path');
@@ -68,7 +68,7 @@ test('\n\n***** Configtx Built config  create flow  *****\n\n', function(t) {
 	// Acting as a client in org1 when creating the channel
 	var org = ORGS.org1.name;
 
-	utils.setConfigSetting('key-value-store', 'fabric-client/lib/impl/FileKeyValueStore.js');
+	utils.setConfigSetting('key-value-store', 'inkchain-client/lib/impl/FileKeyValueStore.js');
 
 	return Client.newDefaultKeyValueStore({
 		path: testUtil.storePathForOrg(org)

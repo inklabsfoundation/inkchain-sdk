@@ -16,7 +16,7 @@
 
 'use strict';
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('events');
 
 var tape = require('tape');
@@ -27,7 +27,7 @@ var path = require('path');
 var util = require('util');
 var fs = require('fs');
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var testUtil = require('../unit/util.js');
 var eputil = require('./eventutil.js');
 

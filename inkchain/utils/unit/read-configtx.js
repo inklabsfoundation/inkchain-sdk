@@ -18,7 +18,7 @@
 if (global && global.hfc) global.hfc.config = undefined;
 require('nconf').reset();
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('E2E create-channel');
 var util = require('util');
 var fs = require('fs');
@@ -27,11 +27,11 @@ var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
-var Channel = require('fabric-client/lib/Channel.js');
+var Channel = require('inkchain-client/lib/Channel.js');
 
 var grpc = require('grpc');
-var _commonProto   = grpc.load(__dirname + '/../../fabric-client/lib/protos/common/common.proto').common;
-var _configtxProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/common/configtx.proto').common;
+var _commonProto   = grpc.load(__dirname + '/../../inkchain-client/lib/protos/common/common.proto').common;
+var _configtxProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/common/configtx.proto').common;
 
 var testUtil = require('../unit/util.js');
 

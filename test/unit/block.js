@@ -24,17 +24,17 @@ var fs = require('fs');
 var path = require('path');
 
 var grpc = require('grpc');
-var configtxProto = grpc.load(path.join(__dirname, '../../fabric-client/lib/protos/common/configtx.proto')).common;
-var policiesProto = grpc.load(path.join(__dirname, '../../fabric-client/lib/protos/common/policies.proto')).common;
-var commonProto = grpc.load(path.join(__dirname, '../../fabric-client/lib/protos/common/common.proto')).common;
-var kv_query_resultProto = grpc.load(path.join(__dirname, '../../fabric-client/lib/protos/ledger/queryresult/kv_query_result.proto')).queryresult;
-var rwsetProto = grpc.load(path.join(__dirname, '../../fabric-client/lib/protos/ledger/rwset/rwset.proto')).rwset;
-var kvrwsetProto = grpc.load(path.join(__dirname, '../../fabric-client/lib/protos/ledger/rwset/kvrwset/kv_rwset.proto')).kvrwset;
-var utils = require('fabric-client/lib/utils.js');
+var configtxProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/common/configtx.proto')).common;
+var policiesProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/common/policies.proto')).common;
+var commonProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/common/common.proto')).common;
+var kv_query_resultProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/ledger/queryresult/kv_query_result.proto')).queryresult;
+var rwsetProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/ledger/rwset/rwset.proto')).rwset;
+var kvrwsetProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/ledger/rwset/kvrwset/kv_rwset.proto')).kvrwset;
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('BlockDecoder');
 
 var rewire = require('rewire');
-var BlockDecoder = rewire('fabric-client/lib/BlockDecoder.js');
+var BlockDecoder = rewire('inkchain-client/lib/BlockDecoder.js');
 
 test('\n\n*** BlockDecoder test for readwrite sets', (t) => {
 

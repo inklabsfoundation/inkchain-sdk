@@ -1,10 +1,10 @@
 {
-  "name": "fabric-sdk-node",
+  "name": "inkchain-sdk-node",
   "version": "1.0.1-snapshot",
   "main": "index.js",
   "repository": {
     "type": "gerrit",
-    "url": "http://gerrit.hyperledger.org/r/fabric-sdk-node"
+    "url": "http://gerrit.hyperledger.org/r/inkchain-sdk-node"
   },
   "scripts": {
     "test": "gulp test-headless"
@@ -21,8 +21,8 @@
     "cloudant": "^1.7.0",
     "del": "^2.2.2",
     "elliptic": "^6.3.2",
-    "fabric-ca-client": "file:./fabric-ca-client",
-    "fabric-client": "file:./fabric-client",
+    "inkchain-ca-client": "file:./inkchain-ca-client",
+    "inkchain-client": "file:./inkchain-client",
     "fs-extra": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-add-src": "^0.2.0",
@@ -53,7 +53,7 @@
   "licenses": [
     {
       "type": "Apache-2.0",
-      "url": "https://github.com/hyperledger/fabric/blob/master/LICENSE"
+      "url": "https://github.com/hyperledger/inkchain/blob/master/LICENSE"
     }
   ]
 }

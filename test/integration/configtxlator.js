@@ -18,14 +18,14 @@
 /*
  *   This test case requires that the 'configtxlator' tool be running locally and on port 7059
  *   see:
- *   https://github.com/jyellick/fabric-gerrit/tree/configtxlator/examples/configtxupdate
+ *   https://github.com/jyellick/inkchain-gerrit/tree/configtxlator/examples/configtxupdate
  *
  *   This test case also requires two node packages to make it easier to make REST calls to
  *   the 'configtxlator'
  *        superagent
  *        superagent-promise
  */
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('configinator');
 
 var tape = require('tape');
@@ -35,7 +35,7 @@ var superagent = require('superagent');
 var agent = require('superagent-promise')(require('superagent'), Promise);
 var requester = require('request');
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var util = require('util');
 var fs = require('fs');
 var path = require('path');
@@ -82,7 +82,7 @@ test('\n\n***** configtxlator flow for create and then update  *****\n\n', funct
 	// Acting as a client in org1 when creating the channel
 	var org = ORGS.org1.name;
 
-	utils.setConfigSetting('key-value-store', 'fabric-client/lib/impl/FileKeyValueStore.js');
+	utils.setConfigSetting('key-value-store', 'inkchain-client/lib/impl/FileKeyValueStore.js');
 
 	return Client.newDefaultKeyValueStore({
 		path: testUtil.storePathForOrg(org)

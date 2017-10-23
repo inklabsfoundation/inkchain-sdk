@@ -4,7 +4,7 @@ v1.0.0 July 11, 2017
 Release Notes
 -------------
 Bug fixes and documentation.
-Moved the sample application to the fabric-samples repository.
+Moved the sample application to the inkchain-samples repository.
 
 Known Vulnerabilities
 ---------------------
@@ -20,4 +20,4 @@ none
 
 Change Log
 ----------
-https://github.com/hyperledger/fabric-sdk-node/blob/master/CHANGELOG.md#v100
+https://github.com/hyperledger/inkchain-sdk-node/blob/master/CHANGELOG.md#v100

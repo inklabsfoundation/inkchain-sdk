@@ -20,9 +20,9 @@ var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
 
-var TransactionID = require('fabric-client/lib/TransactionID.js');
-var User = require('fabric-client/lib/User.js');
-var utils = require('fabric-client/lib/utils.js');
+var TransactionID = require('inkchain-client/lib/TransactionID.js');
+var User = require('inkchain-client/lib/User.js');
+var utils = require('inkchain-client/lib/utils.js');
 var testutil = require('./util.js');
 
 var enrollmentID = 123454321;

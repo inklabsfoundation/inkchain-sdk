@@ -14,13 +14,13 @@ var fs = require('fs');
 var path = require('path');
 var grpc = require('grpc');
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 
 var testUtil = require('../../unit/util.js');
 var keyValStorePath = testUtil.KVS;
 var ORGS;
 
-var commonProto = grpc.load(path.join(__dirname, '../../../fabric-client/lib/protos/common/common.proto')).common;
+var commonProto = grpc.load(path.join(__dirname, '../../../inkchain-client/lib/protos/common/common.proto')).common;
 
 var client = new Client();
 var org = 'org1';
@@ -35,7 +35,7 @@ var DESC = 	'\n\n************************************************' +
 
 test(DESC, function(t) {
 	testUtil.resetDefaults();
-	Client.setConfigSetting('key-value-store', 'fabric-ca-client/lib/impl/FileKeyValueStore.js');//force for 'gulp test'
+	Client.setConfigSetting('key-value-store', 'inkchain-ca-client/lib/impl/FileKeyValueStore.js');//force for 'gulp test'
 	Client.addConfigFile(path.join(__dirname, '../e2e', 'config.json'));
 	ORGS = Client.getConfigSetting('test-network');
 	let orgName = ORGS[org].name;

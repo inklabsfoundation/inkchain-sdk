@@ -25,26 +25,26 @@ var path = require('path');
 var gunzip = require('gunzip-maybe');
 var fs = require('fs-extra');
 var grpc = require('grpc');
-var _policiesProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/common/policies.proto').common;
-var _mspPrProto = grpc.load(__dirname + '/../../fabric-client/lib/protos/msp/msp_principal.proto').common;
+var _policiesProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/common/policies.proto').common;
+var _mspPrProto = grpc.load(__dirname + '/../../inkchain-client/lib/protos/msp/msp_principal.proto').common;
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var testutil = require('./util.js');
-var Peer = require('fabric-client/lib/Peer.js');
-var Channel = require('fabric-client/lib/Channel.js');
-var Packager = require('fabric-client/lib/Packager.js');
-var Orderer = require('fabric-client/lib/Orderer.js');
-var User = require('fabric-client/lib/User.js');
-var MSP = require('fabric-client/lib/msp/msp.js');
-var MSPManager = require('fabric-client/lib/msp/msp-manager.js');
-var idModule = require('fabric-client/lib/msp/identity.js');
+var Peer = require('inkchain-client/lib/Peer.js');
+var Channel = require('inkchain-client/lib/Channel.js');
+var Packager = require('inkchain-client/lib/Packager.js');
+var Orderer = require('inkchain-client/lib/Orderer.js');
+var User = require('inkchain-client/lib/User.js');
+var MSP = require('inkchain-client/lib/msp/msp.js');
+var MSPManager = require('inkchain-client/lib/msp/msp-manager.js');
+var idModule = require('inkchain-client/lib/msp/identity.js');
 var SigningIdentity = idModule.SigningIdentity;
 
 var _channel = null;
 var channelName = 'testChannel';
 var client = new Client();
 
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('channel');
 
 // Channel tests /////////////
@@ -824,7 +824,7 @@ test('\n\n ** Channel queryByChaincode() tests **\n\n', function (t) {
 	var member = new User('admin');
 
 	// do some setup for following test
-	utils.setConfigSetting('key-value-store', 'fabric-client/lib/impl/FileKeyValueStore.js');
+	utils.setConfigSetting('key-value-store', 'inkchain-client/lib/impl/FileKeyValueStore.js');
 	Client.newDefaultKeyValueStore({
 		path: testutil.KVS
 	}).then ( function (store) {
@@ -998,7 +998,7 @@ test('\n\n** TEST ** orderer via channel setOrderer/getOrderer', function(t) {
 	//
 	// Create and configure the test channel
 	//
-	utils.setConfigSetting('key-value-store', 'fabric-client/lib/impl/FileKeyValueStore.js');
+	utils.setConfigSetting('key-value-store', 'inkchain-client/lib/impl/FileKeyValueStore.js');
 	Client.newDefaultKeyValueStore({
 		path: testutil.KVS
 	})

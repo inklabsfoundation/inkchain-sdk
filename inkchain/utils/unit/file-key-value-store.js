@@ -25,9 +25,9 @@ var path = require('path');
 var util = require('util');
 var testUtil = require('./util.js');
 var fs = require('fs-extra');
-var utils = require('fabric-client/lib/utils.js');
+var utils = require('inkchain-client/lib/utils.js');
 
-var FileKeyValueStore = require('fabric-client/lib/impl/FileKeyValueStore.js');
+var FileKeyValueStore = require('inkchain-client/lib/impl/FileKeyValueStore.js');
 
 var keyValStorePath = path.join(testUtil.getTempDir(), 'kvsTemp');
 var testKey = 'keyValFileStoreName';

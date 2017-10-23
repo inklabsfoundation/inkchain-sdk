@@ -27,8 +27,8 @@ console.log('####################################################\n');
 
 gulp.task('pre-test', function() {
 	return gulp.src([
-		'node_modules/fabric-client/lib/**/*.js',
-		'node_modules/fabric-ca-client/lib/FabricCAClientImpl.js'])
+		'node_modules/inkchain-client/lib/**/*.js',
+		'node_modules/inkchain-ca-client/lib/inkchainCAClientImpl.js'])
 	.pipe(istanbul())
 	.pipe(istanbul.hookRequire());
 });
@@ -75,12 +75,12 @@ gulp.task('test', ['clean-up', 'lint', 'pre-test', 'docker-ready', 'ca'], functi
 		// channel: mychannel, chaincode: end2endnodesdk:v0/v1
 		'test/integration/e2e.js',
 		'test/integration/query.js',
-		'test/integration/fabric-ca-services-tests.js',
+		'test/integration/inkchain-ca-services-tests.js',
 		'test/integration/client.js',
 		'test/integration/orderer-channel-tests.js',
-		'test/integration/cloudant-fabricca-tests.js',
-		'test/integration/couchdb-fabricca-tests.js',
-		'test/integration/fileKeyValueStore-fabricca-tests.js',
+		'test/integration/cloudant-inkchainca-tests.js',
+		'test/integration/couchdb-inkchainca-tests.js',
+		'test/integration/fileKeyValueStore-inkchainca-tests.js',
 		'test/integration/install.js',
 		'test/integration/events.js',
 		// channel: mychannel, chaincode: end2endnodesdk:v2

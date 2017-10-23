@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-var Client = require('fabric-client');
+var Client = require('inkchain-client');
 var nano = require('nano');
 var Cloudant = require('cloudant');
 

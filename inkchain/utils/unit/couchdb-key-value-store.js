@@ -21,7 +21,7 @@ var _test = require('tape-promise');
 var test = _test(tape);
 var CouchdbMock = require('mock-couch');
 
-var CDBKVS = require('fabric-client/lib/impl/CouchDBKeyValueStore.js');
+var CDBKVS = require('inkchain-client/lib/impl/CouchDBKeyValueStore.js');
 
 test('\n\n** CouchDBKeyValueStore tests', (t) => {
 	t.throws(
