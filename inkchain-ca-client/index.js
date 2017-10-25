@@ -20,4 +20,8 @@
  * renew and revoke, so that the application can use the properly signed certificates to
  * authenticate with the inkchain
  */
+<<<<<<< HEAD:inkchain-ca-client/index.js
 module.exports = require('./lib/inkchainCAClientImpl.js');
+=======
+module.exports = require('./lib/InkchainCAClientImpl.js');
+>>>>>>> 2a93d38... 改名inkchain:inkchain-ca-client/index.js

@@ -4,7 +4,11 @@
   "main": "index.js",
   "repository": {
     "type": "gerrit",
+<<<<<<< HEAD:inkchain-client/package.json
     "url": "http://gerrit.inkchain.org/r/inkchain-sdk-node"
+=======
+    "url": "http://gerrit.hyperledger.org/r/inkchain-sdk-node"
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/package.json
   },
   "scripts": {
     "test": "node test/unit/headless-tests.js"
@@ -45,7 +49,11 @@
   "licenses": [
     {
       "type": "Apache-2.0",
+<<<<<<< HEAD:inkchain-client/package.json
       "url": "https://github.com/inkchain/inkchain/blob/master/LICENSE"
+=======
+      "url": "https://github.com/hyperledger/inkchain/blob/master/LICENSE"
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/package.json
     }
   ]
 }

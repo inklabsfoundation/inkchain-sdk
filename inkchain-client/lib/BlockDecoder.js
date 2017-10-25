@@ -46,7 +46,11 @@ var _kv_rwsetProto = grpc.load(path.join(__dirname, '/protos/ledger/rwset/kvrwse
 var _ledgerSetProto = grpc.load(path.join(__dirname, '/protos/ledger/ledgerset/ledgerset.proto')).ledgerset;
 
 /**
+<<<<<<< HEAD:inkchain-client/lib/BlockDecoder.js
  * Utility class to convert a protobuf encoded byte array of a inkchain inkchain block
+=======
+ * Utility class to convert a protobuf encoded byte array of a Hyperledger Inkchain block
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/BlockDecoder.js
  * message into a pure Javascript object
  *
  * @class
@@ -129,7 +133,11 @@ signature -- {byte[]}
 	 */
 
 	/**
+<<<<<<< HEAD:inkchain-client/lib/BlockDecoder.js
 	 * An object that is part of all signatures in inkchain inkchain. The "creator"
+=======
+	 * An object that is part of all signatures in Hyperledger Inkchain. The "creator"
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/BlockDecoder.js
 	 * field has two important pieces of information about the identity of the signer,
 	 * the organization (Mspid) that the signer belongs to, and the certificate (IdBytes).
 	 * The "nonce" field is a unique value to guard against replay attacks.
@@ -513,7 +521,11 @@ policy
 
 	/**
 	 * @typedef {Object} ProcessedTransaction
+<<<<<<< HEAD:inkchain-client/lib/BlockDecoder.js
 	 * @property {number} validationCode - See [this list]{@link https://github.com/inkchain/inkchain/blob/v1.0.0/protos/peer/transaction.proto#L125}
+=======
+	 * @property {number} validationCode - See [this list]{@link https://github.com/hyperledger/inkchain/blob/v1.0.0/protos/peer/transaction.proto#L125}
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/BlockDecoder.js
 	 *                                     for all the defined validation codes
 	 * @property {Object} transactionEnvelope - Encapsulates the transaction and the signature over it.
 	 *                                          It has the following structure:
@@ -788,7 +800,11 @@ function decodeConfigValue(proto_config_value) {
 		var msp_config = {};
 		var proto_msp_config = _mspConfigProto.MSPConfig.decode(proto_config_value.value.value);
 		if(proto_msp_config.getType() == 0) {
+<<<<<<< HEAD:inkchain-client/lib/BlockDecoder.js
 			msp_config = decodeinkchainMSPConfig(proto_msp_config.getConfig());
+=======
+			msp_config = decodeInkchainMSPConfig(proto_msp_config.getConfig());
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/BlockDecoder.js
 		}
 		config_value.value.type = proto_msp_config.type;
 		config_value.value.config = msp_config;
@@ -999,9 +1015,15 @@ function decodeIdentity(id_bytes) {
 	return identity;
 };
 
+<<<<<<< HEAD:inkchain-client/lib/BlockDecoder.js
 function decodeinkchainMSPConfig(msp_config_bytes) {
 	var msp_config = {};
 	var proto_msp_config = _mspConfigProto.inkchainMSPConfig.decode(msp_config_bytes);
+=======
+function decodeInkchainMSPConfig(msp_config_bytes) {
+	var msp_config = {};
+	var proto_msp_config = _mspConfigProto.InkchainMSPConfig.decode(msp_config_bytes);
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/BlockDecoder.js
 
 	msp_config.name = proto_msp_config.getName();
 	msp_config.root_certs = toPEMcerts(proto_msp_config.getRootCerts());
@@ -1009,12 +1031,20 @@ function decodeinkchainMSPConfig(msp_config_bytes) {
 	msp_config.admins = toPEMcerts(proto_msp_config.getAdmins());
 	msp_config.revocation_list = toPEMcerts(proto_msp_config.getRevocationList());
 	msp_config.signing_identity = decodeSigningIdentityInfo(proto_msp_config.getSigningIdentity());
+<<<<<<< HEAD:inkchain-client/lib/BlockDecoder.js
 	msp_config.organizational_unit_identifiers = decodeinkchainOUIdentifier(proto_msp_config.getOrganizationalUnitIdentifiers());
+=======
+	msp_config.organizational_unit_identifiers = decodeInkchainOUIdentifier(proto_msp_config.getOrganizationalUnitIdentifiers());
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/BlockDecoder.js
 
 	return msp_config;
 };
 
+<<<<<<< HEAD:inkchain-client/lib/BlockDecoder.js
 function decodeinkchainOUIdentifier(proto_organizational_unit_identitfiers) {
+=======
+function decodeInkchainOUIdentifier(proto_organizational_unit_identitfiers) {
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/BlockDecoder.js
 	var organizational_unit_identitfiers = [];
 	if (proto_organizational_unit_identitfiers) {
 		for (let i = 0; i < proto_organizational_unit_identitfiers.length; i++) {

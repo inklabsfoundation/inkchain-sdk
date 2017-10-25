@@ -23,7 +23,11 @@ var jsrsa = require('jsrsasign');
 var KEYUTIL = jsrsa.KEYUTIL;
 
 var Client = require('inkchain-client');
+<<<<<<< HEAD
 var copService = require('inkchain-ca-client/lib/inkchainCAClientImpl.js');
+=======
+var copService = require('inkchain-ca-client/lib/InkchainCAClientImpl.js');
+>>>>>>> 2a93d38... 改名inkchain
 var User = require('inkchain-client/lib/User.js');
 var CryptoSuite = require('inkchain-client/lib/impl/CryptoSuite_ECDSA_AES.js');
 var KeyStore = require('inkchain-client/lib/impl/CryptoKeyStore.js');

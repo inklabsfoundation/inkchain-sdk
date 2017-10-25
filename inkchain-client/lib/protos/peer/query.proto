@@ -16,8 +16,13 @@ limitations under the License.
 
 syntax = "proto3";
 
+<<<<<<< HEAD:inkchain-client/lib/protos/peer/query.proto
 option java_package = "org.inkchain.inkchain.protos.peer";
 option go_package = "github.com/inkchain/inkchain/protos/peer";
+=======
+option java_package = "org.hyperledger.inkchain.protos.peer";
+option go_package = "github.com/hyperledger/inkchain/protos/peer";
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/protos/peer/query.proto
 
 package protos;
 

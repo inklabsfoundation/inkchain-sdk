@@ -80,7 +80,11 @@ var ChainCodeCBE = class {
  * the event when the transaction achieves finality, which is when the block
  * containing the transaction gets added to the peer's ledger/blockchain.
  * <br><br>
+<<<<<<< HEAD:inkchain-client/lib/EventHub.js
  * inkchain committing peers provides an event stream to publish events to registered
+=======
+ * Inkchain committing peers provides an event stream to publish events to registered
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/EventHub.js
  * listeners. As of v1.0, the only events that get published are Block events. A
  * Block event gets published whenever the committing peer adds a validated block
  * to the ledger. There are three ways to register a listener to get notified:
@@ -88,10 +92,17 @@ var ChainCodeCBE = class {
  *     will be passed a fully decoded {@link Block} object. See [registerBlockEvent]{@link EventHub#registerBlockEvent}
  * <li>register a "transaction listener" to get called when the specific transaction
  *     by id is committed (discovered inside a block event). The listener will be
+<<<<<<< HEAD:inkchain-client/lib/EventHub.js
  *     passed the transaction id and the [validation code]{@link https://github.com/inkchain/inkchain/blob/v1.0.0/protos/peer/transaction.proto#L125}.
  *     See [registerTxEvent]{@link EventHub#registerTxEvent}
  * <li>register a "chaincode event listener" to get called when a specific
  *     [chaincode event]{@link https://github.com/inkchain/inkchain/blob/v1.0.0/examples/chaincode/go/eventsender/eventsender.go#L65}
+=======
+ *     passed the transaction id and the [validation code]{@link https://github.com/hyperledger/inkchain/blob/v1.0.0/protos/peer/transaction.proto#L125}.
+ *     See [registerTxEvent]{@link EventHub#registerTxEvent}
+ * <li>register a "chaincode event listener" to get called when a specific
+ *     [chaincode event]{@link https://github.com/hyperledger/inkchain/blob/v1.0.0/examples/chaincode/go/eventsender/eventsender.go#L65}
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/EventHub.js
  *     has arrived. The listener will be passed the {@link ChaincodeEvent}. See
  *     [registerChaincodeEvent]{@link EventHub#registerChaincodeEvent}
  * <br><br>
@@ -108,9 +119,15 @@ var ChainCodeCBE = class {
  *     implementations can be used as reference to write the necessary glue code between
  *     the inkchain event stream and a message queue:
  * <ul>
+<<<<<<< HEAD:inkchain-client/lib/EventHub.js
  *     <li>Node.js: this class. Source code can be found [here]{@link https://github.com/inkchain/inkchain-sdk-node/blob/v1.0.0/inkchain-client/lib/EventHub.js}
  *     <li>Java: part of the Java SDK for inkchain inkchain. Source code can be found [here]{@link https://github.com/inkchain/inkchain-sdk-java/blob/v1.0.0/src/main/java/org/inkchain/inkchain/sdk/EventHub.java}
  *     <li>Golang: an example event listener client can be found [here]{@link https://github.com/inkchain/inkchain/blob/v1.0.0/examples/events/block-listener/block-listener.go}
+=======
+ *     <li>Node.js: this class. Source code can be found [here]{@link https://github.com/hyperledger/inkchain-sdk-node/blob/v1.0.0/inkchain-client/lib/EventHub.js}
+ *     <li>Java: part of the Java SDK for Hyperledger Inkchain. Source code can be found [here]{@link https://github.com/hyperledger/inkchain-sdk-java/blob/v1.0.0/src/main/java/org/hyperledger/inkchain/sdk/EventHub.java}
+ *     <li>Golang: an example event listener client can be found [here]{@link https://github.com/hyperledger/inkchain/blob/v1.0.0/examples/events/block-listener/block-listener.go}
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/EventHub.js
  * </ul>
  *
  * @example

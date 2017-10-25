@@ -42,8 +42,13 @@ var User = require('inkchain-ca-client/lib/User.js');
 
 var keyValStorePath = testUtil.KVS;
 
+<<<<<<< HEAD
 var inkchainCAServices = require('inkchain-ca-client');
 var inkchainCAClient = inkchainCAServices.inkchainCAClient;
+=======
+var InkchainCAServices = require('inkchain-ca-client');
+var InkchainCAClient = InkchainCAServices.InkchainCAClient;
+>>>>>>> 2a93d38... 改名inkchain
 
 var enrollmentID = 'testUser';
 var enrollmentSecret;
@@ -58,11 +63,16 @@ var	tlsOptions = {
 };
 
 /**
+<<<<<<< HEAD
  * inkchainCAServices class tests
+=======
+ * InkchainCAServices class tests
+>>>>>>> 2a93d38... 改名inkchain
  */
 
 //run the enroll test
 
+<<<<<<< HEAD
 test('\n\n ** inkchainCAServices: Test enroll() With Dynamic CSR **\n\n', function (t) {
 	testUtil.resetDefaults();
 	inkchainCAServices.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
@@ -73,6 +83,18 @@ test('\n\n ** inkchainCAServices: Test enroll() With Dynamic CSR **\n\n', functi
 	inkchainCAServices.setConfigSetting('crypto-hash-algo', 'SHA2');//force for gulp test
 
 	var caService = new inkchainCAServices(inkchainCAEndpoint, tlsOptions, ORGS[userOrg].ca.name);
+=======
+test('\n\n ** InkchainCAServices: Test enroll() With Dynamic CSR **\n\n', function (t) {
+	testUtil.resetDefaults();
+	InkchainCAServices.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
+	ORGS = InkchainCAServices.getConfigSetting('test-network');
+	inkchainCAEndpoint = ORGS[userOrg].ca.url;
+
+	InkchainCAServices.getConfigSetting('crypto-keysize', '256');//force for gulp test
+	InkchainCAServices.setConfigSetting('crypto-hash-algo', 'SHA2');//force for gulp test
+
+	var caService = new InkchainCAServices(inkchainCAEndpoint, tlsOptions, ORGS[userOrg].ca.name);
+>>>>>>> 2a93d38... 改名inkchain
 
 	var req = {
 		enrollmentID: 'admin',
@@ -88,7 +110,11 @@ test('\n\n ** inkchainCAServices: Test enroll() With Dynamic CSR **\n\n', functi
 			//check that we got back the expected certificate
 			var subject;
 			try {
+<<<<<<< HEAD
 				subject = X509.getSubject(inkchainCAServices.normalizeX509(enrollment.certificate));
+=======
+				subject = X509.getSubject(InkchainCAServices.normalizeX509(enrollment.certificate));
+>>>>>>> 2a93d38... 改名inkchain
 			} catch(err) {
 				t.fail(util.format('Failed to parse enrollment cert\n%s\n. Error: %s', enrollment.certificate, err));
 			}
@@ -128,7 +154,11 @@ test('\n\n ** inkchainCAServices: Test enroll() With Dynamic CSR **\n\n', functi
 		}).then(() => {
 
 			// now test being able to save user to persistence store
+<<<<<<< HEAD
 			return inkchainCAServices.newDefaultKeyValueStore({
+=======
+			return InkchainCAServices.newDefaultKeyValueStore({
+>>>>>>> 2a93d38... 改名inkchain
 				path: testUtil.KVS
 			});
 		},(err) => {
@@ -172,7 +202,11 @@ test('\n\n ** inkchainCAServices: Test enroll() With Dynamic CSR **\n\n', functi
 
 			var cert;
 			try {
+<<<<<<< HEAD
 				cert = X509.parseCert(inkchainCAServices.normalizeX509(enrollment.certificate));
+=======
+				cert = X509.parseCert(InkchainCAServices.normalizeX509(enrollment.certificate));
+>>>>>>> 2a93d38... 改名inkchain
 			} catch(err) {
 				t.fail(util.format('Failed to parse enrollment cert\n%s\n. Error: %s', enrollment.certificate, err));
 			}
@@ -241,9 +275,15 @@ test('\n\n ** inkchainCAServices: Test enroll() With Dynamic CSR **\n\n', functi
 		});
 });
 
+<<<<<<< HEAD
 test('\n\n ** inkchainCAClient: Test enroll With Static CSR **\n\n', function (t) {
 	var endpoint = inkchainCAServices._parseURL(inkchainCAEndpoint);
 	var client = new inkchainCAClient({
+=======
+test('\n\n ** InkchainCAClient: Test enroll With Static CSR **\n\n', function (t) {
+	var endpoint = InkchainCAServices._parseURL(inkchainCAEndpoint);
+	var client = new InkchainCAClient({
+>>>>>>> 2a93d38... 改名inkchain
 		protocol: endpoint.protocol,
 		hostname: endpoint.hostname,
 		port: endpoint.port,
@@ -257,7 +297,11 @@ test('\n\n ** inkchainCAClient: Test enroll With Static CSR **\n\n', function (t
 			//check that we got back the expected certificate
 			var subject;
 			try {
+<<<<<<< HEAD
 				subject = X509.getSubject(inkchainCAServices.normalizeX509(enrollResponse.enrollmentCert));
+=======
+				subject = X509.getSubject(InkchainCAServices.normalizeX509(enrollResponse.enrollmentCert));
+>>>>>>> 2a93d38... 改名inkchain
 			} catch(err) {
 				t.fail(util.format('Failed to parse enrollment cert\n%s\n. Error: %s', enrollResponse.enrollmentCert, err));
 			}

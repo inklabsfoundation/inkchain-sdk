@@ -3,11 +3,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
+<<<<<<< HEAD
 site_name: Hyperledger inkchain Node SDK
 site_url: http://inkchain-sdk-node.readthedocs.io
 theme: readthedocs
 repo_url: https://github.com/hyperledger/inkchain-sdk-node.git
 site_description: 'Welcome to the Hyperledger inkchain Node SDK documentation'
+=======
+site_name: Hyperledger Inkchain Node SDK
+site_url: http://inkchain-sdk-node.readthedocs.io
+theme: readthedocs
+repo_url: https://github.com/hyperledger/inkchain-sdk-node.git
+site_description: 'Welcome to the Hyperledger Inkchain Node SDK documentation'
+>>>>>>> 2a93d38... 改名inkchain
 strict: true
 theme_dir: 'docs/custom_theme'
 

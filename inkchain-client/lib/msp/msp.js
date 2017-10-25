@@ -112,8 +112,13 @@ var MSP = class {
 	 */
 	toProtobuf() {
 		var proto_msp_config = new _mspConfigProto.MSPConfig();
+<<<<<<< HEAD:inkchain-client/lib/msp/msp.js
 		proto_msp_config.setType(0); //inkchain
 		var proto_inkchain_msp_config = new _mspConfigProto.inkchainMSPConfig();
+=======
+		proto_msp_config.setType(0); //INKCHAIN
+		var proto_inkchain_msp_config = new _mspConfigProto.InkchainMSPConfig();
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/msp/msp.js
 		proto_inkchain_msp_config.setName(this._id);
 		proto_inkchain_msp_config.setRootCerts(this._rootCerts);
 		if(this._intermediateCerts) {

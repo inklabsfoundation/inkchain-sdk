@@ -18,8 +18,13 @@ syntax = "proto3";
 
 import "../msp/msp_principal.proto";
 
+<<<<<<< HEAD:inkchain-client/lib/protos/common/policies.proto
 option go_package = "github.com/inkchain/inkchain/protos/common";
 option java_package = "org.inkchain.inkchain.protos.common";
+=======
+option go_package = "github.com/hyperledger/inkchain/protos/common";
+option java_package = "org.hyperledger.inkchain.protos.common";
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/protos/common/policies.proto
 
 package common;
 

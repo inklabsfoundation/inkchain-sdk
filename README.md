@@ -11,18 +11,31 @@
 * node test/integration/inkchain/example_invoke.js
 * node test/integration/inkchain/example_query.js
 
+<<<<<<< HEAD
 ## Hyperledger inkchain Client SDK for Node.js
+=======
+## Hyperledger Inkchain Client SDK for Node.js
+>>>>>>> 2a93d38... 改名inkchain
 
 [![Build Status](https://jenkins.hyperledger.org/buildStatus/icon?job=inkchain-sdk-node-merge-x86_64)](https://jenkins.hyperledger.org/view/inkchain-sdk-node/job/inkchain-sdk-node-merge-x86_64/)
 [![Documentation Status](https://readthedocs.org/projects/inkchain-sdk-node/badge/?version=master)](http://inkchain-sdk-node.readthedocs.io/en/master/?badge=master)
 
+<<<<<<< HEAD
 The Hyperledger inkchain Client SDK makes it easy to use APIs to interact with a Hyperledger inkchain blockchain.
+=======
+The Hyperledger Inkchain Client SDK makes it easy to use APIs to interact with a Hyperledger Inkchain blockchain.
+>>>>>>> 2a93d38... 改名inkchain
 
 As an application developer, to learn about how to install and use the Node.js SDK, please visit the [SDK documentation](https://inkchain-sdk-node.github.io/).
 
 This project publishes two separate npm packages:
+<<<<<<< HEAD
 * `inkchain-client` - main client for the [Hyperledger inkchain](http://hyperledger-inkchain.readthedocs.io/en/latest/). Applications can use this package to install and instantiate chaincodes, submit transactions and make queries against a Hyperledger inkchain-based blockchain network.
 * `inkchain-ca-client` - client for the optional component in Hyperledger inkchain, [inkchain-ca](http://hyperledger-inkchain.readthedocs.io/en/latest/Setup/ca-setup.html). The inkchain-ca component allows applications to enroll Peers and application users to establish trusted identities on the blockchain network. It also provides support for pseudonymous transaction submissions with Transaction Certificates. If the target blockchain network is configured with standard Certificate Authorities for trust anchors, the application does not need to use this package.
+=======
+* `inkchain-client` - main client for the [Hyperledger Inkchain](http://hyperledger-inkchain.readthedocs.io/en/latest/). Applications can use this package to install and instantiate chaincodes, submit transactions and make queries against a Hyperledger Inkchain-based blockchain network.
+* `inkchain-ca-client` - client for the optional component in Hyperledger Inkchain, [inkchain-ca](http://hyperledger-inkchain.readthedocs.io/en/latest/Setup/ca-setup.html). The inkchain-ca component allows applications to enroll Peers and application users to establish trusted identities on the blockchain network. It also provides support for pseudonymous transaction submissions with Transaction Certificates. If the target blockchain network is configured with standard Certificate Authorities for trust anchors, the application does not need to use this package.
+>>>>>>> 2a93d38... 改名inkchain
 
 The following section targets a current or future contributor to this project itself.
 
@@ -105,8 +118,13 @@ Run the full unit test bucket and make sure 100% are passing.  Because v1.0 is s
 
 The gulp test command above also generates code coverage reports. Your new code should be accompanied with unit tests and provide 80% line coverage or higher.
 
+<<<<<<< HEAD
 ### Hyperledger inkchain Client objects and reference documentation
 For a high-level design specificiation for inkchain SDKs of all languages, visit [this google doc](https://docs.google.com/document/d/1R5RtIBMW9fZpli37E5Li5_Q9ve3BnQ4q3gWmGZj6Sv4/edit?usp=sharing) (Work-In-Progress).
+=======
+### Hyperledger Inkchain Client objects and reference documentation
+For a high-level design specificiation for Inkchain SDKs of all languages, visit [this google doc](https://docs.google.com/document/d/1R5RtIBMW9fZpli37E5Li5_Q9ve3BnQ4q3gWmGZj6Sv4/edit?usp=sharing) (Work-In-Progress).
+>>>>>>> 2a93d38... 改名inkchain
 
 inkchain-client and inkchain-ca-client are written in CommonJS modules and take advantage of ECMAScript 2015 class syntax.
 
@@ -114,7 +132,11 @@ inkchain-client and inkchain-ca-client are written in CommonJS modules and take 
 * The **KeyValueStore** is a very simple interface which SDK uses to store and retrieve all persistent data. This data includes private keys, so it is very important to keep this storage secure. The default implementation is a simple file-based version found in the _FileKeyValueStore_ class. The SDK also provides an implementation based on CouchDB which can be configured to use a local CouchDB database or a remote deployment including a Cloudant database.
 * The **User** class represents an end user who transacts on the channel. The user object must have a valid enrollment configured in order to properly sign transaction requests. The enrollment materials can either be obtained from enrolling with inkchain-ca or an external Certificate Authority.
 * The **EventHub** class encapsulates the interaction with the network peers' event streams.
+<<<<<<< HEAD
 * The **inkchainCAClientImpl** class provides security and identity related features such as user registration and enrollment, transaction certificate issuance. The Hyperledger inkchain has a built-in implementation that issues _ECerts_ (enrollment certificates) and _TCerts_ (transaction certificates). ECerts are for enrollment identity and TCerts are for transactions.
+=======
+* The **InkchainCAClientImpl** class provides security and identity related features such as user registration and enrollment, transaction certificate issuance. The Hyperledger Inkchain has a built-in implementation that issues _ECerts_ (enrollment certificates) and _TCerts_ (transaction certificates). ECerts are for enrollment identity and TCerts are for transactions.
+>>>>>>> 2a93d38... 改名inkchain
 
 ### Pluggability
 HFC defines the following abstract classes for application developers to supply extensions or alternative implementations. For each abstract class, a built-in implementation is included with the ability to load alternative implementations via designated environment variables:

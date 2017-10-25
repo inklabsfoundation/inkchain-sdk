@@ -32,7 +32,11 @@ var Identity = idModule.Identity;
 
 var mspProto = grpc.load(path.join(__dirname, '../../inkchain-client/lib/protos/msp/msp_config.proto')).msp;
 
+<<<<<<< HEAD
 const inkchain = 0;
+=======
+const INKCHAIN = 0;
+>>>>>>> 2a93d38... 改名inkchain
 const TEST_CERT_PEM = '-----BEGIN CERTIFICATE-----' +
 'MIIDVDCCAvqgAwIBAgIBATAKBggqhkjOPQQDAjBOMRMwEQYDVQQKDArOoyBBY21l' +
 'IENvMRkwFwYDVQQDExB0ZXN0LmV4YW1wbGUuY29tMQ8wDQYDVQQqEwZHb3BoZXIx' +
@@ -86,7 +90,11 @@ test('\n\n** MSP Tests **\n\n', (t) => {
 			}]);
 		},
 		/MSP Configuration object missing the payload in the "Config" property/,
+<<<<<<< HEAD
 		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid inkchainMSPConfig'
+=======
+		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid InkchainMSPConfig'
+>>>>>>> 2a93d38... 改名inkchain
 	);
 
 	t.throws(
@@ -97,7 +105,11 @@ test('\n\n** MSP Tests **\n\n', (t) => {
 			}]);
 		},
 		/MSP Configuration object missing the payload in the "Config" property/,
+<<<<<<< HEAD
 		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid inkchainMSPConfig'
+=======
+		'Check MSPManager.loadMSPs() arguments: each config must have getConfig() returning a valid InkchainMSPConfig'
+>>>>>>> 2a93d38... 改名inkchain
 	);
 
 	loadMSPConfig('peerOrg0', 'org0')
@@ -168,9 +180,15 @@ function loadMSPConfig(name, org) {
 
 	return new Promise((resolve, reject) => {
 		mspConfig = new mspProto.MSPConfig();
+<<<<<<< HEAD
 		mspConfig.setType(inkchain); // type: inkchain
 
 		fConfig = new mspProto.inkchainMSPConfig();
+=======
+		mspConfig.setType(INKCHAIN); // type: INKCHAIN
+
+		fConfig = new mspProto.InkchainMSPConfig();
+>>>>>>> 2a93d38... 改名inkchain
 		fConfig.setName(name);
 
 		return testutil.readFile(path.join(__dirname, '../fixtures/msp', org, 'cacerts/org_ca.pem'))

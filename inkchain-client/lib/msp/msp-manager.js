@@ -65,7 +65,11 @@ var MSPManager = class {
 			if (!config.getConfig || !config.getConfig())
 				throw new Error('MSP Configuration object missing the payload in the "Config" property');
 
+<<<<<<< HEAD:inkchain-client/lib/msp/msp-manager.js
 			var inkchainConfig = mspProto.inkchainMSPConfig.decode(config.getConfig());
+=======
+			var inkchainConfig = mspProto.InkchainMSPConfig.decode(config.getConfig());
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/msp/msp-manager.js
 
 			if (!inkchainConfig.getName())
 				throw new Error('MSP Configuration does not have a name');

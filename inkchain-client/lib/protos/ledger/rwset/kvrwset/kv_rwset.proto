@@ -16,8 +16,13 @@ limitations under the License.
 
 syntax = "proto3";
 
+<<<<<<< HEAD:inkchain-client/lib/protos/ledger/rwset/kvrwset/kv_rwset.proto
 option go_package = "github.com/inkchain/inkchain/protos/ledger/rwset/kvrwset";
 option java_package = "org.inkchain.inkchain.protos.ledger.rwset.kvrwset";
+=======
+option go_package = "github.com/hyperledger/inkchain/protos/ledger/rwset/kvrwset";
+option java_package = "org.hyperledger.inkchain.protos.ledger.rwset.kvrwset";
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/protos/ledger/rwset/kvrwset/kv_rwset.proto
 
 package kvrwset;
 

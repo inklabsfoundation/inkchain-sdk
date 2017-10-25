@@ -16,8 +16,13 @@ limitations under the License.
 
 syntax = "proto3";
 
+<<<<<<< HEAD:inkchain-client/lib/protos/ledger/ledgerset/ledgerset.proto
 option go_package = "github.com/inkchain/inkchain/protos/ledger/ledgerset";
 option java_package = "org.inkchain.inkchain.protos.ledger.ledgerset";
+=======
+option go_package = "github.com/hyperledger/inkchain/protos/ledger/ledgerset";
+option java_package = "org.hyperledger.inkchain.protos.ledger.ledgerset";
+>>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/protos/ledger/ledgerset/ledgerset.proto
 
 package ledgerset;
 

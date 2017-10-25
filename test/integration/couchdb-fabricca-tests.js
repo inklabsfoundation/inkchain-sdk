@@ -25,7 +25,11 @@ var path = require('path');
 var Client = require('inkchain-client');
 
 var User = require('inkchain-client/lib/User.js');
+<<<<<<< HEAD
 var inkchainCAServices = require('inkchain-ca-client/lib/inkchainCAClientImpl');
+=======
+var InkchainCAServices = require('inkchain-ca-client/lib/InkchainCAClientImpl');
+>>>>>>> 2a93d38... 改名inkchain
 var testUtil = require('../unit/util.js');
 
 var couchdbUtil = require('./couchdb-util.js');
@@ -40,10 +44,17 @@ var	tlsOptions = {
 
 // This test first checks to see if a user has already been enrolled. If so,
 // the test terminates. If the user is not yet enrolled, the test uses the
+<<<<<<< HEAD
 // inkchainCAClientImpl to enroll a user, and saves the enrollment materials into the
 // CouchDB KeyValueStore. Then the test uses the Client class to load the member
 // from the key value store.
 test('Use inkchainCAServices with a CouchDB KeyValueStore', function(t) {
+=======
+// InkchainCAClientImpl to enroll a user, and saves the enrollment materials into the
+// CouchDB KeyValueStore. Then the test uses the Client class to load the member
+// from the key value store.
+test('Use InkchainCAServices with a CouchDB KeyValueStore', function(t) {
+>>>>>>> 2a93d38... 改名inkchain
 	testUtil.resetDefaults();
 	Client.addConfigFile(path.join(__dirname, 'e2e', 'config.json'));
 	ORGS = Client.getConfigSetting('test-network');
@@ -101,7 +112,11 @@ test('Use inkchainCAServices with a CouchDB KeyValueStore', function(t) {
 					t.end();
 					process.exit(1);
 				}
+<<<<<<< HEAD
 				return new inkchainCAServices(inkchainCAEndpoint, tlsOptions, ORGS[userOrg].ca.name,
+=======
+				return new InkchainCAServices(inkchainCAEndpoint, tlsOptions, ORGS[userOrg].ca.name,
+>>>>>>> 2a93d38... 改名inkchain
 					cryptoSuite);
 			},
 			function(err) {
@@ -113,7 +128,11 @@ test('Use inkchainCAServices with a CouchDB KeyValueStore', function(t) {
 		.then(
 			function(caService) {
 				logger.info('ADD: caService - ' + caService);
+<<<<<<< HEAD
 				t.pass('Successfully initialized the inkchain CA service.');
+=======
+				t.pass('Successfully initialized the Inkchain CA service.');
+>>>>>>> 2a93d38... 改名inkchain
 
 				return caService.enroll({
 					enrollmentID: 'admin',
@@ -121,7 +140,11 @@ test('Use inkchainCAServices with a CouchDB KeyValueStore', function(t) {
 				});
 			},
 			function(err) {
+<<<<<<< HEAD
 				t.fail('Failed to initialize the inkchain CA service. Error:');
+=======
+				t.fail('Failed to initialize the Inkchain CA service. Error:');
+>>>>>>> 2a93d38... 改名inkchain
 				logger.error(err.stack ? err.stack : err);
 				t.end();
 			}

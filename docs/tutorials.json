@@ -1,6 +1,10 @@
 {
 	"index": {
+<<<<<<< HEAD
 		"title": "Hyperledger inkchain SDK for Node.js Overview"
+=======
+		"title": "Hyperledger Inkchain SDK for Node.js Overview"
+>>>>>>> 2a93d38... 改名inkchain
 	},
 	"app-dev-env-setup": {
 		"title": "Setting up the Application Developer's Environment"

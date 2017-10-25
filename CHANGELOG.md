@@ -74,7 +74,11 @@ Thu Jun  8 07:11:33 EDT 2017
 * [5d158e8](https://github.com/hyperledger/inkchain-sdk-node/commit/5d158e8) [FAB-2787](https://jira.hyperledger.org/browse/FAB-2787) NodeSDK - Client timeout
 * [63ea71d](https://github.com/hyperledger/inkchain-sdk-node/commit/63ea71d) [FAB-4226](https://jira.hyperledger.org/browse/FAB-4226) Upgrade example app to beta level
 * [af194a8](https://github.com/hyperledger/inkchain-sdk-node/commit/af194a8) [FAB-4306](https://jira.hyperledger.org/browse/FAB-4306) signatures not able to save
+<<<<<<< HEAD
 * [f306afe](https://github.com/hyperledger/inkchain-sdk-node/commit/f306afe) [FAB-4131](https://jira.hyperledger.org/browse/FAB-4131) Enhance inkchainCAClientImpl with persistence
+=======
+* [f306afe](https://github.com/hyperledger/inkchain-sdk-node/commit/f306afe) [FAB-4131](https://jira.hyperledger.org/browse/FAB-4131) Enhance InkchainCAClientImpl with persistence
+>>>>>>> 2a93d38... 改名inkchain
 * [335f587](https://github.com/hyperledger/inkchain-sdk-node/commit/335f587) [FAB-4308](https://jira.hyperledger.org/browse/FAB-4308) add missing CCBY license to docs
 * [a494295](https://github.com/hyperledger/inkchain-sdk-node/commit/a494295) [FAB-2991](https://jira.hyperledger.org/browse/FAB-2991) Improve query interfaces
 * [4b6bd7a](https://github.com/hyperledger/inkchain-sdk-node/commit/4b6bd7a) [FAB-4238](https://jira.hyperledger.org/browse/FAB-4238) install chaincode e2e test
@@ -96,7 +100,11 @@ Thu Jun  8 07:11:33 EDT 2017
 * [6778314](https://github.com/hyperledger/inkchain-sdk-node/commit/6778314) [FAB-3829](https://jira.hyperledger.org/browse/FAB-3829) Remove storekey param in cryptoSuite importKey
 * [a01f72f](https://github.com/hyperledger/inkchain-sdk-node/commit/a01f72f) [FAB-4054](https://jira.hyperledger.org/browse/FAB-4054) consolidate ca launch params
 * [c3b5cb9](https://github.com/hyperledger/inkchain-sdk-node/commit/c3b5cb9) [FAB-3568](https://jira.hyperledger.org/browse/FAB-3568) NodeSDK - Remove nonce requirement
+<<<<<<< HEAD
 * [33fb2b0](https://github.com/hyperledger/inkchain-sdk-node/commit/33fb2b0) [FAB-4019](https://jira.hyperledger.org/browse/FAB-4019) Add newCryptoKeyStore to inkchainCAClientImpl
+=======
+* [33fb2b0](https://github.com/hyperledger/inkchain-sdk-node/commit/33fb2b0) [FAB-4019](https://jira.hyperledger.org/browse/FAB-4019) Add newCryptoKeyStore to InkchainCAClientImpl
+>>>>>>> 2a93d38... 改名inkchain
 * [9541aa4](https://github.com/hyperledger/inkchain-sdk-node/commit/9541aa4) [FAB-2819](https://jira.hyperledger.org/browse/FAB-2819) Tutorial for app dev environment setup
 * [696da1f](https://github.com/hyperledger/inkchain-sdk-node/commit/696da1f) [FAB-4000](https://jira.hyperledger.org/browse/FAB-4000) balance-transasfer README corrections
 * [88c0de6](https://github.com/hyperledger/inkchain-sdk-node/commit/88c0de6) [FAB-3862](https://jira.hyperledger.org/browse/FAB-3862) Remove getRoles from Peer

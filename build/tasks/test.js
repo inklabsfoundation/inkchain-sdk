@@ -28,7 +28,11 @@ console.log('####################################################\n');
 gulp.task('pre-test', function() {
 	return gulp.src([
 		'node_modules/inkchain-client/lib/**/*.js',
+<<<<<<< HEAD
 		'node_modules/inkchain-ca-client/lib/inkchainCAClientImpl.js'])
+=======
+		'node_modules/inkchain-ca-client/lib/InkchainCAClientImpl.js'])
+>>>>>>> 2a93d38... 改名inkchain
 	.pipe(istanbul())
 	.pipe(istanbul.hookRequire());
 });
