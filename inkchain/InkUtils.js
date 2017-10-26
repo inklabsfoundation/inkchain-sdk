@@ -463,10 +463,11 @@ module.exports.invokeChaincodeSigned = invokeChaincodeSigned;
 
 function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpec, priKey){
     init();
-
+    var useAdmin = false;
     if(arguments.length < 7) {
         senderSpec = null;
         priKey = null;
+        useAdmin = true;
     }
     logger.debug('invokeChaincode begin');
     Client.setConfigSetting('request-timeout', 60000);
@@ -517,7 +518,7 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
         if (store) {
             client.setStateStore(store);
         }
-        return testUtil.getSubmitter(client, userOrg);
+        return testUtil.getSubmitter(client, useAdmin, userOrg);
     }).then((admin) => {
         logger.debug('Successfully enrolled user \'admin\'');
         the_user = admin;

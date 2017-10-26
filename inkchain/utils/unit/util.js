@@ -156,7 +156,11 @@ function getMember(username, password, client, userOrg) {
 			}).then(() => {
 				return resolve(member);
 			}).catch((err) => {
+<<<<<<< HEAD
                 console.log('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
+=======
+				console.log(err);
+>>>>>>> 2123545... 修改enroll ca 代码
 				logger.debug('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
 			});
 		});
