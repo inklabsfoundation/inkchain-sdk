@@ -10,6 +10,7 @@ services:
     image: inkchain/inkchain-ca
     environment:
 <<<<<<< HEAD
+<<<<<<< HEAD
       - inkchain_CA_HOME=/etc/hyperledger/inkchain-ca-server
       - inkchain_CA_SERVER_CA_NAME=ca-org1
       - inkchain_CA_SERVER_CA_CERTFILE=/etc/hyperledger/inkchain-ca-server-config/org1.example.com-cert.pem
@@ -19,23 +20,32 @@ services:
       - inkchain_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/inkchain-ca-server-config/a22daf356b2aab5792ea53e35f66fccef1d7f1aa2b3a2b92dbfbf96a448ea26a_sk
 =======
       - INKCHAIN_CA_HOME=/etc/hyperledger/inkchain-ca-server
+=======
+      - INKCHAIN_CA_HOME=/etc/hyperledger/fabric-ca-server
+>>>>>>> d3bbb7a... modify docker-compose-inkchain.yaml
       - INKCHAIN_CA_SERVER_CA_NAME=ca-org1
-      - INKCHAIN_CA_SERVER_CA_CERTFILE=/etc/hyperledger/inkchain-ca-server-config/org1.example.com-cert.pem
-      - INKCHAIN_CA_SERVER_CA_KEYFILE=/etc/hyperledger/inkchain-ca-server-config/a22daf356b2aab5792ea53e35f66fccef1d7f1aa2b3a2b92dbfbf96a448ea26a_sk
+      - INKCHAIN_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/org1.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a22daf356b2aab5792ea53e35f66fccef1d7f1aa2b3a2b92dbfbf96a448ea26a_sk
       - INKCHAIN_CA_SERVER_TLS_ENABLED=true
+<<<<<<< HEAD
       - INKCHAIN_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/inkchain-ca-server-config/org1.example.com-cert.pem
       - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/inkchain-ca-server-config/a22daf356b2aab5792ea53e35f66fccef1d7f1aa2b3a2b92dbfbf96a448ea26a_sk
 >>>>>>> 2a93d38... 改名inkchain
+=======
+      - INKCHAIN_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/org1.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a22daf356b2aab5792ea53e35f66fccef1d7f1aa2b3a2b92dbfbf96a448ea26a_sk
+>>>>>>> d3bbb7a... modify docker-compose-inkchain.yaml
     ports:
       - "7054:7054"
-    command: sh -c 'inkchain-ca-server start -b admin:adminpw -d'
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/inkchain-ca-server-config
+      - ./channel/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     container_name: ca_peerOrg1
 
   ca1:
     image: inkchain/inkchain-ca
     environment:
+<<<<<<< HEAD
 <<<<<<< HEAD
       - inkchain_CA_HOME=/etc/hyperledger/inkchain-ca-server
       - inkchain_CA_SERVER_CA_NAME=ca-org2
@@ -46,18 +56,26 @@ services:
       - inkchain_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/inkchain-ca-server-config/464d550fe9bf9e7d8976cdf59d1a5d472598f54c058c3546317c5c5fb0ddfd6e_sk
 =======
       - INKCHAIN_CA_HOME=/etc/hyperledger/inkchain-ca-server
+=======
+      - INKCHAIN_CA_HOME=/etc/hyperledger/fabric-ca-server
+>>>>>>> d3bbb7a... modify docker-compose-inkchain.yaml
       - INKCHAIN_CA_SERVER_CA_NAME=ca-org2
-      - INKCHAIN_CA_SERVER_CA_CERTFILE=/etc/hyperledger/inkchain-ca-server-config/org2.example.com-cert.pem
-      - INKCHAIN_CA_SERVER_CA_KEYFILE=/etc/hyperledger/inkchain-ca-server-config/464d550fe9bf9e7d8976cdf59d1a5d472598f54c058c3546317c5c5fb0ddfd6e_sk
+      - INKCHAIN_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/org2.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/464d550fe9bf9e7d8976cdf59d1a5d472598f54c058c3546317c5c5fb0ddfd6e_sk
       - INKCHAIN_CA_SERVER_TLS_ENABLED=true
+<<<<<<< HEAD
       - INKCHAIN_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/inkchain-ca-server-config/org2.example.com-cert.pem
       - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/inkchain-ca-server-config/464d550fe9bf9e7d8976cdf59d1a5d472598f54c058c3546317c5c5fb0ddfd6e_sk
 >>>>>>> 2a93d38... 改名inkchain
+=======
+      - INKCHAIN_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/org2.example.com-cert.pem
+      - INKCHAIN_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/464d550fe9bf9e7d8976cdf59d1a5d472598f54c058c3546317c5c5fb0ddfd6e_sk
+>>>>>>> d3bbb7a... modify docker-compose-inkchain.yaml
     ports:
       - "8054:7054"
-    command: sh -c 'inkchain-ca-server start -b admin:adminpw -d'
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./channel/crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/inkchain-ca-server-config
+      - ./channel/crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
     container_name: ca_peerOrg2
 
   orderer.example.com:
