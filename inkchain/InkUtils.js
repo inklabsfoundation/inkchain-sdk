@@ -134,6 +134,107 @@ function installChaincode(org, chaincode_id, chaincode_path, version, t, get_adm
 
 module.exports.installChaincode = installChaincode;
 
+function issueToken(org, ccId, version, func, args, get_admin) {
+    init();
+    Client.setConfigSetting('request-timeout', 60000);
+    var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
+
+    var client = new Client();
+    // client.setDevMode(true);
+    var channel = client.newChannel(channel_name);
+
+    var orgName = ORGS[org].name;
+    var cryptoSuite = Client.newCryptoSuite();
+    cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
+    client.setCryptoSuite(cryptoSuite);
+
+    var caRootsPath = ORGS.orderer.tls_cacerts;
+    let data = fs.readFileSync(path.join(__dirname, caRootsPath));
+    let caroots = Buffer.from(data).toString();
+
+    channel.addOrderer(
+        client.newOrderer(
+            ORGS.orderer.url,
+            {
+                'pem': caroots,
+                'ssl-target-name-override': ORGS.orderer['server-hostname']
+            }
+        )
+    );
+
+    var targets = [];
+    for (let key in ORGS[org]) {
+        if (ORGS[org].hasOwnProperty(key)) {
+            if (key.indexOf('peer') === 0) {
+                let data = fs.readFileSync(path.join(__dirname, ORGS[org][key]['tls_cacerts']));
+                let peer = client.newPeer(
+                    ORGS[org][key].requests,
+                    {
+                        pem: Buffer.from(data).toString(),
+                        'ssl-target-name-override': ORGS[org][key]['server-hostname']
+                    }
+                );
+
+                targets.push(peer);    // a peer can be the target this way
+                channel.addPeer(peer); // or a peer can be the target this way
+                                       // you do not have to do both, just one, when there are
+                                       // 'targets' in the request, those will be used and not
+                                       // the peers added to the channel
+            }
+        }
+    }
+
+    return Client.newDefaultKeyValueStore({
+        path: testUtil.storePathForOrg(orgName)
+    }).then((store) => {
+        client.setStateStore(store);
+
+        // get the peer org's admin required to send install chaincode requests
+        return testUtil.getSubmitter(client, get_admin /* get peer org admin */, org);
+    }).then((admin) => {
+            the_user = admin;
+            tx_id = client.newTransactionID();
+            utils.setConfigSetting('E2E_TX_ID', tx_id.getTransactionID());
+            console.log('transaction id:' + tx_id.getTransactionID());
+            logger.debug('setConfigSetting("E2E_TX_ID") = %s', tx_id.getTransactionID());
+            // send proposal to endorser
+            var request = {
+                chaincodeId : ccId,
+                fcn: func,
+                args: args,
+                txId: tx_id,
+            };
+            return channel.sendTransactionProposal(request);
+        },
+        (err) => {
+            throw new Error('Failed to enroll user \'admin\'. ' + err);
+        }).then((results) => {
+            var proposalResponses = results[0];
+
+            var proposal = results[1];
+            var all_good = true;
+            var errors = [];
+            for(var i in proposalResponses) {
+                let one_good = false;
+                if (proposalResponses && proposalResponses[i].response && proposalResponses[i].response.status === 200) {
+                    one_good = true;
+                    logger.info('install proposal was good');
+                } else {
+                    logger.error('install proposal was bad');
+                    errors.push(proposalResponses[i]);
+                }
+                all_good = all_good & one_good;
+            }
+            if (!all_good) {
+                throw new Error(util.format('Failed to send install Proposal or receive valid response: %s', errors));
+            }
+        },
+        (err) => {
+            throw new Error('Failed to send install proposal due to error: ' + err.stack ? err.stack : err);
+        });
+}
+
+module.exports.issueToken = issueToken;
 
 function instantiateChaincode(userOrg, chaincode_id, chaincode_path, version, upgrade, t){
     init();
