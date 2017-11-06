@@ -189,6 +189,28 @@ function getAdmin(client, userOrg) {
 	}));
 }
 
+function getUser(client, userOrg, userName) {
+    var keyPath = path.join(__dirname, util.format('../fixtures/channel/crypto-config/peerOrganizations/%s.example.com/users/%s@%s.example.com/keystore', userOrg, userName, userOrg));
+    var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
+    var certPath = path.join(__dirname, util.format('../fixtures/channel/crypto-config/peerOrganizations/%s.example.com/users/%s@%s.example.com/signcerts', userOrg, userName, userOrg));
+    var certPEM = readAllFiles(certPath)[0];
+
+    var cryptoSuite = Client.newCryptoSuite();
+    if (userOrg) {
+        cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: module.exports.storePathForOrg(ORGS[userOrg].name)}));
+        client.setCryptoSuite(cryptoSuite);
+    }
+
+    return Promise.resolve(client.createUser({
+        username: 'peer'+userOrg+userName,
+        mspid: ORGS[userOrg].mspid,
+        cryptoContent: {
+            privateKeyPEM: keyPEM.toString(),
+            signedCertPEM: certPEM.toString()
+        }
+    }));
+}
+
 function getOrdererAdmin(client) {
 	var keyPath = path.join(__dirname, '../fixtures/channel/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/keystore');
 	var keyPEM = Buffer.from(readAllFiles(keyPath)[0]).toString();
@@ -253,6 +275,7 @@ module.exports.getSubmitter = function(client, peerOrgAdmin, org) {
 	if (peerAdmin) {
 		return getAdmin(client, userOrg);
 	} else {
-		return getMember('admin', 'adminpw', client, userOrg);
+		//return getMember('admin', 'adminpw', client, userOrg);
+		return getUser(client,userOrg,'User1');
 	}
 };

@@ -62,7 +62,6 @@ test('\n\n***** SDK Built config update  create flow  *****\n\n', function(t) {
     var client = new Client();
 
     var caRootsPath = ORGS.orderer.tls_cacerts;
-    console.log(caRootsPath);
     let data = fs.readFileSync(path.join(inkUtils.WORK_PATH,'inkchain', caRootsPath));
     let caroots = Buffer.from(data).toString();
 

@@ -42,7 +42,6 @@ test('\n\n***** inkchain flow: chaincode install *****\n\n', (t) => {
         .then((result) => {
             if(result){
                 t.pass('Successfully instantiated chaincode on the channel');
-
                 return inkUtils.sleep(5000);
             }
             else {

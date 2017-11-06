@@ -196,12 +196,9 @@ function issueToken(org, ccId, version, func, args, get_admin) {
         return testUtil.getSubmitter(client, get_admin /* get peer org admin */, org);
     }).then((admin) => {
         the_user = admin;
-
         return channel.initialize();
     }).then((nothing)=>{
             // an event listener can only register with a peer in its own org
-
-
             tx_id = client.newTransactionID();
             utils.setConfigSetting('E2E_TX_ID', tx_id.getTransactionID());
             console.log('transaction id:' + tx_id.getTransactionID());
@@ -661,7 +658,7 @@ function buildChaincodeProposal(client, the_user, chaincode_id, chaincode_path, 
 module.exports.instantiateChaincode = instantiateChaincode;
 
 
-function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey) {
+function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin) {
     init();
 
     let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex"));
@@ -674,7 +671,7 @@ function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg
                 ink_limit:Buffer.from(inkLimit),
                 msg:Buffer.from(msg)
             };
-            return invokeChaincode(userOrg,ccId,version,func,args,false,senderSpec,priKey);
+            return invokeChaincode(userOrg,ccId,version,func,args,true,senderSpec,priKey, isAdmin);
         });
     }, (err) => {
         console.log('Failed to query chaincode on the channel. ' + err.stack ? err.stack : err);
@@ -687,13 +684,12 @@ function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg
 }
 module.exports.invokeChaincodeSigned = invokeChaincodeSigned;
 
-function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpec, priKey){
+function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpec, priKey, isAdmin){
     init();
-    var useAdmin = false;
     if(arguments.length < 7) {
         senderSpec = null;
         priKey = null;
-        useAdmin = true;
+        isAdmin = false;
     }
     logger.debug('invokeChaincode begin');
     Client.setConfigSetting('request-timeout', 60000);
@@ -744,7 +740,7 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
         if (store) {
             client.setStateStore(store);
         }
-        return testUtil.getSubmitter(client, useAdmin, userOrg);
+        return testUtil.getSubmitter(client, isAdmin, userOrg);
     }).then((admin) => {
         logger.debug('Successfully enrolled user \'admin\'');
         the_user = admin;
@@ -947,7 +943,7 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
 
 module.exports.invokeChaincode = invokeChaincode;
 
-function queryChaincode(org,ccId, func, args, transientMap) {
+function queryChaincode(org,ccId, func, args, transientMap, isAdmin) {
     init();
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
@@ -982,7 +978,7 @@ function queryChaincode(org,ccId, func, args, transientMap) {
         path: testUtil.storePathForOrg(orgName)
     }).then((store) => {
         client.setStateStore(store);
-        return testUtil.getSubmitter(client, org);
+        return testUtil.getSubmitter(client, isAdmin, org);
 
     }).then((admin) => {
             the_user = admin;
@@ -1023,7 +1019,7 @@ module.exports.queryChaincode = queryChaincode;
 const TOKEN_ID = "token";
 const GET_BLANCE_FUNC = "getBalance";
 
-function getBalance(org, args, transientMap) {
+function getBalance(org, args, transientMap, isAdmin) {
     init();
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
@@ -1054,7 +1050,7 @@ function getBalance(org, args, transientMap) {
         path: testUtil.storePathForOrg(orgName)
     }).then((store) => {
         client.setStateStore(store);
-        return testUtil.getSubmitter(client, org);
+        return testUtil.getSubmitter(client, isAdmin, org);
 
     }).then((admin) => {
             the_user = admin;
@@ -1084,6 +1080,7 @@ function getBalance(org, args, transientMap) {
             }
         },
         (err) => {
+            console.log(err);
             logger.debug('Failed to send query due to error: ' + err.stack ? err.stack : err);
             throw new Error('Failed, got error on query');
         });
@@ -1093,7 +1090,7 @@ module.exports.getBalance = getBalance;
 
 const GET_ACCOUNT_FUNC = "getAccount";
 
-function getAccount(org, args, transientMap) {
+function getAccount(org, args, transientMap, isAdmin) {
     init();
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
@@ -1124,7 +1121,7 @@ function getAccount(org, args, transientMap) {
         path: testUtil.storePathForOrg(orgName)
     }).then((store) => {
         client.setStateStore(store);
-        return testUtil.getSubmitter(client, org);
+        return testUtil.getSubmitter(client, isAdmin, org);
 
     }).then((admin) => {
             the_user = admin;
