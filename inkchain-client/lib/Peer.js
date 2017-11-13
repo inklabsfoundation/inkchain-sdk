@@ -80,11 +80,7 @@ var Peer = class extends Remote {
 	 * or runs queries.
 	 *
 	 * @param {Proposal} proposal - A protobuf encoded byte array of type
-<<<<<<< HEAD:inkchain-client/lib/Peer.js
-	 *                              [Proposal]{@link https://github.com/inkchain/inkchain/blob/v1.0.0/protos/peer/proposal.proto#L134}
-=======
-	 *                              [Proposal]{@link https://github.com/hyperledger/inkchain/blob/v1.0.0/protos/peer/proposal.proto#L134}
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Peer.js
+	 *                              [Proposal]{@link https://github.com/inklabsfoundation/inkchain/blob/v1.0.0/protos/peer/proposal.proto#L134}
 	 * @returns {Promise} A Promise for a {@link ProposalResponse}
 	 */
 	sendProposal(proposal) {

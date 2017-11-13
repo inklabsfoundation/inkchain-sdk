@@ -16,8 +16,8 @@ limitations under the License.
 
 syntax = "proto3";
 
-option go_package = "github.com/hyperledger/inkchain/protos/msp";
-option java_package = "org.hyperledger.inkchain.protos.msp";
+option go_package = "github.com/inklabsfoundation/inkchain/protos/msp";
+option java_package = "org.inklabsfoundation.inkchain.protos.msp";
 option java_outer_classname = "MspConfigPackage";
 
 package msp;

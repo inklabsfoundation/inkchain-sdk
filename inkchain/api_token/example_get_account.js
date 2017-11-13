@@ -6,11 +6,7 @@
 var tape = require('tape');
 var _test = require('tape-promise');
 var test = _test(tape);
-<<<<<<< HEAD:inkchain/api_token/example_get_account.js
 var inkUtils = require('../InkUtils.js');
-=======
-var inkUtils = require('./InkUtils.js');
->>>>>>> a0c2aa5... replace fabric to inkchain and update test operations:test/integration/inkchain/example_get_balance.js
 
 test('\n\n***** End-to-end flow: query chaincode *****\n\n', (t) => {
 

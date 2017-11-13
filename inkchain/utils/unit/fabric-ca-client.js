@@ -27,13 +27,8 @@ var path = require('path');
 var util = require('util');
 var rewire = require('rewire');
 
-<<<<<<< HEAD
-var inkchainCAServices = rewire('inkchain-ca-client/lib/inkchainCAClientImpl');
-var inkchainCAClient = inkchainCAServices.inkchainCAClient;
-=======
 var InkchainCAServices = rewire('inkchain-ca-client/lib/InkchainCAClientImpl');
 var InkchainCAClient = InkchainCAServices.InkchainCAClient;
->>>>>>> 2a93d38... 改名inkchain
 
 const SAMPLE_PEM_ENCODED_CERTIFICATE = '-----BEGIN CERTIFICATE-----' +
 	'MIIBbDCCARKgAwIBAwICA+gwCgYIKoZIzj0EAwIwEzERMA8GA1UEAwwIcGVlck9y' +
@@ -47,28 +42,17 @@ const SAMPLE_PEM_ENCODED_CERTIFICATE = '-----BEGIN CERTIFICATE-----' +
 	'-----END CERTIFICATE-----';
 
 /**
-<<<<<<< HEAD
- * inkchainCAClient class tests
- */
-//test constructor
-test('inkchainCAClient: Test constructor', function (t) {
-=======
  * InkchainCAClient class tests
  */
 //test constructor
 test('InkchainCAClient: Test constructor', function (t) {
->>>>>>> 2a93d38... 改名inkchain
 	testutil.resetDefaults();
 
 	var connectOpts = {};
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'Throw error for missing protocol'
@@ -78,11 +62,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'Throw error for invalid protocol'
@@ -93,11 +73,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'HTTP is a valid protocol'
@@ -107,11 +83,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Protocol must be set to 'http' or 'https'/,
 		'HTTPS is a valid protocol'
@@ -121,11 +93,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Hostname must be set/,
 		'Throw error for missing hostname'
@@ -135,11 +103,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Port must be an integer/,
 		'Should not throw error if port is not set'
@@ -149,11 +113,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Port must be an integer/,
 		'Throw error for invalid port'
@@ -163,11 +123,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 	t.doesNotThrow(
 		function () {
-<<<<<<< HEAD
-			let client = new inkchainCAClient(connectOpts);
-=======
 			let client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Invalid connection options.  Port must be an integer/,
 		'Integer is a valid type for port'
@@ -179,11 +135,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 		let client = null;
 		t.doesNotThrow(
 			function () {
-<<<<<<< HEAD
-				client = new inkchainCAClient(connectOpts);
-=======
 				client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 			},
 			/Invalid connection options. /,
 			'Add tlsOptions to client connect_opts -- all default values'
@@ -199,11 +151,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 		let client = null;
 		t.doesNotThrow(
 			function () {
-<<<<<<< HEAD
-				client = new inkchainCAClient(connectOpts);
-=======
 				client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 			},
 			/Invalid connection options. /,
 			'Add tlsOptions to client connect_opts -- non default values'
@@ -220,11 +168,7 @@ test('InkchainCAClient: Test constructor', function (t) {
 		let client = null;
 		t.doesNotThrow(
 			function () {
-<<<<<<< HEAD
-				client = new inkchainCAClient(connectOpts);
-=======
 				client = new InkchainCAClient(connectOpts);
->>>>>>> 2a93d38... 改名inkchain
 			},
 			/Invalid connection options. /,
 			'Add tlsOptions to client connect_opts -- non default values'
@@ -239,39 +183,24 @@ test('InkchainCAClient: Test constructor', function (t) {
 
 });
 
-<<<<<<< HEAD
-//inkchainCAClient _pemToDER tests
-var ecertPEM = fs.readFileSync(path.resolve(__dirname, '../fixtures/inkchainca/ecert.pem'));
-
-test('inkchainCAClient: Test _pemToDer static method',function(t){
-=======
 //InkchainCAClient _pemToDER tests
 var ecertPEM = fs.readFileSync(path.resolve(__dirname, '../fixtures/inkchainca/ecert.pem'));
 
 test('InkchainCAClient: Test _pemToDer static method',function(t){
->>>>>>> 2a93d38... 改名inkchain
 
 	t.plan(2);
 
 	//call function with garbage
 	t.throws(
 		function(){
-<<<<<<< HEAD
-			var hex = inkchainCAClient.pemToDER('garbage');
-=======
 			var hex = InkchainCAClient.pemToDER('garbage');
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/Input parameter does not appear to be PEM-encoded./,
 		'Throw an error when input is not PEM-encoded'
 	);
 
 	try {
-<<<<<<< HEAD
-		var hex = inkchainCAClient.pemToDER(ecertPEM.toString());
-=======
 		var hex = InkchainCAClient.pemToDER(ecertPEM.toString());
->>>>>>> 2a93d38... 改名inkchain
 		t.pass('Sucessfully converted ecert from PEM to DER');
 	} catch(err) {
 		t.fail('Failed to convert PEM to DER due to ' + err);
@@ -281,11 +210,7 @@ test('InkchainCAClient: Test _pemToDer static method',function(t){
 });
 
 // Test newCryptoSuite() function
-<<<<<<< HEAD
-test('inkchainCAServices:  Test newCryptoSuite() function', function(t) {
-=======
 test('InkchainCAServices:  Test newCryptoSuite() function', function(t) {
->>>>>>> 2a93d38... 改名inkchain
 	var	tlsOptions = {
 		trustedRoots: [],
 		verify: false
@@ -309,11 +234,7 @@ test('InkchainCAServices:  Test newCryptoSuite() function', function(t) {
 });
 
 // Test newCryptoKeyStore() function
-<<<<<<< HEAD
-test('inkchainCAServices:  Test newCryptoKeyStore() function', function(t) {
-=======
 test('InkchainCAServices:  Test newCryptoKeyStore() function', function(t) {
->>>>>>> 2a93d38... 改名inkchain
 	var	tlsOptions = {
 		trustedRoots: [],
 		verify: false
@@ -350,13 +271,8 @@ test('InkchainCAServices:  Test newCryptoKeyStore() function', function(t) {
 });
 
 // Test getCryptoSuite() function
-<<<<<<< HEAD
-test('inkchainCAServices:  Test getCryptoSuite() function', function(t) {
-	var ca = new inkchainCAServices('http://localhost:7054');
-=======
 test('InkchainCAServices:  Test getCryptoSuite() function', function(t) {
 	var ca = new InkchainCAServices('http://localhost:7054');
->>>>>>> 2a93d38... 改名inkchain
 	var crypto = ca.getCryptoSuite();
 
 	if (crypto) {
@@ -368,13 +284,8 @@ test('InkchainCAServices:  Test getCryptoSuite() function', function(t) {
 	t.end();
 });
 
-<<<<<<< HEAD
-test('inkchainCAServices: Test register() function', function(t) {
-	var cop = new inkchainCAServices('http://localhost:7054');
-=======
 test('InkchainCAServices: Test register() function', function(t) {
 	var cop = new InkchainCAServices('http://localhost:7054');
->>>>>>> 2a93d38... 改名inkchain
 
 	t.throws(
 		() => {
@@ -427,19 +338,11 @@ test('InkchainCAServices: Test register() function', function(t) {
 
 /*
 **
-<<<<<<< HEAD
- * inkchainCAServices enroll tests
- */
-test('inkchainCAServices: Test enroll with missing parameters', function (t) {
-
-	var ca = new inkchainCAServices('http://localhost:7054');
-=======
  * InkchainCAServices enroll tests
  */
 test('InkchainCAServices: Test enroll with missing parameters', function (t) {
 
 	var ca = new InkchainCAServices('http://localhost:7054');
->>>>>>> 2a93d38... 改名inkchain
 	var req = null;
 
 	ca.enroll()
@@ -494,13 +397,8 @@ test('InkchainCAServices: Test enroll with missing parameters', function (t) {
 	});
 });
 
-<<<<<<< HEAD
-test('inkchainCAServices: Test revoke() function', function(t) {
-	var cop = new inkchainCAServices('http://localhost:7054');
-=======
 test('InkchainCAServices: Test revoke() function', function(t) {
 	var cop = new InkchainCAServices('http://localhost:7054');
->>>>>>> 2a93d38... 改名inkchain
 	t.throws(
 		() => {
 			cop.revoke();
@@ -630,13 +528,8 @@ var VALID_CERT2 = '-----BEGIN CERTIFICATE-----\n' +
 'jTSXP2wxocvyk8upDrUD9XI=\n' +
 '-----END CERTIFICATE-----\n';
 
-<<<<<<< HEAD
-test('inkchainCAServices: Test reenroll() function', function(t) {
-	var cop = new inkchainCAServices('http://localhost_bad:7054');
-=======
 test('InkchainCAServices: Test reenroll() function', function(t) {
 	var cop = new InkchainCAServices('http://localhost_bad:7054');
->>>>>>> 2a93d38... 改名inkchain
 
 	t.throws(
 		() => {
@@ -675,11 +568,7 @@ test('InkchainCAServices: Test reenroll() function', function(t) {
 		'Must throw error when current user enrollment certificate does not have a "CN" value'
 	);
 
-<<<<<<< HEAD
-	var getSubjectCommonName = inkchainCAServices.__get__('getSubjectCommonName');
-=======
 	var getSubjectCommonName = InkchainCAServices.__get__('getSubjectCommonName');
->>>>>>> 2a93d38... 改名inkchain
 
 	t.throws(
 		() => {
@@ -721,11 +610,7 @@ test('InkchainCAServices: Test reenroll() function', function(t) {
 	t.end();
 });
 
-<<<<<<< HEAD
-test('inkchainCAServices: Test static method normalizeX509()', function (t) {
-=======
 test('InkchainCAServices: Test static method normalizeX509()', function (t) {
->>>>>>> 2a93d38... 改名inkchain
 	testNormalizer(VALID_CERT, t);
 	testNormalizer(VALID_CERT1, t);
 	testNormalizer(VALID_CERT2, t);
@@ -733,22 +618,14 @@ test('InkchainCAServices: Test static method normalizeX509()', function (t) {
 });
 
 function testNormalizer(cert, t) {
-<<<<<<< HEAD
-	var normalized = inkchainCAServices.normalizeX509(cert);
-=======
 	var normalized = InkchainCAServices.normalizeX509(cert);
->>>>>>> 2a93d38... 改名inkchain
 	var matches = normalized.match(/\-\-\-\-\-\s*BEGIN ?[^-]+?\-\-\-\-\-\n/);
 	t.equals(matches.length, 1, 'Check that the normalized CERT has the standalone start line');
 	matches = normalized.match(/\n\-\-\-\-\-\s*END ?[^-]+?\-\-\-\-\-/);
 	t.equals(matches.length, 1, 'Check that the normalized CERT has the standalone end line');
 }
 
-<<<<<<< HEAD
-test('inkchainCAServices: Test _parseURL() function', function (t) {
-=======
 test('InkchainCAServices: Test _parseURL() function', function (t) {
->>>>>>> 2a93d38... 改名inkchain
 
 	var goodHost = 'www.example.com';
 	var goodPort = 7054;
@@ -767,40 +644,24 @@ test('InkchainCAServices: Test _parseURL() function', function (t) {
 	t.plan(12);
 
 	//valid http endpoint
-<<<<<<< HEAD
-	var endpointGood = inkchainCAServices._parseURL(goodURL);
-=======
 	var endpointGood = InkchainCAServices._parseURL(goodURL);
->>>>>>> 2a93d38... 改名inkchain
 	t.equals(endpointGood.protocol, 'http', 'Check that protocol is set correctly to \'http\'');
 	t.equals(endpointGood.hostname, goodHost, 'Check that hostname is set correctly');
 	t.equals(endpointGood.port, goodPort, 'Check that port is set correctly');
 
 	//valid https endpoint
-<<<<<<< HEAD
-	var endpointGoodSecure = inkchainCAServices._parseURL(goodURLSecure);
-=======
 	var endpointGoodSecure = InkchainCAServices._parseURL(goodURLSecure);
->>>>>>> 2a93d38... 改名inkchain
 	t.equals(endpointGoodSecure.protocol, 'https', 'Check that protocol is set correctly to \'https\'');
 	t.equals(endpointGoodSecure.hostname, goodHost, 'Check that hostname is set correctly');
 	t.equals(endpointGoodSecure.port, goodPort, 'Check that port is set correctly');
 
-<<<<<<< HEAD
-	var endpointGoodUrlNoPort = inkchainCAServices._parseURL(goodUrlNoPort);
-=======
 	var endpointGoodUrlNoPort = InkchainCAServices._parseURL(goodUrlNoPort);
->>>>>>> 2a93d38... 改名inkchain
 	t.notOk(endpointGoodUrlNoPort.port, 'Check default port value');
 
 	//check invalid endpoints
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			inkchainCAServices._parseURL(badURL);
-=======
 			InkchainCAServices._parseURL(badURL);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/InvalidURL: missing hostname./,
 		'Throw error for missing hostname'
@@ -808,11 +669,7 @@ test('InkchainCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			inkchainCAServices._parseURL(badURL2);
-=======
 			InkchainCAServices._parseURL(badURL2);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for invalid protocol'
@@ -820,11 +677,7 @@ test('InkchainCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			inkchainCAServices._parseURL(badURL3);
-=======
 			InkchainCAServices._parseURL(badURL3);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for invalid protocol'
@@ -832,11 +685,7 @@ test('InkchainCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			inkchainCAServices._parseURL(badURL3);
-=======
 			InkchainCAServices._parseURL(badURL3);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for missing protocol'
@@ -844,11 +693,7 @@ test('InkchainCAServices: Test _parseURL() function', function (t) {
 
 	t.throws(
 		function () {
-<<<<<<< HEAD
-			inkchainCAServices._parseURL(badURL5);
-=======
 			InkchainCAServices._parseURL(badURL5);
->>>>>>> 2a93d38... 改名inkchain
 		},
 		/InvalidURL: url must start with http or https./,
 		'Throw error for invalid protocol'
@@ -857,13 +702,8 @@ test('InkchainCAServices: Test _parseURL() function', function (t) {
 	t.end();
 });
 
-<<<<<<< HEAD
-test('inkchainCAServices: Test toString() function', function(t) {
-	var ca = new inkchainCAServices('http://localhost:7054');
-=======
 test('InkchainCAServices: Test toString() function', function(t) {
 	var ca = new InkchainCAServices('http://localhost:7054');
->>>>>>> 2a93d38... 改名inkchain
 	var printableCa = ca.toString();
 
 	if ((typeof printableCa == 'string') && (printableCa.length > 1)) {
@@ -876,19 +716,11 @@ test('InkchainCAServices: Test toString() function', function(t) {
 });
 
 /**
-<<<<<<< HEAD
- * inkchainCAClient enroll tests
- */
-test('inkchainCAClient: Test enroll with missing parameters', function (t) {
-
-	var client = new inkchainCAClient({
-=======
  * InkchainCAClient enroll tests
  */
 test('InkchainCAClient: Test enroll with missing parameters', function (t) {
 
 	var client = new InkchainCAClient({
->>>>>>> 2a93d38... 改名inkchain
 		protocol: 'http',
 		hostname: '127.0.0.1',
 		port: 7054
@@ -911,19 +743,11 @@ test('InkchainCAClient: Test enroll with missing parameters', function (t) {
 });
 
 /**
-<<<<<<< HEAD
- * inkchainCAClient register tests
- */
-test('inkchainCAClient: Test register with missing parameters', function (t) {
-
-	var client = new inkchainCAClient({
-=======
  * InkchainCAClient register tests
  */
 test('InkchainCAClient: Test register with missing parameters', function (t) {
 
 	var client = new InkchainCAClient({
->>>>>>> 2a93d38... 改名inkchain
 		protocol: 'http',
 		hostname: '127.0.0.1',
 		port: 7054
@@ -941,19 +765,11 @@ test('InkchainCAClient: Test register with missing parameters', function (t) {
 });
 
 /**
-<<<<<<< HEAD
- * inkchainCAClient revoke tests
- */
-test('inkchainCAClient: Test revoke with missing parameters', function (t) {
-
-	var client = new inkchainCAClient({
-=======
  * InkchainCAClient revoke tests
  */
 test('InkchainCAClient: Test revoke with missing parameters', function (t) {
 
 	var client = new InkchainCAClient({
->>>>>>> 2a93d38... 改名inkchain
 		protocol: 'http',
 		hostname: '127.0.0.1',
 		port: 7054

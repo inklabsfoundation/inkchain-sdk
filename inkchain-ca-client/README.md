@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-## Hyperledger inkchain-CA Client for Node.js
+## Inklabsfoundation Inkchain-CA Client for Node.js
 
-SDK for writing node.js applications to interact with [Hyperledger inkchain CA](http://hyperledger-inkchain.readthedocs.io/en/latest/Setup/ca-setup.html).
-
-This package encapsulates the APIs to interact with the inkchain CA to manage user certificates lifecycle such as register, enroll, renew and revoke. 
-=======
-## Hyperledger Inkchain-CA Client for Node.js
-
-SDK for writing node.js applications to interact with [Hyperledger Inkchain CA](http://hyperledger-inkchain.readthedocs.io/en/latest/Setup/ca-setup.html).
+SDK for writing node.js applications to interact with [Inklabsfoundation Inkchain CA](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/Setup/ca-setup.html).
 
 This package encapsulates the APIs to interact with the Inkchain CA to manage user certificates lifecycle such as register, enroll, renew and revoke. 
->>>>>>> 2a93d38... 改名inkchain
 
 A separate package is provided, `inkchain-client`, to interact with Peers and Orderers to install and instantiate chaincodes, send transactions and perform queries.
 

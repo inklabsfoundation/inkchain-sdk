@@ -394,11 +394,7 @@ var Channel = class {
 	 * A protobuf message that gets returned by endorsing peers on proposal requests.
 	 * The peer node runs the target chaincode, as designated by the proposal, and
 	 * decides on whether to endorse the proposal or not, and sends back the endorsement
-<<<<<<< HEAD:inkchain-client/lib/Channel.js
-	 * result along with the [read and write sets]{@link http://inkchain-inkchain.readthedocs.io/en/latest/arch-deep-dive.html?highlight=readset#the-endorsing-peer-simulates-a-transaction-and-produces-an-endorsement-signature}
-=======
-	 * result along with the [read and write sets]{@link http://hyperledger-inkchain.readthedocs.io/en/latest/arch-deep-dive.html?highlight=readset#the-endorsing-peer-simulates-a-transaction-and-produces-an-endorsement-signature}
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Channel.js
+	 * result along with the [read and write sets]{@link http://inklabsfoundation-inkchain.readthedocs.io/en/latest/arch-deep-dive.html?highlight=readset#the-endorsing-peer-simulates-a-transaction-and-produces-an-endorsement-signature}
 	 * inside the proposal response message.
 	 *
 	 * @typedef {Object} ProposalResponse
@@ -1380,11 +1376,7 @@ var Channel = class {
 	 * validation against the chaincode's endorsement policy. When the committering peers
 	 * successfully validate the transactions, it will mark the transaction as valid inside
 	 * the block. After all transactions in a block have been validated, and marked either as
-<<<<<<< HEAD:inkchain-client/lib/Channel.js
-	 * valid or invalid (with a [reason code]{@link https://github.com/inkchain/inkchain/blob/v1.0.0/protos/peer/transaction.proto#L125}),
-=======
-	 * valid or invalid (with a [reason code]{@link https://github.com/hyperledger/inkchain/blob/v1.0.0/protos/peer/transaction.proto#L125}),
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Channel.js
+	 * valid or invalid (with a [reason code]{@link https://github.com/inklabsfoundation/inkchain/blob/v1.0.0/protos/peer/transaction.proto#L125}),
 	 * the block will be appended (committed) to the channel's ledger on the peer.
 	 * <br><br>
 	 * The caller of this method must use the proposal responses returned from the endorser along
@@ -1397,11 +1389,7 @@ var Channel = class {
 	 *
 	 * @param {TransactionRequest} request
 	 * @returns {Promise} A Promise for a "BroadcastResponse" message returned by the orderer that contains a
-<<<<<<< HEAD:inkchain-client/lib/Channel.js
-	 *                    single "status" field for a standard [HTTP response code]{@link https://github.com/inkchain/inkchain/blob/v1.0.0/protos/common/common.proto#L27}.
-=======
-	 *                    single "status" field for a standard [HTTP response code]{@link https://github.com/hyperledger/inkchain/blob/v1.0.0/protos/common/common.proto#L27}.
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Channel.js
+	 *                    single "status" field for a standard [HTTP response code]{@link https://github.com/inklabsfoundation/inkchain/blob/v1.0.0/protos/common/common.proto#L27}.
 	 *                    This will be an acknowledgement from the orderer of successfully submitted transaction.
 	 */
 	sendTransaction(request) {

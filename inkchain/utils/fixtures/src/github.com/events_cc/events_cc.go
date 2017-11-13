@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/hyperledger/inkchain/core/chaincode/shim"
-	pb "github.com/hyperledger/inkchain/protos/peer"
+	"github.com/inklabsfoundation/inkchain/core/chaincode/shim"
+	pb "github.com/inklabsfoundation/inkchain/protos/peer"
 )
 
 // EventSender example simple Chaincode implementation

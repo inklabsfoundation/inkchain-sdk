@@ -24,7 +24,7 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/inkchain/crypto/peer/tls/server.key
       - CORE_PEER_TLS_CERT_FILE=/etc/inkchain/crypto/peer/tls/server.crt
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/inkchain/crypto/peer/tls/ca.crt
-    working_dir: /opt/gopath/src/github.com/inkchain/inkchain/peer
+    working_dir: /opt/gopath/src/github.com/inklabsfoundation/inkchain/peer
     command: peer node start
     volumes:
         - /var/run/:/host/var/run/

@@ -3,8 +3,8 @@
   "version": "1.0.1",
   "main": "index.js",
   "repository": {
-    "type": "gerrit",
-    "url": "http://gerrit.hyperledger.org/r/inkchain-sdk-node"
+    "type": "github",
+    "url": "https://www.github.com/inklabsfoundation/inkchain-sdk-node"
   },
   "engines": {
     "node": ">=6.9.0 <7.0",
@@ -30,7 +30,7 @@
   "licenses": [
     {
       "type": "Apache-2.0",
-      "url": "https://github.com/hyperledger/inkchain/blob/master/LICENSE"
+      "url": "https://github.com/inklabsfoundation/inkchain/blob/master/LICENSE"
     }
   ]
 }

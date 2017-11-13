@@ -3,10 +3,6 @@
 		"title": "Setting up the Application Developer's Environment"
 	},
 	"channel-create": {
-<<<<<<< HEAD
-		"title": "How to create a Hyperledger inkchain channel"
-=======
-		"title": "How to create a Hyperledger Inkchain channel"
->>>>>>> 2a93d38... 改名inkchain
+		"title": "How to create a Inklabsfoundation Inkchain channel"
 	}
 }

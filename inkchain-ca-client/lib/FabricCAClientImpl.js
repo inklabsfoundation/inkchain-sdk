@@ -615,7 +615,7 @@ var InkchainCAClient = class {
 	 */
 	generateAuthToken(reqBody, signingIdentity) {
 		// specific signing procedure is according to:
-		// https://github.com/hyperledger/inkchain-ca/blob/master/util/util.go#L213
+		// https://github.com/inklabsfoundation/inkchain-ca/blob/master/util/util.go#L213
 		var cert = Buffer.from(signingIdentity._certificate).toString('base64');
 		var body = Buffer.from(JSON.stringify(reqBody)).toString('base64');
 

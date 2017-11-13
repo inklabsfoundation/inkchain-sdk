@@ -1,57 +1,32 @@
 
 This tutorial describes how to prepare a development environment in order to
-build a business application to use a blockchain network based on Hyperledger
-<<<<<<< HEAD
-inkchain. At a high level, a business application running on a Hyperledger inkchain
-=======
-Inkchain. At a high level, a business application running on a Hyperledger Inkchain
->>>>>>> 2a93d38... 改名inkchain
+build a business application to use a blockchain network based on Inklabsfoundation
+Inkchain. At a high level, a business application running on a Inklabsfoundation Inkchain
 network is made up of two parts: chaincode that runs in the servers
-([endorser](http://hyperledger-inkchain.readthedocs.io/en/latest/arch-deep-dive.html#peer)
+([endorser](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/arch-deep-dive.html#peer)
 nodes), and client code that runs in the Node.js application.
 
-<<<<<<< HEAD
-For chaincode development, please visit the Hyperledger inkchain
-[chaincode tutorials](http://hyperledger-inkchain.readthedocs.io/en/latest/chaincode.html).
+For chaincode development, please visit the Inklabsfoundation Inkchain
+[chaincode tutorials](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/chaincode.html).
 
-For complete information on starting a Hyperledger inkchain network, please see the [Build your first network tutorial](http://hyperledger-inkchain.readthedocs.io/en/latest/build_network.html).
-=======
-For chaincode development, please visit the Hyperledger Inkchain
-[chaincode tutorials](http://hyperledger-inkchain.readthedocs.io/en/latest/chaincode.html).
-
-For complete information on starting a Hyperledger Inkchain network, please see the [Build your first network tutorial](http://hyperledger-inkchain.readthedocs.io/en/latest/build_network.html).
->>>>>>> 2a93d38... 改名inkchain
+For complete information on starting a Inklabsfoundation Inkchain network, please see the [Build your first network tutorial](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/build_network.html).
 
 The following tutorial assumes a chaincode has been developed and
 the focus is developing the client application.
 
-<<<<<<< HEAD
-## What makes up a Hyperledger inkchain application development environment?
+## What makes up a Inklabsfoundation Inkchain application development environment?
 
-Below you'll find a high level summary of the Hyperledger inkchain design aimed
+Below you'll find a high level summary of the Inklabsfoundation Inkchain design aimed
 at an introductory level of understanding, so that you can be on your way to
 setting up the development environment. For a comprehensive description of
 the concepts, the architecture, please visit the official
-[Hyperledger inkchain documentation](http://hyperledger-inkchain.readthedocs.io/en/latest).
-=======
-## What makes up a Hyperledger Inkchain application development environment?
-
-Below you'll find a high level summary of the Hyperledger Inkchain design aimed
-at an introductory level of understanding, so that you can be on your way to
-setting up the development environment. For a comprehensive description of
-the concepts, the architecture, please visit the official
-[Hyperledger Inkchain documentation](http://hyperledger-inkchain.readthedocs.io/en/latest).
->>>>>>> 2a93d38... 改名inkchain
+[Inklabsfoundation Inkchain documentation](http://inklabsfoundation-inkchain.readthedocs.io/en/latest).
 
 First of all, you will need an
-[orderer](http://hyperledger-inkchain.readthedocs.io/en/latest/orderingservice.html).
+[orderer](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/orderingservice.html).
 But isn't an orderer responsible for the consensus?
 Why start here? It's true that the main responsibility of the ordering service
-<<<<<<< HEAD
-of a Hyperledger inkchain blockchain network is to provide consensus on a
-=======
-of a Hyperledger Inkchain blockchain network is to provide consensus on a
->>>>>>> 2a93d38... 改名inkchain
+of a Inklabsfoundation Inkchain blockchain network is to provide consensus on a
 transaction among the maintainers of the ledger, a.k.a the committer nodes.
 However, the ordering service also maintains critical data about the overall
 network: what organizations are participating, what channels have been created,
@@ -79,37 +54,21 @@ is sent by the peer through a dedicated streaming port. Any application
 within the organization can register themselves to listen on that port
 to get notified.
 
-The final piece of the puzzle is identities. Every operation in a Hyperledger
-<<<<<<< HEAD
-inkchain network must be digitially signed for the purposes of access control,
-=======
+The final piece of the puzzle is identities. Every operation in a Inklabsfoundation
 Inkchain network must be digitially signed for the purposes of access control,
->>>>>>> 2a93d38... 改名inkchain
 or provenance/auditing (who did what), or both. As of v1.0, identities are
 based on the Public Key Infrastructure (PKI)) standards. Every orderer node,
 every peer node and every user/transactor must have a key pair with the
 public key wrapped in a x.509 certificate signed by a
-<<<<<<< HEAD
-Certificate Authority (CA). Since x.509 is an open standard, Hyperledger inkchain
+Certificate Authority (CA). Since x.509 is an open standard, Inklabsfoundation Inkchain
 would work with any existing certificate authority. This is typically a painful
 process with lots of potential red tape to get real certificates, so for the
 development purposes it is a popular practice to use self-signed certificates
-locally generated. As you will see in the later section, the Hyperledger inkchain
+locally generated. As you will see in the later section, the Inklabsfoundation Inkchain
 provides tools to make this less painful.
 
 Also related to identities, you should make a decision on whether
-[inkchain-CA](http://hyperledger-inkchain-ca.readthedocs.io/en/latest/users-guide.html)
-=======
-Certificate Authority (CA). Since x.509 is an open standard, Hyperledger Inkchain
-would work with any existing certificate authority. This is typically a painful
-process with lots of potential red tape to get real certificates, so for the
-development purposes it is a popular practice to use self-signed certificates
-locally generated. As you will see in the later section, the Hyperledger Inkchain
-provides tools to make this less painful.
-
-Also related to identities, you should make a decision on whether
-[Inkchain-CA](http://hyperledger-inkchain-ca.readthedocs.io/en/latest/users-guide.html)
->>>>>>> 2a93d38... 改名inkchain
+[Inkchain-CA](http://inklabsfoundation-inkchain-ca.readthedocs.io/en/latest/users-guide.html)
 should be part of your solution. This is a server with REST APIs that supports
 dynamic identity management with registration, enrollment (getting certificates),
 revocation and re-enrollment. So it is very useful in providing user identities
@@ -123,21 +82,13 @@ for the `ADMIN` role:
 For these privileged operations, the client must use an ADMIN user to submit
 the request.
 
-<<<<<<< HEAD
-If you choose to not use inkchain-CA, everything will still work, but the application
-=======
 If you choose to not use Inkchain-CA, everything will still work, but the application
->>>>>>> 2a93d38... 改名inkchain
 is responsible for managing the user certificates.
 
 ## Prerequisites
 
 You will need the following software:
-<<<<<<< HEAD
-* [Docker and Docker Compose](http://hyperledger-inkchain.readthedocs.io/en/latest/prereqs.html#docker-and-docker-compose) - see Hyperledger inkchain for details
-=======
-* [Docker and Docker Compose](http://hyperledger-inkchain.readthedocs.io/en/latest/prereqs.html#docker-and-docker-compose) - see Hyperledger Inkchain for details
->>>>>>> 2a93d38... 改名inkchain
+* [Docker and Docker Compose](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/prereqs.html#docker-and-docker-compose) - see Inklabsfoundation Inkchain for details
 * [Nodejs](https://nodejs.org/en/download/)
 v6.2.0 - 6.10.0 ( __Node v7+ is not supported__ )
 
@@ -150,26 +101,17 @@ there are many identities involved:
 * orderers need identities to sign proposed blocks for the committers
 to validate and append to the ledger
 * applications need identities to sign transaction requests
-<<<<<<< HEAD
-* the inkchain CA themselves also need identities, so their signatures
-=======
 * the Inkchain CA themselves also need identities, so their signatures
->>>>>>> 2a93d38... 改名inkchain
 in the certificates can be validated
 
 Luckily there is a tool for that. Follow
-[this guide](http://hyperledger-inkchain.readthedocs.io/en/latest/build_network.html#crypto-generator)
+[this guide](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/build_network.html#crypto-generator)
 to use the cryptogen tool to generate all the required keys and
 certificates in one swoop.
 
 Note that the cryptogen tool will automatically generate identities for
-<<<<<<< HEAD
-the inkchain CA nodes for each orderer and peer organization,
-which can be used to start the inkchain-CA servers (if you choose to use
-=======
 the Inkchain CA nodes for each orderer and peer organization,
 which can be used to start the Inkchain-CA servers (if you choose to use
->>>>>>> 2a93d38... 改名inkchain
 it as part of the solution as discussed above). In addition, it also
 generates one admin user of the `ADMIN` role with the privileges to perform
 admin-level operations listed above. Finally, it also generates regular
@@ -182,7 +124,7 @@ This would get us all the crypto materials needed to start things up.
 As discussed above, the orderer should be the first step to bootstrap (launch)
 a network. The orderer will need the initial configurations wrapped inside
 a `genesis block`. Follow the
-[instructions here](http://hyperledger-inkchain.readthedocs.io/en/latest/build_network.html#configuration-transaction-generator)
+[instructions here](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/build_network.html#configuration-transaction-generator)
 to use the `congigtxgen` tool to generate a `genesis.block`.
 The output, a genesis block file for the orderer, will be used in
 the next step to launch the orderer node.
@@ -191,7 +133,7 @@ the next step to launch the orderer node.
 
 Now we are ready to put it all together. The easiest way to launch the
 development environment is to use docker-compose. Follow the
-[instructions here](http://hyperledger-inkchain.readthedocs.io/en/latest/build_network.html#start-the-network)
+[instructions here](http://inklabsfoundation-inkchain.readthedocs.io/en/latest/build_network.html#start-the-network)
 to start the network. To minimize the chances of a mistake,
 you may wish to run the network without TLS.
 <br><br><br>

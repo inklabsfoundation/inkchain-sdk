@@ -18,13 +18,8 @@ syntax = "proto3";
 
 import "../common/common.proto";
 
-<<<<<<< HEAD:inkchain-client/lib/protos/orderer/ab.proto
-option go_package = "github.com/inkchain/inkchain/protos/orderer";
-option java_package = "org.inkchain.inkchain.protos.orderer";
-=======
-option go_package = "github.com/hyperledger/inkchain/protos/orderer";
-option java_package = "org.hyperledger.inkchain.protos.orderer";
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/protos/orderer/ab.proto
+option go_package = "github.com/inklabsfoundation/inkchain/protos/orderer";
+option java_package = "org.inklabsfoundation.inkchain.protos.orderer";
 
 package orderer;
 

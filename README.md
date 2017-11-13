@@ -1,41 +1,11 @@
-## inkchainx related
-* run `(sudo) npm install -g gulp (--registry=https://registry.npm.taobao.org)`
-* run `(sudo) npm install `
-* run `(sudo) npm install sleep`
-* run `npm install inkchain-client`    to invoke building inkchain-client.
-* run `(sudo) gulp watch`
-* cd test/fixtures && docker-compose -f docker-compose-inkchain.yaml up
-* `node test/integration/inkchain/init.js`   initialize channel and issue CCToken
-* node test/integration/inkchain/example_get_balance.js
-* node test/integration/inkchain/example_query.js
-* node test/integration/inkchain/example_invoke.js
-* node test/integration/inkchain/example_query.js
 
-<<<<<<< HEAD
-## Hyperledger inkchain Client SDK for Node.js
-=======
-## Hyperledger Inkchain Client SDK for Node.js
->>>>>>> 2a93d38... 改名inkchain
+## Inklabsfoundation Inkchain Client SDK for Node.js
 
-[![Build Status](https://jenkins.hyperledger.org/buildStatus/icon?job=inkchain-sdk-node-merge-x86_64)](https://jenkins.hyperledger.org/view/inkchain-sdk-node/job/inkchain-sdk-node-merge-x86_64/)
-[![Documentation Status](https://readthedocs.org/projects/inkchain-sdk-node/badge/?version=master)](http://inkchain-sdk-node.readthedocs.io/en/master/?badge=master)
-
-<<<<<<< HEAD
-The Hyperledger inkchain Client SDK makes it easy to use APIs to interact with a Hyperledger inkchain blockchain.
-=======
-The Hyperledger Inkchain Client SDK makes it easy to use APIs to interact with a Hyperledger Inkchain blockchain.
->>>>>>> 2a93d38... 改名inkchain
-
-As an application developer, to learn about how to install and use the Node.js SDK, please visit the [SDK documentation](https://inkchain-sdk-node.github.io/).
+The Inklabsfoundation Inkchain Client SDK makes it easy to use APIs to interact with a Inklabsfoundation Inkchain blockchain.
 
 This project publishes two separate npm packages:
-<<<<<<< HEAD
-* `inkchain-client` - main client for the [Hyperledger inkchain](http://hyperledger-inkchain.readthedocs.io/en/latest/). Applications can use this package to install and instantiate chaincodes, submit transactions and make queries against a Hyperledger inkchain-based blockchain network.
-* `inkchain-ca-client` - client for the optional component in Hyperledger inkchain, [inkchain-ca](http://hyperledger-inkchain.readthedocs.io/en/latest/Setup/ca-setup.html). The inkchain-ca component allows applications to enroll Peers and application users to establish trusted identities on the blockchain network. It also provides support for pseudonymous transaction submissions with Transaction Certificates. If the target blockchain network is configured with standard Certificate Authorities for trust anchors, the application does not need to use this package.
-=======
-* `inkchain-client` - main client for the [Hyperledger Inkchain](http://hyperledger-inkchain.readthedocs.io/en/latest/). Applications can use this package to install and instantiate chaincodes, submit transactions and make queries against a Hyperledger Inkchain-based blockchain network.
-* `inkchain-ca-client` - client for the optional component in Hyperledger Inkchain, [inkchain-ca](http://hyperledger-inkchain.readthedocs.io/en/latest/Setup/ca-setup.html). The inkchain-ca component allows applications to enroll Peers and application users to establish trusted identities on the blockchain network. It also provides support for pseudonymous transaction submissions with Transaction Certificates. If the target blockchain network is configured with standard Certificate Authorities for trust anchors, the application does not need to use this package.
->>>>>>> 2a93d38... 改名inkchain
+* `inkchain-client` - main client for the [Inklabsfoundation Inkchain](https://ink.one/). Applications can use this package to install and instantiate chaincodes, submit transactions and make queries against a Inklabsfoundation Inkchain-based blockchain network.
+* `inkchain-ca-client` - client for the optional component in Inklabsfoudnation Inkchain. The inkchain-ca component allows applications to enroll Peers and application users to establish trusted identities on the blockchain network. It also provides support for pseudonymous transaction submissions with Transaction Certificates. If the target blockchain network is configured with standard Certificate Authorities for trust anchors, the application does not need to use this package.
 
 The following section targets a current or future contributor to this project itself.
 
@@ -56,7 +26,7 @@ In the project root folder:
 
 The following tests require setting up a local blockchain network as the target. Because v1.0 is still in active development, you still need to build the necessary Docker images needed to run the network. Follow the steps below to set it up.
 * You will need the peers, orderers and inkchain-ca server (new implementation of the member service) to run the tests. The first two components are from the *inkchain* repository. The inkchain-ca server is from the *inkchain-ca* repository.
-* git clone both the *inkchain* and *inkchain-ca* repositories into the $GOPATH/src/github.com/hyperledger folder in your native host (MacOS, Windows or Ubuntu, etc).
+* git clone both the *inkchain* and *inkchain-ca* repositories into the $GOPATH/src/github.com/inklabsfoundation folder in your native host (MacOS, Windows or Ubuntu, etc).
 
 You can build the docker images in your native host (Mac, Ubuntu, Windows, etc.):
 * If docker is installed and it’s not ‘Docker for Mac/Windows’, uninstall and follow Docker’s clean up instructions to uninstall completely.
@@ -66,28 +36,23 @@ You can build the docker images in your native host (Mac, Ubuntu, Windows, etc.)
   * run `brew install gnu-tar —-with-default-names` in order to swap out Mac's default tar command for a gnu-compliant one needed by chaincode execution on the peers
 
 * build inkchain-ca docker image (new membership service)
-  * cd `$GOPATH/src/github.com/hyperledger/inkchain-ca
-  * run `make docker`. For more build instructions see [inkchain-ca README](https://github.com/hyperledger/inkchain-ca)
+  * cd `$GOPATH/src/github.com/inklabsfoundation/inkchain-ca
+  * run `make docker`. For more build instructions see [inkchain-ca README](https://github.com/inklabsfoundation/inkchain-ca)
 * build inkchain peer and orderer docker images and other ancillary images
-  * `cd $GOPATH/src/github.com/hyperledger/inkchain`
+  * `cd $GOPATH/src/github.com/inklabsfoundation/inkchain`
   * run `make docker` to build the docker images (you may need to run `make docker-clean` first if you've built before)
-* Now you are ready to run the tests:
-  * Clear out your previous key value stores that may have cached user enrollment certificates (`rm -rf /tmp/hfc-*`, `rm -rf ~/.hfc-key-store`)
-  * run `gulp test` to execute the entire test suite (800+ test cases), or you can run them individually
-  * Test happy path from end to end, run `node test/integration/e2e.js`
-  * Test end to end one step at a time, make sure to follow this sequence:
-    * `node test/integration/e2e/create-channel.js`
-    * `node test/integration/e2e/join-channel.js`
-    * `node test/integration/e2e/install-chaincode.js`
-    * `node test/integration/e2e/instantiate-chaincode.js`
-    * `node test/integration/e2e/invoke-transaction.js`
-    * `node test/integration/e2e/query.js`
-  * Test user management by member services with the following tests that exercise the inkchain-ca-client package with a KeyValueStore implementations for a file-based KeyValueStore as well as a CouchDB KeyValueStore. To successfully run this test, you must first set up a CouchDB database instance on your local machine. Please see the instructions below.
-    * `test/integration/inkchain-ca-services-tests.js`
-    * `test/integration/couchdb-inkchainca-tests.js`
-    * `test/integration/cloudant-inkchainca-tests.js`
-  * To re-run `node test/integration/e2e.js` or `inkchain-ca-services-tests.js` stop the network (ctrl-c), clean up the docker instances (`docker rm $(docker ps -aq)`) and restart the network with `docker-compose up` as described above.
-
+* Now you are ready to use the inkchain sdk:
+  * run `(sudo) npm install -g gulp (--registry=https://registry.npm.taobao.org)`
+  * run `(sudo) npm install `
+  * run `(sudo) npm install sleep`
+  * run `npm install inkchain-client`    to invoke building inkchain-client.
+  * run `(sudo) gulp watch`
+  * cd test/fixtures && docker-compose -f docker-compose-inkchain.yaml up
+  * `node test/integration/inkchain/init.js`   initialize channel and issue CCToken
+  * node test/integration/inkchain/example_get_balance.js
+  * node test/integration/inkchain/example_query.js
+  * node test/integration/inkchain/example_invoke.js
+  * node test/integration/inkchain/example_query.js
 ### Special Tests for Hardware Security Module support (experimental) via PKCS#11 interface
 The SDK has experimental support for PKCS#11 interface in order to allow applications to make use of HSM devices for key management. Unit tests for this feature are skipped by default. To run these testss:
 
@@ -118,13 +83,8 @@ Run the full unit test bucket and make sure 100% are passing.  Because v1.0 is s
 
 The gulp test command above also generates code coverage reports. Your new code should be accompanied with unit tests and provide 80% line coverage or higher.
 
-<<<<<<< HEAD
-### Hyperledger inkchain Client objects and reference documentation
-For a high-level design specificiation for inkchain SDKs of all languages, visit [this google doc](https://docs.google.com/document/d/1R5RtIBMW9fZpli37E5Li5_Q9ve3BnQ4q3gWmGZj6Sv4/edit?usp=sharing) (Work-In-Progress).
-=======
-### Hyperledger Inkchain Client objects and reference documentation
+### Inklabsfoundation Inkchain Client objects and reference documentation
 For a high-level design specificiation for Inkchain SDKs of all languages, visit [this google doc](https://docs.google.com/document/d/1R5RtIBMW9fZpli37E5Li5_Q9ve3BnQ4q3gWmGZj6Sv4/edit?usp=sharing) (Work-In-Progress).
->>>>>>> 2a93d38... 改名inkchain
 
 inkchain-client and inkchain-ca-client are written in CommonJS modules and take advantage of ECMAScript 2015 class syntax.
 
@@ -132,11 +92,7 @@ inkchain-client and inkchain-ca-client are written in CommonJS modules and take 
 * The **KeyValueStore** is a very simple interface which SDK uses to store and retrieve all persistent data. This data includes private keys, so it is very important to keep this storage secure. The default implementation is a simple file-based version found in the _FileKeyValueStore_ class. The SDK also provides an implementation based on CouchDB which can be configured to use a local CouchDB database or a remote deployment including a Cloudant database.
 * The **User** class represents an end user who transacts on the channel. The user object must have a valid enrollment configured in order to properly sign transaction requests. The enrollment materials can either be obtained from enrolling with inkchain-ca or an external Certificate Authority.
 * The **EventHub** class encapsulates the interaction with the network peers' event streams.
-<<<<<<< HEAD
-* The **inkchainCAClientImpl** class provides security and identity related features such as user registration and enrollment, transaction certificate issuance. The Hyperledger inkchain has a built-in implementation that issues _ECerts_ (enrollment certificates) and _TCerts_ (transaction certificates). ECerts are for enrollment identity and TCerts are for transactions.
-=======
-* The **InkchainCAClientImpl** class provides security and identity related features such as user registration and enrollment, transaction certificate issuance. The Hyperledger Inkchain has a built-in implementation that issues _ECerts_ (enrollment certificates) and _TCerts_ (transaction certificates). ECerts are for enrollment identity and TCerts are for transactions.
->>>>>>> 2a93d38... 改名inkchain
+* The **InkchainCAClientImpl** class provides security and identity related features such as user registration and enrollment, transaction certificate issuance. The Inklabsfoundation Inkchain has a built-in implementation that issues _ECerts_ (enrollment certificates) and _TCerts_ (transaction certificates). ECerts are for enrollment identity and TCerts are for transactions.
 
 ### Pluggability
 HFC defines the following abstract classes for application developers to supply extensions or alternative implementations. For each abstract class, a built-in implementation is included with the ability to load alternative implementations via designated environment variables:

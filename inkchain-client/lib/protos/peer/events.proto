@@ -20,15 +20,9 @@ import "../common/common.proto";
 import "chaincode_event.proto";
 import "transaction.proto";
 
-<<<<<<< HEAD:inkchain-client/lib/protos/peer/events.proto
-option java_package = "org.inkchain.inkchain.protos.peer";
+option java_package = "org.inklabsfoundation.inkchain.protos.peer";
 option java_outer_classname = "EventsPackage";
-option go_package = "github.com/inkchain/inkchain/protos/peer";
-=======
-option java_package = "org.hyperledger.inkchain.protos.peer";
-option java_outer_classname = "EventsPackage";
-option go_package = "github.com/hyperledger/inkchain/protos/peer";
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/protos/peer/events.proto
+option go_package = "github.com/inklabsfoundation/inkchain/protos/peer";
 
 package protos;
 

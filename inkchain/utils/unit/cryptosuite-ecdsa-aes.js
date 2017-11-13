@@ -45,16 +45,16 @@ var PKCS11 = require('inkchain-client/lib/impl/bccsp_pkcs11.js');
 var keyValStorePath = path.join(testutil.getTempDir(), 'keyValStore1');
 
 var TEST_MSG = 'this is a test message';
-var TEST_LONG_MSG = 'The Hyperledger project is an open source collaborative effort created to advance cross-industry blockchain technologies. ' +
+var TEST_LONG_MSG = 'The Inklabsfoundation project is an open source collaborative effort created to advance cross-industry blockchain technologies. ' +
 	'It is a global collaboration including leaders in finance, banking, Internet of Things, supply chains, manufacturing and Technology. The Linux ' +
-	'Foundation hosts Hyperledger as a Collaborative Project under the foundation. Why Create the Project? Not since the Web itself has a technology ' +
+	'Foundation hosts Inklabsfoundation as a Collaborative Project under the foundation. Why Create the Project? Not since the Web itself has a technology ' +
 	'promised broader and more fundamental revolution than blockchain technology. A blockchain is a peer-to-peer distributed ledger forged by consensus, ' +
 	'combined with a system for “smart contracts” and other assistive technologies. Together these can be used to build a new generation of transactional ' +
 	'applications that establishes trust, accountability and transparency at their core, while streamlining business processes and legal constraints. ' +
 	'Think of it as an operating system for marketplaces, data-sharing networks, micro-currencies, and decentralized digital communities. It has the potential ' +
 	'to vastly reduce the cost and complexity of getting things done in the real world. Only an Open Source, collaborative software development approach can ' +
 	'ensure the transparency, longevity, interoperability and support required to bring blockchain technologies forward to mainstream commercial adoption. That ' +
-	'is what Hyperledger is about – communities of software developers building blockchain frameworks and platforms.';
+	'is what Inklabsfoundation is about – communities of software developers building blockchain frameworks and platforms.';
 
 var HASH_MSG_SHA384 = '6247065855a812ecd182476576c02d46a675845ef4b0056e973ca42dcf8191d3adabc8c6c4b909f20f96136032ab723a';
 var HASH_LONG_MSG_SHA384 = 'e647ea97fec64412a34f522b5d80cbba9a293f89d4dc63802c79bf485078ecbaed59a0d53cd7ab08a9ae983e64f886a6';

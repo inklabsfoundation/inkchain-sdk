@@ -17,13 +17,8 @@ limitations under the License.
 
 syntax = "proto3";
 
-<<<<<<< HEAD:inkchain-client/lib/protos/msp/msp_principal.proto
-option go_package = "github.com/inkchain/inkchain/protos/msp";
-option java_package = "org.inkchain.inkchain.protos.common";
-=======
-option go_package = "github.com/hyperledger/inkchain/protos/msp";
-option java_package = "org.hyperledger.inkchain.protos.common";
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/protos/msp/msp_principal.proto
+option go_package = "github.com/inklabsfoundation/inkchain/protos/msp";
+option java_package = "org.inklabsfoundation.inkchain.protos.common";
 
 package common;
 

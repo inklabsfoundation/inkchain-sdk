@@ -33,11 +33,7 @@ var Signer = idModule.Signer;
  * transactions and queries with the Channel.
  *
  * User ECerts can be obtained from a CA beforehand as part of installing and instantiating
-<<<<<<< HEAD:inkchain-client/lib/User.js
- * the application, or it can be obtained from the optional inkchain CA service via its
-=======
  * the application, or it can be obtained from the optional Inkchain CA service via its
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/User.js
  * enrollment process.
  *
  * Sometimes User identities are confused with Peer identities. User identities represent

@@ -31,11 +31,7 @@ gulp.task('doc', ['clean'], function () {
 		'!inkchain-client/lib/hash.js',
 		'!inkchain-client/lib/utils.js',
 		'inkchain-ca-client/index.js',
-<<<<<<< HEAD
-		'inkchain-ca-client/lib/inkchainCAClientImpl.js'
-=======
 		'inkchain-ca-client/lib/InkchainCAClientImpl.js'
->>>>>>> 2a93d38... 改名inkchain
 	], { read: false })
 	.pipe(jsdoc({
 		opts: {
@@ -43,11 +39,7 @@ gulp.task('doc', ['clean'], function () {
 			destination: './docs/gen'
 		},
 		templates: {
-<<<<<<< HEAD
-			systemName: 'Hyperledger inkchain SDK for node.js',
-=======
-			systemName: 'Hyperledger Inkchain SDK for node.js',
->>>>>>> 2a93d38... 改名inkchain
+			systemName: 'Inklabsfoundation Inkchain SDK for node.js',
 			theme: 'cosmo' //cerulean, cosmo, cyborg, flatly, journal, lumen, paper, readable, sandstone, simplex, slate, spacelab, superhero, united, yeti
 		}
 	}));

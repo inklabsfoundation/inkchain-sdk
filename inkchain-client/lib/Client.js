@@ -56,10 +56,6 @@ var _queryProto = grpc.load(__dirname + '/protos/peer/query.proto').protos;
  *     You can enroll each authenticated user separately so that each user gets its own signing identity.
  * <li>Use a shared client instance and a common signing identity among authenticated users.
  * <br><br>
- * It is important to understand that switching userContexts with the same client instance is considered an
- * anti-pattern. This is the direct result of the stateful design. A JIRA work item has been opened to discuss
- * adding support for stateless usage of the SDK: [FAB-4563]{@link https://jira.inkchain.org/browse/FAB-4563}
- * <br><br>
  * The client also supports persistence via a <code>stateStore</code>. A state store is a simple storage plugin
  * that implements the {@link module:api.KeyValueStore} interface, which helps the SDK save critical information
  * to be used across server restarts/crashes. Out of the box, the SDK saves the signing identities (instances of
@@ -86,11 +82,7 @@ var Client = class extends BaseClient {
 
 	/**
 	 * Determine if the inkchain backend is started in
-<<<<<<< HEAD:inkchain-client/lib/Client.js
-	 * [development mode]{@link http://inkchain-inkchain.readthedocs.io/en/latest/Setup/Chaincode-setup.html?highlight=development%20mode}.
-=======
-	 * [development mode]{@link http://hyperledger-inkchain.readthedocs.io/en/latest/Setup/Chaincode-setup.html?highlight=development%20mode}.
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Client.js
+	 * [development mode]{@link http://inklabsfoundation-inkchain.readthedocs.io/en/latest/Setup/Chaincode-setup.html?highlight=development%20mode}.
 	 * In development mode, the endorsing peers will not attempt to spin up a docker instance to run
 	 * the target chaincode requested by a transaction proposal, but instead redirect the invocation
 	 * requests to the chaincode process that has registered itself with the endorsing peer. This makes
@@ -207,11 +199,7 @@ var Client = class extends BaseClient {
 	}
 
 	/**
-<<<<<<< HEAD:inkchain-client/lib/Client.js
-	 * Returns a new {@link TransactionID} object. inkchain transaction ids are constructed
-=======
 	 * Returns a new {@link TransactionID} object. Inkchain transaction ids are constructed
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Client.js
 	 * as a hash of a nonce concatenated with the signing identity's serialized bytes. The
 	 * TransactionID object keeps the nonce and the resulting id string bundled together
 	 * as a coherent pair.
@@ -231,11 +219,7 @@ var Client = class extends BaseClient {
 
 	/**
 	 * Extracts the protobuf 'ConfigUpdate' object out of the 'ConfigEnvelope' object
-<<<<<<< HEAD:inkchain-client/lib/Client.js
-	 * that is produced by the [configtxgen tool]{@link http://inkchain-inkchain.readthedocs.io/en/latest/configtxgen.html}.
-=======
-	 * that is produced by the [configtxgen tool]{@link http://hyperledger-inkchain.readthedocs.io/en/latest/configtxgen.html}.
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Client.js
+	 * that is produced by the [configtxgen tool]{@link http://inklabsfoundation-inkchain.readthedocs.io/en/latest/configtxgen.html}.
 	 * The returned object may then be signed using the signChannelConfig() method of this class. Once the all
 	 * signatures have been collected, the 'ConfigUpdate' object and the signatures may be used
 	 * on the [createChannel()]{@link Client#createChannel} or [updateChannel()]{@link Client#updateChannel} calls.
@@ -322,13 +306,8 @@ var Client = class extends BaseClient {
 	 * @property {byte[]} envelope - Optional. Bytes of the envelope object containing all
 	 *                               required settings and signatures to initialize this channel. This envelope
 	 *                               would have been created by the command line tool
-<<<<<<< HEAD:inkchain-client/lib/Client.js
-	 *                               [configtxgen]{@link http://inkchain-inkchain.readthedocs.io/en/latest/configtxgen.html} or
-	 *                               [configtxlator]{@link https://github.com/inkchain/inkchain/blob/master/examples/configtxupdate/README.md}
-=======
-	 *                               [configtxgen]{@link http://hyperledger-inkchain.readthedocs.io/en/latest/configtxgen.html} or
-	 *                               [configtxlator]{@link https://github.com/hyperledger/inkchain/blob/master/examples/configtxupdate/README.md}
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Client.js
+	 *                               [configtxgen]{@link http://inklabsfoundation-inkchain.readthedocs.io/en/latest/configtxgen.html} or
+	 *                               [configtxlator]{@link https://github.com/inklabsfoundation/inkchain/blob/master/examples/configtxupdate/README.md}
 	 * @property {byte[]} config - Optional. Protobuf ConfigUpdate object extracted from a ConfigEnvelope
 	 *                             created by the configtxgen tool. See [extractChannelConfig()]{@link Client#extractChannelConfig}.
 	 *                             The ConfigUpdate object may also be created by the configtxlator tool.
@@ -1040,11 +1019,7 @@ var Client = class extends BaseClient {
 	 * private key and the corresponding x509 certificate. This allows applications
 	 * to use pre-existing crypto materials (private keys and certificates) to
 	 * construct user objects with signing capabilities, as an alternative to
-<<<<<<< HEAD:inkchain-client/lib/Client.js
-	 * dynamically enrolling users with [inkchain-ca]{@link http://inkchain-inkchain-ca.readthedocs.io/en/latest/}
-=======
-	 * dynamically enrolling users with [inkchain-ca]{@link http://hyperledger-inkchain-ca.readthedocs.io/en/latest/}
->>>>>>> 2a93d38... 改名inkchain:inkchain-client/lib/Client.js
+	 * dynamically enrolling users with [inkchain-ca]{@link http://inklabsfoundation-inkchain-ca.readthedocs.io/en/latest/}
 	 * <br><br>
 	 * Note that upon successful creation of the new user object, it is set to
 	 * the client instance as the current <code>userContext</code>.

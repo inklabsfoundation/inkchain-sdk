@@ -23,11 +23,7 @@ var jsrsa = require('jsrsasign');
 var KEYUTIL = jsrsa.KEYUTIL;
 
 var Client = require('inkchain-client');
-<<<<<<< HEAD
-var copService = require('inkchain-ca-client/lib/inkchainCAClientImpl.js');
-=======
 var copService = require('inkchain-ca-client/lib/InkchainCAClientImpl.js');
->>>>>>> 2a93d38... 改名inkchain
 var User = require('inkchain-client/lib/User.js');
 var CryptoSuite = require('inkchain-client/lib/impl/CryptoSuite_ECDSA_AES.js');
 var KeyStore = require('inkchain-client/lib/impl/CryptoKeyStore.js');
@@ -120,6 +116,7 @@ var	tlsOptions = {
 
 function getMember(username, password, client, userOrg) {
 	var caUrl = ORGS[userOrg].ca.url;
+
 	return client.getUserContext(username, true)
 	.then((user) => {
 		return new Promise((resolve, reject) => {
@@ -141,6 +138,7 @@ function getMember(username, password, client, userOrg) {
 
 			// need to enroll it with CA server
 			var cop = new copService(caUrl, tlsOptions, ORGS[userOrg].ca.name, cryptoSuite);
+
 			return cop.enroll({
 				enrollmentID: username,
 				enrollmentSecret: password
@@ -156,11 +154,7 @@ function getMember(username, password, client, userOrg) {
 			}).then(() => {
 				return resolve(member);
 			}).catch((err) => {
-<<<<<<< HEAD
-                console.log('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
-=======
 				console.log(err);
->>>>>>> 2123545... 修改enroll ca 代码
 				logger.debug('Failed to enroll and persist user. Error: ' + err.stack ? err.stack : err);
 			});
 		});
@@ -262,6 +256,7 @@ module.exports.getSubmitter = function(client, peerOrgAdmin, org) {
 	} else {
 		peerAdmin = false;
 	}
+
 	// if the 3rd argument was skipped
 	if (typeof peerOrgAdmin === 'string') {
 		userOrg = peerOrgAdmin;
