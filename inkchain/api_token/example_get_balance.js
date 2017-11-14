@@ -10,7 +10,7 @@ var inkUtils = require('../InkUtils.js');
 
 test('\n\n***** End-to-end flow: query chaincode *****\n\n', (t) => {
 
-    inkUtils.getBalance('org1',["411b6f8f24F28CaAFE514c16E11800167f8EBd89","CCCToken"], null,false)
+    inkUtils.getBalance('org1',["411b6f8f24F28CaAFE514c16E11800167f8EBd89","INK"], null,false)
         .then((result) => {
             t.pass('Successfully query chaincode on the channel. Response:' + result);
             t.end();
