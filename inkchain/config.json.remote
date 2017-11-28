@@ -1,0 +1,50 @@
+{
+        "test-network": {
+                "orderer": {
+                        "url": "grpcs://10.9.119.159:7050",
+                        "server-hostname": "orderer.example.com",
+                        "tls_cacerts": "utils/fixtures/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+                },
+                "org1": {
+                        "name": "peerOrg1",
+                        "mspid": "Org1MSP",
+                        "ca": {
+                                "url": "https://10.9.116.95:7054",
+                                "name": "ca_peerOrg1"
+                        },
+                        "peer1": {
+                                "requests": "grpcs://10.9.167.141:7051",
+                                "events": "grpcs://10.9.167.141:7053",
+                                "server-hostname": "peer0.org1.example.com",
+                                "tls_cacerts": "utils/fixtures/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
+                        },
+                        "peer2": {
+                                "requests": "grpcs://10.9.168.61:7056",
+                                "events": "grpcs://10.9.168.61:7058",
+                                "server-hostname": "peer1.org1.example.com",
+                                "tls_cacerts": "utils/fixtures/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
+                        }
+                },
+                "org2": {
+                        "name": "peerOrg2",
+                        "mspid": "Org2MSP",
+                        "ca": {
+                                "url": "https://10.9.96.191:8054",
+                                "name": "ca_peerOrg2"
+                        },
+                        "peer1": {
+                                "requests": "grpcs://10.9.158.182:8051",
+                                "events": "grpcs://10.9.158.182:8053",
+                                "server-hostname": "peer0.org2.example.com",
+                                "tls_cacerts": "utils/fixtures/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem"
+                        },
+                        "peer2": {
+                                "requests": "grpcs://10.9.115.208:8056",
+                                "events": "grpcs://10.9.115.208:8058",
+                                "server-hostname": "peer1.org2.example.com",
+                                "tls_cacerts": "utils/fixtures/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem"
+                        }
+                }
+        }
+}
+
