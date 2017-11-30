@@ -1237,11 +1237,7 @@ function decodeTranSet(tranSet_bytes) {
         kv_tran_set.balance_type = proto_tran_set.getBalanceType();
         let amount = proto_tran_set.getAmount().toBuffer();
         let bigIntAmount = "";
-        console.log("0x"+amount.toString('hex')/1);
         kv_tran_set.amount = bigInt.bigInt2str(bigInt.str2bigInt("0x" + amount.toString('hex'), 16), 10);
-        //amount.get(bytes, 0, bytes.length);
-        // console.log(amount.buffer.slice(amount.offset-100, amount.limit+120).toString('ascii'));
-        //kv_tran_set.amount = amount.buffer.readIString(amount.offset, amount.limit - amount.offset);
         transet.transet.push(kv_tran_set);
     }
     return transet;
