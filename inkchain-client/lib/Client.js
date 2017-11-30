@@ -41,6 +41,7 @@ var _commonProto = grpc.load(__dirname + '/protos/common/common.proto').common;
 var _configtxProto = grpc.load(__dirname + '/protos/common/configtx.proto').common;
 var _ccProto = grpc.load(__dirname + '/protos/peer/chaincode.proto').protos;
 var _queryProto = grpc.load(__dirname + '/protos/peer/query.proto').protos;
+var BlockDecoder = require('./BlockDecoder.js');
 
 /**
  * A client instance provides the main API surface to interact with a network of
@@ -66,6 +67,9 @@ var _queryProto = grpc.load(__dirname + '/protos/peer/query.proto').protos;
  *
  */
 var Client = class extends BaseClient {
+	static decodeTransaction(bytes) {
+		return BlockDecoder.decodeTransaction(bytes);
+	}
 
 	constructor() {
 		super();
