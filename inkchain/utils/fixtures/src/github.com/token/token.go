@@ -138,13 +138,11 @@ func (t *tokenChaincode) transfer(stub shim.ChaincodeStubInterface, args []strin
 	B = strings.ToLower(args[0])
 	BalanceType = args[1]
 
-	_, err = strconv.Atoi(args[2])
-	if err != nil {
+	amount := big.NewInt(0)
+	_, good := amount.SetString(args[2], 10)
+	if !good {
 		return shim.Error("Expecting integer value for amount")
 	}
-
-	amount := big.NewInt(0)
-	amount.SetString(args[2], 10)
 
 	err = stub.Transfer(B, BalanceType, amount)
 	if err != nil {
