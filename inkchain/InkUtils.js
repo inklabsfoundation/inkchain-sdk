@@ -664,7 +664,7 @@ function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg
     let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex"));
     let promise = Promise.resolve();
     return promise.then(()=>{
-        queryChaincode('org1', 'token', 'counter', [senderAddress.toString("hex")]).then((counter)=>{
+        queryChaincode('org1', ccId, 'counter', [senderAddress.toString("hex")]).then((counter)=>{
             let senderSpec = {
                 sender:Buffer.from(senderAddress.toString("hex")),
                 counter:Long.fromString(counter[0].toString()),
