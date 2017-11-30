@@ -20,7 +20,9 @@ var grpc = require('grpc');
 var util = require('util');
 var path = require('path');
 var utils = require('./utils.js');
+var ByteBuffer = require('bytebuffer');
 var logger = utils.getLogger('BlockDecoder.js');
+var bigInt = require('BigInt');
 
 var _ccProto = grpc.load(__dirname + '/protos/peer/chaincode.proto').protos;
 var _ccEventProto = grpc.load(__dirname + '/protos/peer/chaincode_event.proto').protos;
@@ -44,6 +46,8 @@ var _rwsetProto = grpc.load(path.join(__dirname, '/protos/ledger/rwset/rwset.pro
 var _kv_rwsetProto = grpc.load(path.join(__dirname, '/protos/ledger/rwset/kvrwset/kv_rwset.proto')).kvrwset;
 
 var _ledgerSetProto = grpc.load(path.join(__dirname, '/protos/ledger/ledgerset/ledgerset.proto')).ledgerset;
+var _tranSetProto = grpc.load(path.join(__dirname, '/protos/ledger/ledgerset/transet/transet.proto')).transet;
+var _kvTranSetProto = grpc.load(path.join(__dirname, '/protos/ledger/ledgerset/transet/kvtranset/kv_transet.proto')).kvtranset;
 
 /**
  * Utility class to convert a protobuf encoded byte array of a Inklabsfoundation Inkchain block
@@ -644,7 +648,7 @@ function decodeMetadataValueSignatures(proto_meta_signatures) {
 
 function decodeBlockDataEnvelope(proto_envelope) {
 	var envelope = {};
-	envelope.signature = proto_envelope.getSignature().toBuffer(); //leave as bytes
+	envelope.signature = proto_envelope.getSignature().toBuffer().toString('hex'); //leave as bytes
 
 	envelope.payload = {};
 	var proto_payload = _commonProto.Payload.decode(proto_envelope.getPayload().toBuffer());
@@ -980,7 +984,7 @@ function decodeSignatureHeader(signature_header_bytes) {
 	var signature_header = {};
 	var proto_signature_header = _commonProto.SignatureHeader.decode(signature_header_bytes);
 	signature_header.creator = decodeIdentity(proto_signature_header.getCreator().toBuffer());
-	signature_header.nonce = proto_signature_header.getNonce().toBuffer();
+	signature_header.nonce = proto_signature_header.getNonce().toBuffer().toString('hex');
 
 	return signature_header;
 };
@@ -1090,7 +1094,7 @@ function decodeChannelHeader(header_bytes) {
 	channel_header.tx_id = proto_channel_header.getTxId();
 	channel_header.epoch = proto_channel_header.getEpoch().toInt();
 	//TODO need to decode this
-	channel_header.extension = proto_channel_header.getExtension().toBuffer();
+	channel_header.extension = proto_channel_header.getExtension().toBuffer().toString('hex');
 
 	return channel_header;
 };
@@ -1112,14 +1116,65 @@ function decodeChaincodeActionPayload(payload_bytes) {
 };
 
 function decodeChaincodeProposalPayload(chaincode_proposal_payload_bytes) {
-	var chaincode_proposal_payload = {};
-	var proto_chaincode_proposal_payload = _proposalProto.ChaincodeProposalPayload.decode(chaincode_proposal_payload_bytes);
-	chaincode_proposal_payload.input = proto_chaincode_proposal_payload.getInput().toBuffer();
+	let chaincode_proposal_payload = {};
+	let proto_chaincode_proposal_payload = _proposalProto.ChaincodeProposalPayload.decode(chaincode_proposal_payload_bytes);
+
+    chaincode_proposal_payload.input = decodeChaincodeInvocationSpec(proto_chaincode_proposal_payload.getInput());
+  //  chaincode_proposal_payload.TransientMap = proto_chaincode_proposal_payload.getTransientMap();
+
+//	chaincode_proposal_payload.input.chaincode_spec = _ccProto.ChaincodeSpec.decode(chaincode_invocation_spec.getChaincodeSpec());
 	//TransientMap is not allowed to be included on ledger
 
 	return chaincode_proposal_payload;
 }
 
+function decodeChaincodeInvocationSpec(chaincode_invocation_spec_bytes) {
+    let chaincode_invocation_spec = {};
+    let proto_chaincode_invocation_spec = _ccProto.ChaincodeInvocationSpec.decode(chaincode_invocation_spec_bytes);
+    chaincode_invocation_spec.id_generation_alg = proto_chaincode_invocation_spec.getIdGenerationAlg();
+    chaincode_invocation_spec.sig = proto_chaincode_invocation_spec.getSig().toBuffer().toString('hex');
+    chaincode_invocation_spec.chaincode_spec = decodeChaincodeSpec(proto_chaincode_invocation_spec.getChaincodeSpec());
+    chaincode_invocation_spec.sender_spec = decodeSenderSpec(proto_chaincode_invocation_spec.getSenderSpec());
+    return chaincode_invocation_spec;
+}
+function decodeSenderSpec(sender_spec_) {
+    let sender_spec = {};
+    sender_spec.sender = sender_spec_.sender.toBuffer().toString();
+    sender_spec.counter = sender_spec_.counter;
+    sender_spec.ink_limit = sender_spec_.ink_limit.toBuffer().toString();
+    sender_spec.msg = sender_spec_.msg.toBuffer().toString();
+    return sender_spec;
+}
+function decodeChaincodeSpec(chaincode_spec_) {
+    let chaincode_spec = {};
+    switch(chaincode_spec_.type) {
+        case 0:
+            chaincode_spec.type = 'UNDEFINED';
+            break;
+        case 1:
+            chaincode_spec.type = 'GOLANG';
+            break;
+        case 2:
+            chaincode_spec.type = 'NODE';
+            break;
+        case 3:
+            chaincode_spec.type = 'CAR';
+            break;
+        case 4:
+            chaincode_spec.type = 'JAVA';
+            break;
+    }
+    chaincode_spec.chaincode_id = chaincode_spec_.chaincode_id;
+    let args = chaincode_spec_.input.args;
+    chaincode_spec.input = {
+        args:[]
+    };
+    for(let arg in args) {
+        chaincode_spec.input.args.push(args[arg].toBuffer().toString());
+    }
+    chaincode_spec.timeout = chaincode_spec_.timeout;
+    return chaincode_spec;
+}
 function decodeChaincodeEndorsedAction(proto_chaincode_endorsed_action) {
 	var action = {};
 	action.proposal_response_payload = decodeProposalResponsePayload(proto_chaincode_endorsed_action.getProposalResponsePayload());
@@ -1135,7 +1190,7 @@ function decodeChaincodeEndorsedAction(proto_chaincode_endorsed_action) {
 function decodeEndorsement(proto_endorsement) {
 	var endorsement = {};
 	endorsement.endorser = decodeIdentity(proto_endorsement.getEndorser());
-	endorsement.signature = proto_endorsement.getSignature().toBuffer();
+	endorsement.signature = proto_endorsement.getSignature().toBuffer().toString('hex');
 
 	return endorsement;
 };
@@ -1163,11 +1218,34 @@ function decodeLedgerSets(ledger_bytes) {
 	var ledgerset = {};
 	var ledgerSetProto = _ledgerSetProto.LedgerSet.decode(ledger_bytes);
 	ledgerset.TxRwSet = decodeReadWriteSets(ledgerSetProto.getRwset());
-	ledgerset.Transet = ledgerSetProto.getTranset();
+	ledgerset.Transet = decodeTranSet(ledgerSetProto.getTranset());
 
 	return ledgerset;
 }
 
+function decodeTranSet(tranSet_bytes) {
+    let transet = {};
+    let tran_set = _tranSetProto.TranSet.decode(tranSet_bytes);
+    transet.from = tran_set.getFrom();
+    transet.from_ver = tran_set.getFromVer();
+    transet.transet = [];
+    let kvtrans = _kvTranSetProto.KVTranSet.decode(tran_set.getTranset()).getTrans();
+    for (let i in kvtrans) {
+        let kv_tran_set = {};
+        let proto_tran_set = kvtrans[i];
+        kv_tran_set.to = proto_tran_set.getTo();
+        kv_tran_set.balance_type = proto_tran_set.getBalanceType();
+        let amount = proto_tran_set.getAmount().toBuffer();
+        let bigIntAmount = "";
+        console.log("0x"+amount.toString('hex')/1);
+        kv_tran_set.amount = bigInt.bigInt2str(bigInt.str2bigInt("0x" + amount.toString('hex'), 16), 10);
+        //amount.get(bytes, 0, bytes.length);
+        // console.log(amount.buffer.slice(amount.offset-100, amount.limit+120).toString('ascii'));
+        //kv_tran_set.amount = amount.buffer.readIString(amount.offset, amount.limit - amount.offset);
+        transet.transet.push(kv_tran_set);
+    }
+    return transet;
+}
 function decodeChaincodeEvents(event_bytes) {
 	var events = {};
 	var proto_events = _ccEventProto.ChaincodeEvent.decode(event_bytes);
