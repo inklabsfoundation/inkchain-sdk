@@ -22,7 +22,7 @@ app.get('/help', (req, res)=>{
         '<br>' +
         '<strong>EXAMPLE:</strong>' + '<br>' +
         '<strong>GET</strong> <pre>/get-account/0dd7c16a70d42f9e952225862855edd0098a4920</pre>' + '<br>' +
-        '<strong>RETURN</strong> <pre>{"Name":"0dd7c16a70d42f9e952225862855edd0098a4920","Balance":"{"Tobee":999999999806}"}</pre>' + '<br>';
+        '<strong>RETURN</strong> <pre>{"Name":"0dd7c16a70d42f9e952225862855edd0098a4920","Balance":{"Tobee":999999999770}}</pre>' + '<br>';
     const get_balance = '' +
         '<h3>获取用户账户余额/Get user account balance</h3>' +
         '<strong>GET</strong> /get-balance/{address}/{coin_type}' + '<br>' +
@@ -59,17 +59,17 @@ app.get('/help', (req, res)=>{
 
 app.get('/generate-account', (req, res)=>{
     Wallet.generate();
-    res.send('{"address": "'+Wallet.getAddress()+'", "private_key": "'+Wallet.getPriKey()+'"}');
+    res.json({"address": "'+Wallet.getAddress()+'", "private_key": "'+Wallet.getPriKey()+'"});
 });
 app.get('/get-account/:address', (req, res)=>{
     const address = req.params.address;
     inkUtils.getAccount('org1',[address], null, false)
         .then((result) => {
-            res.send(result[0].toString());
+            res.json(JSON.parse(result[0].toString().replace(":\"{", ":{").replace("}\"}", "}}")));
         }, (err) => {
-            res.send(err);
+            res.json(err);
         }).catch((err) => {
-            res.send(err);
+            res.json(err);
         });
 });
 app.get('/get-balance/:address/:coin_type', (req, res)=>{
@@ -77,15 +77,14 @@ app.get('/get-balance/:address/:coin_type', (req, res)=>{
     const coin_type = req.params.coin_type;
     inkUtils.getBalance('org1',[address, coin_type], null,false)
         .then((result) => {
-            res.send(result[0].toString());
+            res.json(JSON.parse(result[0].toString()));
         }, (err) => {
-            res.send(err);
+            res.json(err);
         }).catch((err) => {
-            res.send(err);
+            res.json(err);
         });
 });
 app.post('/transfer', (req, res)=>{
-    console.log(req.body);
     const to_address = req.body.to_address;
     const coin_type = req.body.coin_type;
     const amount = req.body.amount;
@@ -93,24 +92,23 @@ app.post('/transfer', (req, res)=>{
     const private_key = req.body.private_key;
     inkUtils.invokeChaincodeSigned('org1', 'token', 'v0','transfer', [to_address, coin_type, amount],"10", message, private_key, false)
         .then((result) => {
-            console.log(result);
-            res.send('{"transaction_id": "'+result+'"}');
+            res.json({"transaction_id": result});
         }, (err) => {
-            res.send(err);
+            res.json(err);
         }).catch((err) => {
-            res.send(err);
+            res.json(err);
         });
 });
 app.get('/get-transaction/:transaction_id', (req, res)=>{
     const transaction_id = req.params.transaction_id;
     inkUtils.queryChaincode('org1', 'qscc','GetTransactionByID', ["mychannel", transaction_id])
         .then((result) => {
-            res.send(JSON.stringify(Client.decodeTransaction(result[0])));
+            res.json(Client.decodeTransaction(result[0]));
         }, (err) => {
-            res.send(err);
+            res.json(err);
         }).catch((err) => {
-        res.send(err);
-    });
+            res.json(err);
+        });
 });
 
 let server = app.listen(8081, ()=>{
