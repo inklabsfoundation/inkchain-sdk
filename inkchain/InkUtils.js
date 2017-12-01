@@ -3,7 +3,8 @@
  */
 'use strict';
 var path = require('path');
-module.exports.WORK_PATH = path.join(__dirname,'../');
+const WORK_PATH = path.join(__dirname,'../');
+module.exports.WORK_PATH = WORK_PATH;
 
 var utils = require('inkchain-client/lib/utils.js');
 var logger = utils.getLogger('inkchain testing');
@@ -11,8 +12,8 @@ const Long = require('long');
 var ethUtils = require('ethereumjs-util');
 const CHANNEL_NAME = "mychannel";
 module.exports.CHANNEL_NAME = CHANNEL_NAME;
-
-
+var Orderer = require('inkchain-client/lib/Orderer.js');
+var Peer = require('inkchain-client/lib/Peer.js');
 var ORGS;
 var Client = require('inkchain-client');
 var testUtil = require('./utils/unit/util.js');
@@ -1014,6 +1015,80 @@ function queryChaincode(org,ccId, func, args, transientMap, isAdmin) {
 };
 
 module.exports.queryChaincode = queryChaincode;
+
+function queryChainInfo() {
+    var org = 'org1';
+    var orgName;
+
+    Client.addConfigFile(path.join(WORK_PATH, 'inkchain', 'config.json'));
+    ORGS = Client.getConfigSetting('test-network');
+    orgName = ORGS[org].name;
+    var caRootsPath = ORGS.orderer.tls_cacerts;
+    var data = fs.readFileSync(path.join(WORK_PATH, 'inkchain', caRootsPath));
+
+    let caroots = Buffer.from(data).toString();
+
+    var client = new Client();
+    var channel = client.newChannel(CHANNEL_NAME);
+    channel.addOrderer(
+        new Orderer(
+            ORGS.orderer.url,
+            {
+                'pem': caroots,
+                'ssl-target-name-override': ORGS.orderer['server-hostname']
+            }
+        )
+    );
+
+    data = fs.readFileSync(path.join(WORK_PATH, 'inkchain', ORGS[org].peer1['tls_cacerts']));
+    var peer0 = new Peer(
+        ORGS[org].peer1.requests,
+        {
+            pem: Buffer.from(data).toString(),
+            'ssl-target-name-override': ORGS[org].peer1['server-hostname']
+        });
+    data = fs.readFileSync(path.join(WORK_PATH, 'inkchain', ORGS['org2'].peer1['tls_cacerts']));
+    var peer1 = new Peer(
+        ORGS['org2'].peer1.requests,
+        {
+            pem: Buffer.from(data).toString(),
+            'ssl-target-name-override': ORGS['org2'].peer1['server-hostname']
+        });
+
+    channel.addPeer(peer0);
+    channel.addPeer(peer1);
+
+    utils.setConfigSetting('key-value-store','inkchain-client/lib/impl/FileKeyValueStore.js');
+    var cryptoSuite = Client.newCryptoSuite();
+    cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
+    client.setCryptoSuite(cryptoSuite);
+
+    return Client.newDefaultKeyValueStore({
+        path: testUtil.storePathForOrg(orgName)
+    }).then( function (store) {
+        client.setStateStore(store);
+        return testUtil.getSubmitter(client, false, org);
+    }).then((admin) => {
+        the_user = admin;
+
+        // read the config block from the orderer for the channel
+        // and initialize the verify MSPs based on the participating
+        // organizations
+        return channel.initialize();
+    }).then((success) => {
+        return channel.queryInfo(peer0);
+    }).then((blockchainInfo) => {
+        return blockchainInfo;
+        //logger.debug(' Channel queryInfo() returned block height='+blockchainInfo.height);
+        //logger.debug(' Channel queryInfo() returned block previousBlockHash='+blockchainInfo.previousBlockHash);
+        //logger.debug(' Channel queryInfo() returned block currentBlockHash='+blockchainInfo.currentBlockHash);
+        //console.log("blockheight:" + blockchainInfo.height);
+    }).catch((err) => {
+        throw new Error(err.stack ? err.stack : err);
+    });
+}
+
+module.exports.queryChainInfo = queryChainInfo;
 
 
 const TOKEN_ID = "token";
