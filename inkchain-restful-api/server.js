@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
 const inkUtils = require('../inkchain/InkUtils');
 const Client = require('inkchain-client');
 const Wallet = require('../inkchain/wallet').Wallet;
+
+app.use(bodyParser.json({extended: true}));
 
 app.get('/help', (req, res)=>{
     const generate_account = '' +
@@ -32,7 +35,7 @@ app.get('/help', (req, res)=>{
         '<strong>GET</strong> /transfer/{to_address}/{coin_type}/{amount}/{message}/{private_key}' + '<br>' +
         '<br>' +
         '<strong>EXAMPLE:</strong>' + '<br>' +
-        '<strong>GET</strong> <pre>/transfer/3c97f146e8de9807ef723538521fcecd5f64c79a/Tobee/9/%E5%93%88%E5%93%88%E5%92%8C%E8%8C%83%E5%9B%B4%E5%8F%8A%E4%BD%9B%E9%97%AE%E4%BD%9B%20i%E6%9C%BA%E5%93%A6%E5%B0%B134i%20%E5%93%A6%E9%A3%9E%E6%9C%BA30%E2%9C%88%EF%B8%8F49%20%F0%9F%92%A2389%E5%8F%8D%E6%82%943%E7%A6%8F%E6%8A%A53%20%E9%99%84%E8%BF%914%E4%BA%86%E2%9C%88%EF%B8%8F%E5%BC%80%E6%88%BF%E9%97%B44i%20%E5%93%A6%E5%8F%91%E5%87%A04i%E9%A3%9E%E6%9C%BA%E5%93%A6%E6%BF%80%E5%8F%91of4%E5%87%8F%E8%82%A5%E4%BA%86%E5%BC%80%E5%B0%B1%E5%88%86%E5%BC%80%E4%BA%86%E5%AE%B64%E5%90%A642%E5%87%A0%E5%88%864%E8%83%BD%E8%8A%A34%E5%A6%AE%E4%BD%9B34%E5%A6%AE%E4%BD%9B%E6%89%A3%E5%8D%96%E9%A3%9E%E6%9C%BA%E7%9C%8B%E7%AB%8B%E6%B3%95%E5%B1%803%E6%89%A3%E4%BA%86%E8%85%93%E5%B0%BC%E5%9F%BA%E7%A7%91%E9%9A%86%E5%8D%9A%E9%99%84%E8%BF%91%E5%B0%81%E5%8C%85%E6%89%A3%E4%BA%86%E5%87%A0%E5%88%86%E5%90%88%E8%AE%A1%E5%AE%A2%E6%88%B7%E6%B3%95%E5%85%B0%E5%85%8B%E9%9F%A9%E5%A4%8D%E6%A6%98%E7%9C%8B%E5%A5%BD%E4%BC%9A%E8%AE%A1%E6%B3%95%E8%AF%9Dv%20%E6%AF%95%E6%81%AD%E6%AF%95%E6%95%AC%E5%92%96%E5%96%B1%E9%A5%AD%E5%94%AF%E9%A5%AD%E5%90%8E21%E5%85%8B%E6%8B%89%E6%88%91%E5%B0%B1%E9%A5%BF%E5%93%AD%E4%BA%86%E9%A3%9E%E6%9C%BA%E8%BF%9D%E6%B3%95%20i%20%E5%93%A6%E5%BE%AE%E7%A7%AF%E5%88%86%20i%20%E5%93%A6%E5%BE%AE%E7%A7%AF%E5%88%86%20i%20%E6%9D%83%E5%A8%81%E8%82%8C%E8%82%A4lwe%20%20%20we%20fwkejfklqewjflkwef/af06d6fc98c25b201777bcd3d4d1828fb6cdb7897bea6cf4157d733c5175f1e0</pre>' + '<br>' +
+        '<strong>GET</strong> <pre>/transfer</pre>' + '<br>' +
         '<strong>RETURN</strong> <pre>{"transaction_id": "f7d4a4007330788153389a0277458e6a80c5c831c953efab6c73e9dcb1552624"}</pre>' + '<br>';
     const get_transaction = '' +
         '<h3>获取交易信息/Get transaction info by transaction_id</h3>' +
@@ -74,12 +77,13 @@ app.get('/get-balance/:address/:coin_type', (req, res)=>{
             res.send(err);
         });
 });
-app.get('/transfer/:to_address/:coin_type/:amount/:message/:private_key', (req, res)=>{
-    const to_address = req.params.to_address;
-    const coin_type = req.params.coin_type;
-    const amount = req.params.amount;
-    const message = req.params.message;
-    const private_key = req.params.private_key;
+app.post('/transfer', (req, res)=>{
+    console.log(req.body);
+    const to_address = req.body.to_address;
+    const coin_type = req.body.coin_type;
+    const amount = req.body.amount;
+    const message = req.body.message;
+    const private_key = req.body.private_key;
     inkUtils.invokeChaincodeSigned('org1', 'token', 'v0','transfer', [to_address, coin_type, amount],"10", message, private_key, false)
         .then((result) => {
             console.log(result);

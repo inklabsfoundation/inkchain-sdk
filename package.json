@@ -58,9 +58,10 @@
   ],
   "dependencies": {
     "BigInt": "^5.5.3",
+    "body-parser": "^1.18.2",
     "cliui": "^3.2.0",
+    "express": "^4.16.2",
     "klaw": "^2.1.1",
-    "sleep": "^5.1.1",
-    "express": "^4.16.2"
+    "sleep": "^5.1.1"
   }
 }
