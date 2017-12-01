@@ -59,7 +59,7 @@ app.get('/help', (req, res)=>{
 
 app.get('/generate-account', (req, res)=>{
     Wallet.generate();
-    res.json({"address": "'+Wallet.getAddress()+'", "private_key": "'+Wallet.getPriKey()+'"});
+    res.json({"address": Wallet.getAddress(), "private_key": Wallet.getPriKey()});
 });
 app.get('/get-account/:address', (req, res)=>{
     const address = req.params.address;
