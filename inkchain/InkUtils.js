@@ -199,7 +199,6 @@ function issueToken(org, ccId, version, func, args, get_admin) {
             // an event listener can only register with a peer in its own org
             tx_id = client.newTransactionID();
             utils.setConfigSetting('E2E_TX_ID', tx_id.getTransactionID());
-            console.log('transaction id:' + tx_id.getTransactionID());
             logger.debug('setConfigSetting("E2E_TX_ID") = %s', tx_id.getTransactionID());
             // send proposal to endorser
             var request = {
@@ -662,7 +661,7 @@ var queue_length = 0;
 var max_queue_length = 10;
 var mutex_counter = false;
 var clean_counter = false;
-
+var sender_address = "";
 async function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin) {
     if(mutex_counter || queue_length >= max_queue_length) {
         await sleep(300);
@@ -670,6 +669,10 @@ async function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimi
     } else {
         mutex_counter = true;
         let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex"));
+        if(senderAddress != sender_address) {
+            sdk_counter = 0;
+            sender_address = senderAddress;
+        }
         if(sdk_counter == null || sdk_counter == 0) {
             // query counter & send transaction
             let promise = Promise.resolve();
@@ -1356,7 +1359,6 @@ function querySystemCC(org, ccId, func, args, get_admin) {
             // an event listener can only register with a peer in its own org
             tx_id = client.newTransactionID();
             utils.setConfigSetting('E2E_TX_ID', tx_id.getTransactionID());
-            console.log('transaction id:' + tx_id.getTransactionID());
             logger.debug('setConfigSetting("E2E_TX_ID") = %s', tx_id.getTransactionID());
             // send proposal to endorser
             var request = {
