@@ -1138,11 +1138,29 @@ function decodeChaincodeInvocationSpec(chaincode_invocation_spec_bytes) {
     return chaincode_invocation_spec;
 }
 function decodeSenderSpec(sender_spec_) {
+    if(sender_spec_ == null) {
+        return null;
+    }
     let sender_spec = {};
-    sender_spec.sender = sender_spec_.sender.toBuffer().toString();
+    if(sender_spec_.sender != null) {
+        sender_spec.sender = sender_spec_.sender.toBuffer().toString();
+    } else {
+        sender_spec.sender = null;
+    }
     sender_spec.counter = sender_spec_.counter;
-    sender_spec.ink_limit = sender_spec_.ink_limit.toBuffer().toString();
-    sender_spec.msg = sender_spec_.msg.toBuffer().toString();
+    if(sender_spec_.ink_limit != null) {
+        sender_spec.ink_limit = sender_spec_.ink_limit.toBuffer().toString();
+    } else {
+        sender_spec.ink_limit = null;
+    }
+    if(sender_spec_.msg != null) {
+        sender_spec.msg = sender_spec_.msg.toBuffer().toString();
+    } else {
+        sender_spec.msg = null;
+    }
+
+
+
     return sender_spec;
 }
 function decodeChaincodeSpec(chaincode_spec_) {
