@@ -20,9 +20,6 @@ var testUtil = require('./utils/unit/util.js');
 var fs = require('fs');
 var util = require('util');
 
-var the_user = null;
-var tx_id = null;
-
 function init() {
     if (!ORGS) {
         Client.addConfigFile(path.join(__dirname, './config.json'));
@@ -34,7 +31,7 @@ function installChaincode(org, chaincode_id, chaincode_path, version, t, get_adm
     init();
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
-
+    var the_user;
     var client = new Client();
     // client.setDevMode(true);
     var channel = client.newChannel(channel_name);
@@ -139,12 +136,12 @@ function issueToken(org, ccId, version, func, args, get_admin) {
     init();
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
-
+    var the_user;
     var client = new Client();
     var pass_results = null;
     // client.setDevMode(true);
     var channel = client.newChannel(channel_name);
-
+    var tx_id;
     var orgName = ORGS[org].name;
     var cryptoSuite = Client.newCryptoSuite();
     cryptoSuite.setCryptoKeyStore(Client.newCryptoKeyStore({path: testUtil.storePathForOrg(orgName)}));
@@ -361,7 +358,8 @@ module.exports.issueToken = issueToken;
 
 function instantiateChaincode(userOrg, chaincode_id, chaincode_path, version, upgrade, t){
     init();
-
+    var the_user;
+    var tx_id;
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
 
@@ -659,42 +657,92 @@ function buildChaincodeProposal(client, the_user, chaincode_id, chaincode_path, 
 module.exports.instantiateChaincode = instantiateChaincode;
 
 
-function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin) {
-    init();
+var sdk_counter = 0;
+var queue_length = 0;
+var max_queue_length = 10;
+var mutex_counter = false;
+var clean_counter = false;
 
-    let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex"));
-    let promise = Promise.resolve();
-
-    return promise.then(()=>{
-        return queryChaincode('org1', ccId, 'counter', [senderAddress.toString("hex")]).then((counter)=>{
+async function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin) {
+    if(mutex_counter || queue_length >= max_queue_length) {
+        await sleep(300);
+        return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
+    } else {
+        mutex_counter = true;
+        let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex"));
+        if(sdk_counter == null || sdk_counter == 0) {
+            // query counter & send transaction
+            let promise = Promise.resolve();
+            return promise.then(() => {
+                return queryChaincode('org1', ccId, 'counter', [senderAddress.toString("hex")]).then((counter) => {
+                    let senderSpec = {
+                        sender: Buffer.from(senderAddress.toString("hex")),
+                        counter: Long.fromString(counter[0].toString()),
+                        ink_limit: Buffer.from(inkLimit),
+                        msg: Buffer.from(msg)
+                    };
+                    sdk_counter = parseInt(counter[0]) + 1;
+                    queue_length ++;
+                    mutex_counter = false;
+                    return invokeChaincode(userOrg, ccId, version, func, args, true, senderSpec, priKey, isAdmin);
+                });
+            }).catch((err) => {
+                if(mutex_counter)
+                    clean_counter = true;
+                else
+                    sdk_counter = 0;
+                queue_length--;
+                return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
+            }).then((result) => {
+                queue_length--;
+                return result;
+            });
+        } else {
+            // counter++ & send transaction
             let senderSpec = {
-                sender:Buffer.from(senderAddress.toString("hex")),
-                counter:Long.fromString(counter[0].toString()),
-                ink_limit:Buffer.from(inkLimit),
-                msg:Buffer.from(msg)
+                sender: Buffer.from(senderAddress.toString("hex")),
+                counter: Long.fromString(sdk_counter.toString()),
+                ink_limit: Buffer.from(inkLimit),
+                msg: Buffer.from(msg)
             };
-            return invokeChaincode(userOrg, ccId, version, func, args, true, senderSpec, priKey, isAdmin);
-        });
-    }, (err) => {
-        console.log('Failed to query chaincode on the channel. ' + err.stack ? err.stack : err);
-        throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
-    }).catch((err) => {
-        console.log('Test failed due to unexpected reasons. ' + err.stack ? err.stack : err);
-        throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack : err);
-    });
-
+            sdk_counter ++;
+            queue_length ++;
+            if(clean_counter) {
+                clean_counter = false;
+                sdk_counter = 0;
+                mutex_counter = false;
+                return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
+            } else {
+                mutex_counter = false;
+                return invokeChaincode(userOrg, ccId, version, func, args, true, senderSpec, priKey, isAdmin).then((result)=>{
+                    queue_length--;
+                    return result;
+                }).catch((err)=>{
+                    if(mutex_counter) {
+                        clean_counter = true;
+                    } else {
+                        sdk_counter = 0;
+                    }
+                    queue_length--;
+                    return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
+                });
+            }
+        }
+    }
 }
 module.exports.invokeChaincodeSigned = invokeChaincodeSigned;
 
 function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpec, priKey, isAdmin){
     init();
+    Client.setConfigSetting('request-timeout', 60000);
     if(arguments.length < 7) {
         senderSpec = null;
         priKey = null;
         isAdmin = false;
     }
+    var tx_id;
+    var the_user;
     logger.debug('invokeChaincode begin');
-    Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
 
     var targets = [],
@@ -797,7 +845,6 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
         return channel.sendTransactionProposal(request);
 
     }, (err) => {
-
         logger.debug('Failed to enroll user \'admin\'. ' + err);
         throw new Error('Failed to enroll user \'admin\'. ' + err);
     }).then((results) =>{
@@ -941,11 +988,12 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
 
     });
 };
-
 module.exports.invokeChaincode = invokeChaincode;
 
 function queryChaincode(org,ccId, func, args, transientMap, isAdmin) {
     init();
+    var tx_id;
+    var the_user;
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
 
@@ -1019,7 +1067,8 @@ module.exports.queryChaincode = queryChaincode;
 function queryChainInfo() {
     var org = 'org1';
     var orgName;
-
+    var tx_id;
+    var the_user;
     Client.addConfigFile(path.join(WORK_PATH, 'inkchain', 'config.json'));
     ORGS = Client.getConfigSetting('test-network');
     orgName = ORGS[org].name;
@@ -1096,6 +1145,8 @@ const GET_BLANCE_FUNC = "getBalance";
 
 function getBalance(org, args, transientMap, isAdmin) {
     init();
+    var tx_id;
+    var the_user;
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
 
@@ -1167,6 +1218,8 @@ const GET_ACCOUNT_FUNC = "getAccount";
 
 function getAccount(org, args, transientMap, isAdmin) {
     init();
+    var the_user;
+    var tx_id;
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
 
@@ -1236,6 +1289,8 @@ module.exports.getAccount = getAccount;
 
 function querySystemCC(org, ccId, func, args, get_admin) {
     init();
+    var the_user;
+    var tx_id;
     Client.setConfigSetting('request-timeout', 60000);
     var channel_name = Client.getConfigSetting('E2E_CONFIGTX_CHANNEL_NAME', CHANNEL_NAME);
 
