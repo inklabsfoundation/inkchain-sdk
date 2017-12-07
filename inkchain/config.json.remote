@@ -13,8 +13,8 @@
                                 "name": "ca_peerOrg1"
                         },
                         "peer1": {
-                                "requests": "grpcs://106.75.14.6:7051",
-                                "events": "grpcs://106.75.14.6:7053",
+                                "requests": "grpcs://106.75.76.251:7051",
+                                "events": "grpcs://106.75.76.251:7053",
                                 "server-hostname": "peer0.org1.example.com",
                                 "tls_cacerts": "utils/fixtures/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
                         },
