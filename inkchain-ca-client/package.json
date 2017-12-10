@@ -7,11 +7,9 @@
     "url": "https://www.github.com/inklabsfoundation/inkchain-sdk-node"
   },
   "engines": {
-    "node": ">=6.9.0 <7.0",
+    "node": ">=6.9.0",
     "npm": ">=3.10.0"
   },
-  "engine-strict": true,
-  "engineStrict": true,
   "dependencies": {
     "bn.js": "^4.11.3",
     "elliptic": "^6.2.3",
@@ -20,7 +18,7 @@
     "jsrsasign": "^6.2.2",
     "jssha": "^2.1.0",
     "nconf": "^0.8.4",
-    "sjcl": "1.0.3",
+    "sjcl": "1.0.7",
     "sjcl-codec": "0.1.1",
     "url": "^0.11.0",
     "util": "^0.10.3",
