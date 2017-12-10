@@ -88,7 +88,7 @@ test('  ---->>>>> Query channel working <<<<<-----', function(t) {
         // organizations
         return channel.initialize();
     }).then((success) => {
-        return inkUtils.invokeChaincode('org2', 'lscc','1.0','getchaincodes', [], false/*useStore*/)
+        return inkUtils.invokeChaincode('org2', 'lscc','1.0','getchaincodes', [], true/*useStore*/,null, null, true)
     }).then((result) => {
         console.log(result);
         if(result){

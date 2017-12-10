@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "main": "index.js",
   "repository": {
-    "type": "gerrit",
+    "type": "git",
     "url": "https://www.github.com/inklabsfoundation/inkchain-sdk-node"
   },
   "scripts": {
@@ -47,5 +47,16 @@
       "type": "Apache-2.0",
       "url": "https://github.com/inklabsfoundation/inkchain/blob/master/LICENSE"
     }
-  ]
+  ],
+  "description": "SDK for writing node.js applications to interact with [Inklabsfoundation Inkchain](https://ink.one/).",
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "ink",
+    "inklabs",
+    "inkchain"
+  ],
+  "author": "inklabsfoundation"
 }
