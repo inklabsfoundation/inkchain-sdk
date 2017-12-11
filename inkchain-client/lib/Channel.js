@@ -1294,7 +1294,7 @@ var Channel = class {
 			logger.debug('sendTransactionProposal - request does not have targets using this channels endorsing peers');
 			request.targets = this.getPeers();
 		}
-		return Channel.sendTransactionProposal(request, this._name, this._clientContext);
+		return Channel.sendTransactionProposal(request, this._name, this._clientContext, timeout);
 	}
 
 	/*
@@ -1359,7 +1359,7 @@ var Channel = class {
 			request.chaincodeId
 			);
 		header = clientUtils.buildHeader(userContext.getIdentity(), channelHeader, request.txId.getNonce());
-		proposal = clientUtils.buildProposal(invokeSpec, header, request.transientMap, request.senderSpec, request.priKey);
+		proposal = clientUtils.buildProposal(invokeSpec, header, request.transientMap, request.senderSpec, request.sig);
 		let signed_proposal = clientUtils.signProposal(userContext.getSigningIdentity(), proposal);
 
 		return clientUtils.sendPeersProposal(request.targets, signed_proposal, timeout)
