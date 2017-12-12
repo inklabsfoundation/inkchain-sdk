@@ -38,24 +38,13 @@ var _timestampProto = grpc.load(__dirname + '/protos/google/protobuf/timestamp.p
 /*
  * This function will build the proposal
  */
-module.exports.buildProposal = function(invokeSpec, header, transientMap, senderSpec, priKey) {
+module.exports.buildProposal = function(invokeSpec, header, transientMap, senderSpec, sig) {
 	// construct the ChaincodeInvocationSpec
 	let cciSpec = new _ccProto.ChaincodeInvocationSpec();
 	cciSpec.setChaincodeSpec(invokeSpec);
     if (senderSpec != null) {
-        let signContent = new _ccProto.SignContent();
-        signContent.setChaincodeSpec(invokeSpec);
-        signContent.setSenderSpec(senderSpec);
-        signContent.id_generation_alg = cciSpec.id_generation_alg;
-        let signHash = ethUtils.sha256(signContent.toBuffer());
-        let sigrsv = ethUtils.ecsign(signHash, new Buffer(priKey, "hex"));
-        let signature = Buffer.concat([
-            ethUtils.setLengthLeft(sigrsv.r, 32),
-            ethUtils.setLengthLeft(sigrsv.s, 32),
-            ethUtils.toBuffer(sigrsv.v - 27)
-        ]);
         cciSpec.setSenderSpec(senderSpec);
-        cciSpec.sig = signature;
+        cciSpec.sig = sig;
     }
 	let cc_payload = new _proposalProto.ChaincodeProposalPayload();
 	cc_payload.setInput(cciSpec.toBuffer());
@@ -67,7 +56,6 @@ module.exports.buildProposal = function(invokeSpec, header, transientMap, sender
 	else {
 		logger.debug('buildProposal - not adding a transientMap');
 	}
-
 	// proposal -- will switch to building the proposal once the signProposal is used
 	let proposal = new _proposalProto.Proposal();
 	proposal.setHeader(header.toBuffer());
@@ -79,14 +67,14 @@ module.exports.buildProposal = function(invokeSpec, header, transientMap, sender
 /*
  * This function will return one Promise when sending a proposal to many peers
  */
-module.exports.sendPeersProposal = function(peers, proposal) {
+module.exports.sendPeersProposal = function(peers, proposal, timeout) {
 	if(!Array.isArray(peers)) {
 		peers = [peers];
 	}
 	// make function to return an individual promise
 	var fn = function(peer) {
 		return new Promise(function(resolve,reject) {
-			peer.sendProposal(proposal)
+			peer.sendProposal(proposal, timeout)
 			.then(
 				function(result) {
 					resolve(result);

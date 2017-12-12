@@ -656,91 +656,12 @@ function buildChaincodeProposal(client, the_user, chaincode_id, chaincode_path, 
 module.exports.instantiateChaincode = instantiateChaincode;
 
 
-var sdk_counter = 0;
-var queue_length = 0;
-var max_queue_length = 10;
-var mutex_counter = false;
-var clean_counter = false;
-var sender_address = "";
-async function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin) {
-    if(mutex_counter || queue_length >= max_queue_length) {
-        await sleep(300);
-        return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
-    } else {
-        mutex_counter = true;
-        let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex"));
-        if(senderAddress != sender_address) {
-            sdk_counter = 0;
-            sender_address = senderAddress;
-        }
-        if(sdk_counter == null || sdk_counter == 0) {
-            // query counter & send transaction
-            let promise = Promise.resolve();
-            return promise.then(() => {
-                return queryChaincode('org1', ccId, 'counter', [senderAddress.toString("hex")]).then((counter) => {
-                    let senderSpec = {
-                        sender: Buffer.from(senderAddress.toString("hex")),
-                        counter: Long.fromString(counter[0].toString()),
-                        ink_limit: Buffer.from(inkLimit),
-                        msg: Buffer.from(msg)
-                    };
-                    sdk_counter = parseInt(counter[0]) + 1;
-                    queue_length ++;
-                    mutex_counter = false;
-                    return invokeChaincode(userOrg, ccId, version, func, args, true, senderSpec, priKey, isAdmin);
-                });
-            }).catch((err) => {
-                if(mutex_counter)
-                    clean_counter = true;
-                else
-                    sdk_counter = 0;
-                queue_length--;
-                return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
-            }).then((result) => {
-                queue_length--;
-                return result;
-            });
-        } else {
-            // counter++ & send transaction
-            let senderSpec = {
-                sender: Buffer.from(senderAddress.toString("hex")),
-                counter: Long.fromString(sdk_counter.toString()),
-                ink_limit: Buffer.from(inkLimit),
-                msg: Buffer.from(msg)
-            };
-            sdk_counter ++;
-            queue_length ++;
-            if(clean_counter) {
-                clean_counter = false;
-                sdk_counter = 0;
-                mutex_counter = false;
-                return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
-            } else {
-                mutex_counter = false;
-                return invokeChaincode(userOrg, ccId, version, func, args, true, senderSpec, priKey, isAdmin).then((result)=>{
-                    queue_length--;
-                    return result;
-                }).catch((err)=>{
-                    if(mutex_counter) {
-                        clean_counter = true;
-                    } else {
-                        sdk_counter = 0;
-                    }
-                    queue_length--;
-                    return invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin);
-                });
-            }
-        }
-    }
-}
-module.exports.invokeChaincodeSigned = invokeChaincodeSigned;
-
-function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpec, priKey, isAdmin){
+function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpec, signature, isAdmin){
     init();
     Client.setConfigSetting('request-timeout', 60000);
     if(arguments.length < 7) {
         senderSpec = null;
-        priKey = null;
+        signature = null;
         isAdmin = false;
     }
     var tx_id;
@@ -843,7 +764,7 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
             args: args,
             txId: tx_id,
             senderSpec:senderSpec,
-            priKey:priKey
+            sig:signature
         };
         return channel.sendTransactionProposal(request);
 
@@ -941,6 +862,13 @@ function invokeChaincode(userOrg, ccId, version, func, args, useStore, senderSpe
             return Promise.all([sendPromise].concat(eventPromises))
                 .then((results) => {
                     logger.debug(' event promise all complete and testing complete');
+                    for(var key in eventhubs) {
+                        var event = eventhubs[key];
+                        if (event && event.isconnected()) {
+                            logger.debug('Disconnecting the event hub');
+                            event.disconnect();
+                        }
+                    }
                     return results[0]; // the first returned value is from the 'sendPromise' which is from the 'sendTransaction()' call
                 }).catch((err) => {
                     for(var key in eventhubs) {
