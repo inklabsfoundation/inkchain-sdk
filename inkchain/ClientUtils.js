@@ -82,6 +82,9 @@ async function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimi
             return invoke(userOrg, ccId, version, func, args, senderAddress, msg, inkLimit, counter[0].toString(), sig).then((result) => {
                 queue_length--;
                 return result;
+            }).catch((err)=>{
+                console.log(err);
+                sdk_counter = 0;
             });
         });
     } else {
@@ -93,7 +96,10 @@ async function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimi
         return invoke(userOrg, ccId, version, func, args, senderAddress, msg, inkLimit, counter_now, sig).then((result) => {
             queue_length--;
             return result;
-        })
+        }).catch((err)=>{
+            console.log(err);
+            sdk_counter = 0;
+        });
     }
 }
 module.exports.invokeChaincodeSigned = invokeChaincodeSigned;

@@ -3,25 +3,15 @@
  */
 'use strict';
 
-let count = 2;
+let count = 20000;
 let util = require('util');
-var memwatch = require('memwatch-next');
-var hd;
-memwatch.on('leak', function(info) {
-    console.log('Memory leak detected: ', info);
-    if (!hd) {
-        hd = new memwatch.HeapDiff();
-    } else {
-        var diff = hd.end();
-        console.log(util.inspect(diff, true, null));
-        hd = null;
-    }
-});
 
 require('../test/config');
 let invokeSignedHandler = require('../invoke-signed');
 
+let helper = require('../helper');
 
+helper.getRegisteredUsers('user', 'org1');
 
 function invokeTransfer(msg) {
     return invokeSignedHandler.invokeChaincodeSigned(['peer1', 'peer2'],'mychannel','token','transfer',["3c97f146e8de9807ef723538521fcecd5f64c79a", "INK", "1000"],'user','org1','10',msg,'bab0c1204b2e7f344f9d1fbe8ad978d5355e32b8fa45b10b600d64ca970e0dc9').then((result) =>{
@@ -35,4 +25,5 @@ for(let i = 0; i < count; i++) {
         console.log(counter);
         counter++;
     });
+
 }
