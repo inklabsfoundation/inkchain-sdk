@@ -6,7 +6,7 @@
 let count = 20000;
 let util = require('util');
 
-require('../test/config');
+require('../config');
 let invokeSignedHandler = require('../invoke-signed');
 
 let helper = require('../helper');
