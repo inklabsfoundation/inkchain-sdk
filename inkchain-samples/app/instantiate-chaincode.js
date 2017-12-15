@@ -58,7 +58,6 @@ var instantiateChaincode = function(channelName, chaincodeName, chaincodeVersion
 		logger.error('Failed to initialize the channel');
 		throw new Error('Failed to initialize the channel');
 	}).then((results) => {
-		console.log("============================");
 		var proposalResponses = results[0];
 		var proposal = results[1];
 		var all_good = true;

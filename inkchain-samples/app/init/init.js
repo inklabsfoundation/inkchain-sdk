@@ -1,13 +1,12 @@
 /**
  * Created by wangh09 on 2017/12/13.
  */
-require('./config');
+require('../config');
 const CC_PATH = 'github.com/token';
 const CC_ID = 'token';
 const CC_VERSION = '1.0';
 const CHANNEL_NAME = 'mychannel';
 let joinChannelHandler = require('../join-channel');
-
 let createChannelHandler = require('../create-channel');
 let installCCHandler = require('../install-chaincode');
 let instantiateCCHandler = require('../instantiate-chaincode');
