@@ -402,8 +402,6 @@ function instantiateChaincode(userOrg, chaincode_id, chaincode_path, version, up
             }
         )
     );
-
-    var targets = [];
     var badTransientMap = { 'test1': 'transientValue' }; // have a different key than what the chaincode example_cc1.go expects in Init()
     var transientMap = { 'test': 'transientValue' };
 
