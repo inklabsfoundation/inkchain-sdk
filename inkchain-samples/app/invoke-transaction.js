@@ -410,19 +410,19 @@ var invokeChaincodePersist = function(peerNames, channelName, chaincodeName, fcn
                 logger.error(
                     'Failed to send transaction and get notifications within the timeout period.'
                 );
-                return 'Failed to send transaction and get notifications within the timeout period.';
+                throw new Error('Failed to send transaction and get notifications within the timeout period.' + err);
             });
         } else {
             logger.error(
                 'Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...'
             );
-            return 'Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...';
+            throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
         }
     }, (err) => {
         logger.error('Failed to send proposal due to error: ' + err.stack ? err.stack :
             err);
-        return 'Failed to send proposal due to error: ' + err.stack ? err.stack :
-            err;
+        throw new Error('Failed to send proposal due to error: ' + err.stack ? err.stack :
+            err);
     }).then((response) => {
         for(let i in targets) {
             targets[i] = null;
@@ -435,13 +435,13 @@ var invokeChaincodePersist = function(peerNames, channelName, chaincodeName, fcn
             return tx_id.getTransactionID();
         } else {
             logger.error('Failed to order the transaction. Error code: ' + response.status);
-            return 'Failed to order the transaction. Error code: ' + response.status;
+            throw new Error('Failed to order the transaction. Error code: ' + response.status);
         }
     }, (err) => {
         logger.error('Failed to send transaction due to error: ' + err.stack ? err
                 .stack : err);
-        return 'Failed to send transaction due to error: ' + err.stack ? err.stack :
-            err;
+        throw new Error('Failed to send transaction due to error: ' + err.stack ? err.stack :
+            err);
     });
 };
 

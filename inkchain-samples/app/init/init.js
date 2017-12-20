@@ -30,7 +30,7 @@ createChannelHandler.createChannel(CHANNEL_NAME, "../artifacts/channel/mychannel
                         instantiateCCHandler.instantiateChaincode(CHANNEL_NAME, 'org1', CC_ID, CC_PATH, CC_VERSION, false).then((result) =>{
                             console.log(result);
                         }).then(()=>{
-                            invokeHandler.invokeChaincodeAdmin(['peer1'],'mychannel','ascc','registerAndIssueToken',['INKToken','1000000000000000000000000000','18','411b6f8f24F28CaAFE514c16E11800167f8EBd89'],'admin','org1',null, null).then((result) =>{
+                            invokeHandler.invokeChaincodeAdmin(['peer1'],'mychannel','ascc','registerAndIssueToken',['INK','1000000000000000000000000000','18','411b6f8f24F28CaAFE514c16E11800167f8EBd89'],'admin','org1',null, null).then((result) =>{
                                 console.log(result);
                             });
                         });
