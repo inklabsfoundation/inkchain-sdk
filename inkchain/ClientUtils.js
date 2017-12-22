@@ -14,10 +14,18 @@ function invoke(userOrg, ccId, version, func, args, senderAddress, msg, inkLimit
         ink_limit: Buffer.from(inkLimit),
         msg: Buffer.from(msg)
     };
-    return inkUtils.invokeChaincode(userOrg, ccId, version, func, args, true, senderSpec, sig, false);
+    try {
+        return inkUtils.invokeChaincode(userOrg, ccId, version, func, args, true, senderSpec, sig, false);
+    } catch(err) {
+        throw err;
+    }
 }
 function queryCounter(org, ccId, func, args) {
-    return inkUtils.queryChaincode(org, ccId, func, args);
+    try {
+        return inkUtils.queryChaincode(org, ccId, func, args);
+    } catch(err) {
+        throw err;
+    }
 }
 
 
@@ -64,42 +72,41 @@ let mutex_counter = false;
 let sender_address = "";
 
 async function invokeChaincodeSigned(userOrg, ccId, version, func, args, inkLimit, msg, priKey, isAdmin) {
-    while (mutex_counter || queue_length >= max_queue_length) {
-        await sleep(300);
-    }
-    mutex_counter = true;
-    let senderAddress = ethUtils.privateToAddress(new Buffer(priKey, "hex")).toString('hex');
-    if (senderAddress != sender_address) {
-        sdk_counter = 0;
-        sender_address = senderAddress;
-    }
-    if (sdk_counter == 0) {
-        return queryCounter('org1', ccId, 'counter', [senderAddress]).then((counter) => {
-            let sig = signTX(ccId, func, args, msg, counter[0].toString(), inkLimit, priKey);
-            sdk_counter = parseInt(counter[0]) + 1;
+    try {
+        while (mutex_counter || queue_length >= max_queue_length) {
+            await sleep(300);
+        }
+        mutex_counter = true;
+        let senderAddress = ethUtils.privateToAddress(new Buffer(priKey, "hex")).toString('hex');
+        if (senderAddress != sender_address) {
+            sdk_counter = 0;
+            sender_address = senderAddress;
+        }
+        if (sdk_counter == 0) {
+            return queryCounter('org1', ccId, 'counter', [senderAddress]).then((counter) => {
+                let sig = signTX(ccId, func, args, msg, counter[0].toString(), inkLimit, priKey);
+                sdk_counter = parseInt(counter[0]) + 1;
+                queue_length++;
+                mutex_counter = false;
+                return invoke(userOrg, ccId, version, func, args, senderAddress, msg, inkLimit, counter[0].toString(), sig).then((result) => {
+                    queue_length--;
+                    return result;
+                });
+            });
+        } else {
+            let counter_now = sdk_counter;
+            sdk_counter++;
             queue_length++;
             mutex_counter = false;
-            return invoke(userOrg, ccId, version, func, args, senderAddress, msg, inkLimit, counter[0].toString(), sig).then((result) => {
+            let sig = signTX(ccId, func, args, msg, counter_now, inkLimit, priKey);
+            return invoke(userOrg, ccId, version, func, args, senderAddress, msg, inkLimit, counter_now, sig).then((result) => {
                 queue_length--;
                 return result;
-            }).catch((err)=>{
-                console.log(err);
-                sdk_counter = 0;
             });
-        });
-    } else {
-        let counter_now = sdk_counter;
-        sdk_counter++;
-        queue_length++;
-        mutex_counter = false;
-        let sig = signTX(ccId, func, args, msg, counter_now, inkLimit, priKey);
-        return invoke(userOrg, ccId, version, func, args, senderAddress, msg, inkLimit, counter_now, sig).then((result) => {
-            queue_length--;
-            return result;
-        }).catch((err)=>{
-            console.log(err);
-            sdk_counter = 0;
-        });
+        }
+    } catch(err) {
+        sdk_counter = 0;
+        throw err;
     }
 }
 module.exports.invokeChaincodeSigned = invokeChaincodeSigned;

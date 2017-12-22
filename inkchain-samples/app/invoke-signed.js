@@ -51,10 +51,18 @@ function invoke(peerNames, channelName, chaincodeName, fcn, args, username, org,
         ink_limit: Buffer.from(inkLimit),
         msg: Buffer.from(msg)
     };
-    return invokeHandler.invokeChaincodePersist(peerNames, channelName, chaincodeName, fcn, args, username, org, senderSpec, sig);
+    try {
+        return invokeHandler.invokeChaincodePersist(peerNames, channelName, chaincodeName, fcn, args, username, org, senderSpec, sig);
+    } catch(err) {
+        throw err;
+    }
 }
 function queryCounter(peer, channelName, CC_ID, fcn, args, username, org) {
-    return queryHandler.queryChaincode(peer,channelName,CC_ID,args, fcn, username, org);
+    try {
+        return queryHandler.queryChaincode(peer, channelName, CC_ID, args, fcn, username, org);
+    } catch(err) {
+        throw err;
+    }
 }
 let sdk_counter = 0;
 let queue_length = 0;
