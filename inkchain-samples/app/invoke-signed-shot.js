@@ -66,7 +66,7 @@ function queryCounter(peer, channelName, CC_ID, fcn, args, username, org) {
 }
 async function invokeChaincodeSigned(peerNames, channelName, ccId, fcn, args, username, org, inkLimit, msg, priKey) {
     let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex")).toString('hex');
-    return queryCounter(peerNames[0], channelName, ccId, 'counter',[senderAddress],username,org).then((counter) => {
+    return queryCounter(peerNames[0], channelName, 'token', 'counter',[senderAddress],username,org).then((counter) => {
         let sig = signTX(ccId, fcn, args, msg, counter[0].toString(), inkLimit, priKey);
         return invoke(peerNames, channelName, ccId, fcn, args, username, org, senderAddress, msg, inkLimit, counter[0].toString(), sig).then((result)=> {
             return result;
