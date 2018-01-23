@@ -22,3 +22,4 @@ inkchain-client/.DS_Store
 inkchain-ca-client/.DS_Store
 test/fixtures/src/github.com/example_cc/junk.go
 .idea/
+inkchain-samples/artifacts/qtum
