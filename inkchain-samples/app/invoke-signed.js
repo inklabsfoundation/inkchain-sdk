@@ -7,11 +7,12 @@ let ethUtils = require('ethereumjs-util');
 const Long = require('long');
 let invokeHandler = require('./invoke-transaction');
 let queryHandler = require('./query');
+let settingsConfig = require('./config');
 function signTX(ccId, fcn, arg, msg, counter, inkLimit, priKey) {
     let args = [];
     let senderAddress = ethUtils.privateToAddress(new Buffer(priKey, "hex"));
     let senderSpec = {
-        sender: Buffer.from(senderAddress.toString("hex")),
+        sender: Buffer.from(settingsConfig.AddressPrefix + senderAddress.toString("hex")),
         counter: Long.fromString(counter.toString()),
         ink_limit: Buffer.from(inkLimit),
         msg: Buffer.from(msg)
@@ -74,7 +75,7 @@ async function invokeChaincodeSigned(peerNames, channelName, ccId, fcn, args, us
         await sleep(300);
     }
     mutex_counter = true;
-    let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex")).toString('hex');
+    let senderAddress = settingsConfig.AddressPrefix + ethUtils.privateToAddress(new Buffer(priKey,"hex")).toString('hex');
     if(senderAddress != sender_address) {
         sdk_counter = 0;
         sender_address = senderAddress;
