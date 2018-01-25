@@ -545,6 +545,7 @@ payload -- {}
 		var proto_processed_transaction = _transProto.ProcessedTransaction.decode(processed_transaction_bytes);
 		processed_transaction.validationCode = proto_processed_transaction.getValidationCode();
 		processed_transaction.transactionEnvelope = decodeBlockDataEnvelope(proto_processed_transaction.getTransactionEnvelope());
+		processed_transaction.blockHash = proto_processed_transaction.getBlockHash().toString('hex');
 		return processed_transaction;
 	}
 };
