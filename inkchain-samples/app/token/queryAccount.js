@@ -4,6 +4,6 @@
 require('../config');
 let queryHandler = require('../query');
 
-queryHandler.queryChaincode('peer1','mychannel','token',["411b6f8f24F28CaAFE514c16E11800167f8EBd89"],'getAccount','user','org1').then((result)=>{
+queryHandler.queryChaincode('peer1','mychannel','token',["iACAdB8391bc793495C203D58d57776DcD5CA83AD"],'getAccount','user','org1').then((result)=>{
     console.log(result[0].toString());
 });

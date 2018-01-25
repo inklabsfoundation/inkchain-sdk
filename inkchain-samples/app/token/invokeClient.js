@@ -1,13 +1,13 @@
 /**
- * Created by wangh09 on 2017/12/13.
+ * Created by wangh09 on 2018/1/15.
  */
+
 let grpc = require('grpc');
 let _ccProto = grpc.load('inkchain-client/lib/protos/peer/chaincode.proto').protos;
 let ethUtils = require('ethereumjs-util');
 const Long = require('long');
-let invokeHandler = require('./invoke-transaction');
-let queryHandler = require('./query');
-let settingsConfig = require('./config');
+let invokeHandler = require('../invoke-signed');
+let settingsConfig = require('../config');
 function signTX(ccId, fcn, arg, msg, counter, inkLimit, priKey) {
     let args = [];
     let senderAddress = ethUtils.privateToAddress(new Buffer(priKey, "hex"));
@@ -45,32 +45,48 @@ function signTX(ccId, fcn, arg, msg, counter, inkLimit, priKey) {
     ]);
 }
 
-function invoke(peerNames, channelName, chaincodeName, fcn, args, username, org, senderAddress, msg, inkLimit, counter, sig) {
-    let senderSpec = {
-        sender: Buffer.from(senderAddress),
-        counter: Long.fromString(counter.toString()),
-        ink_limit: Buffer.from(inkLimit),
-        msg: Buffer.from(msg)
-    };
-    try {
-        return invokeHandler.invokeChaincodePersist(peerNames, channelName, chaincodeName, fcn, args, username, org, senderSpec, sig);
-    } catch(err) {
-        throw err;
-    }
-}
-function queryCounter(peer, channelName, CC_ID, fcn, args, username, org) {
-    try {
-        return queryHandler.queryChaincode(peer, channelName, CC_ID, args, fcn, username, org);
-    } catch(err) {
-        throw err;
-    }
-}
 let sdk_counter = 0;
 let queue_length = 0;
 let max_queue_length = 10;
 let mutex_counter = false;
 let sender_address = "";
-async function invokeChaincodeSigned(peerNames, channelName, ccId, fcn, args, username, org, inkLimit, msg, priKey) {
+function invoke(from, to, tokenId, amount, msg, counter, sig) {
+    let data = {
+        to_address: to,
+        from_address: from,
+        coin_type: tokenId,
+        amount: amount,
+        message: msg,
+        counter: req.body.counter,
+        sig: req.body.sig
+    };
+
+    data = JSON.stringify(data);
+    var opt = {
+        method: "POST",
+        host: "localhost",
+        port: 8081,
+        path: "/transfer",
+        headers: {
+            "Content-Type": 'application/json',
+            "Content-Length": data.length
+        }
+    };
+
+    var req = http.request(opt, function (serverFeedback) {
+        if (serverFeedback.statusCode == 200) {
+            var body = "";
+            serverFeedback.on('data', function (data) { body += data; })
+                .on('end', function () { res.send(200, body); });
+        }
+        else {
+            res.send(500, "error");
+        }
+    });
+    req.write(data + "\n");
+    req.end();
+}
+async function invokeChaincodeSigned(peerNames, channelName, ccId, fcn, args, inkLimit, msg, priKey) {
     while(mutex_counter || queue_length >= max_queue_length) {
         await sleep(300);
     }
@@ -81,12 +97,12 @@ async function invokeChaincodeSigned(peerNames, channelName, ccId, fcn, args, us
         sender_address = senderAddress;
     }
     if(sdk_counter == 0) {
-        return queryCounter(peerNames[0], channelName, ccId, 'counter',[senderAddress],username,org).then((counter) => {
+        return invokeHandler.query(peerNames[0], channelName, ccId, 'counter',[senderAddress]).then((counter) => {
             let sig = signTX(ccId, fcn, args, msg, counter[0].toString(), inkLimit, priKey);
             sdk_counter = parseInt(counter[0]) + 1;
             queue_length++;
             mutex_counter = false;
-            return invoke(peerNames, channelName, ccId, fcn, args, username, org, senderAddress, msg, inkLimit, counter[0].toString(), sig).then((result)=> {
+            return invokeHandler.invoke(peerNames, channelName, ccId, fcn, args, senderAddress, msg, inkLimit, counter[0].toString(), sig).then((result)=> {
                 queue_length--;
                 return result;
             }).catch((err)=>{
@@ -100,7 +116,7 @@ async function invokeChaincodeSigned(peerNames, channelName, ccId, fcn, args, us
         queue_length ++;
         mutex_counter = false;
         let sig = signTX(ccId, fcn, args, msg, counter_now, inkLimit, priKey);
-        return invoke(peerNames, channelName, ccId, fcn, args, username, org, senderAddress, msg, inkLimit, counter_now, sig).then((result)=>{
+        return invokeHandler.invoke(peerNames, channelName, ccId, fcn, args, senderAddress, msg, inkLimit, counter_now, sig).then((result)=>{
             queue_length--;
             return result;
         }).catch((err)=>{

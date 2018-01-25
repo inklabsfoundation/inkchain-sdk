@@ -3,7 +3,7 @@
  */
 var ethUtils = require('ethereumjs-util');
 var crypto = require('crypto');
-
+let address_prefix = "i";
 class PrivKeyWallet {
     constructor(){
     }
@@ -16,7 +16,7 @@ class PrivKeyWallet {
         return this.priKey.toString('hex');
     }
     getAddress() {
-        return ethUtils.toChecksumAddress(`${this.address.toString('hex')}`).replace('0x','').toLowerCase()
+        return ethUtils.toChecksumAddress(`${this.address.toString('hex')}`).replace('0x',address_prefix).toLowerCase()
     }
 }
 exports.Wallet = new PrivKeyWallet();

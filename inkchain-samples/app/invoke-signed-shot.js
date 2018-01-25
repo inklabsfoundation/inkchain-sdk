@@ -5,13 +5,14 @@ let grpc = require('grpc');
 let _ccProto = grpc.load('inkchain-client/lib/protos/peer/chaincode.proto').protos;
 let ethUtils = require('ethereumjs-util');
 const Long = require('long');
+let settingsConfig = require('./config');
 let invokeHandler = require('./invoke-transaction');
 let queryHandler = require('./query');
 function signTX(ccId, fcn, arg, msg, counter, inkLimit, priKey) {
     let args = [];
     let senderAddress = ethUtils.privateToAddress(new Buffer(priKey, "hex"));
     let senderSpec = {
-        sender: Buffer.from(senderAddress.toString("hex")),
+        sender: Buffer.from(settingsConfig.AddressPrefix + senderAddress.toString("hex")),
         counter: Long.fromString(counter.toString()),
         ink_limit: Buffer.from(inkLimit),
         msg: Buffer.from(msg)
@@ -65,7 +66,7 @@ function queryCounter(peer, channelName, CC_ID, fcn, args, username, org) {
     }
 }
 async function invokeChaincodeSigned(peerNames, channelName, ccId, fcn, args, username, org, inkLimit, msg, priKey) {
-    let senderAddress = ethUtils.privateToAddress(new Buffer(priKey,"hex")).toString('hex');
+    let senderAddress = settingsConfig.AddressPrefix + ethUtils.privateToAddress(new Buffer(priKey,"hex")).toString('hex');
     return queryCounter(peerNames[0], channelName, 'token', 'counter',[senderAddress],username,org).then((counter) => {
         let sig = signTX(ccId, fcn, args, msg, counter[0].toString(), inkLimit, priKey);
         return invoke(peerNames, channelName, ccId, fcn, args, username, org, senderAddress, msg, inkLimit, counter[0].toString(), sig).then((result)=> {
