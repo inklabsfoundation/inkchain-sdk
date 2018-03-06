@@ -1333,8 +1333,8 @@ function decodeKVRead(proto_kv_read) {
 	let proto_version = proto_kv_read.getVersion();
 	if (proto_version) {
 		kv_read.version = {};
-		kv_read.version.block_num = proto_version.getBlockNum();
-		kv_read.version.tx_num = proto_version.getTxNum();
+		kv_read.version.block_num = proto_version.getBlockNum().toString();
+		kv_read.version.tx_num = proto_version.getTxNum().toString();
 	} else {
 		kv_read.version = null;
 	}
