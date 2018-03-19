@@ -1091,7 +1091,7 @@ function decodeChannelHeader(header_bytes) {
 	var proto_channel_header = _commonProto.ChannelHeader.decode(header_bytes);
 	channel_header.type = HeaderType[proto_channel_header.getType()];
 	channel_header.version = decodeVersion(proto_channel_header.getVersion());
-	channel_header.timestamp = timeStampToDate(proto_channel_header.getTimestamp()).toString();
+	channel_header.timestamp = timeStampToDate(proto_channel_header.getTimestamp());
 	channel_header.channel_id = proto_channel_header.getChannelId();
 	channel_header.tx_id = proto_channel_header.getTxId();
 	channel_header.epoch = proto_channel_header.getEpoch().toInt();
@@ -1103,13 +1103,13 @@ function decodeChannelHeader(header_bytes) {
 
 function timeStampToDate(time_stamp) {
     if (!time_stamp) {
-        return null;
+        return '';
     }
 
 	var millis = time_stamp.seconds * 1000 + time_stamp.nanos / 1000000;
 	var date = new Date(millis);
 
-	return date;
+	return date.toString();
 };
 
 function decodeChaincodeActionPayload(payload_bytes) {
@@ -1215,12 +1215,7 @@ function decodeChaincodeDeploymentSpec(chaincode_deploy_spec_bytes) {
     let chaincode_deployment_spec = {};
     let proto_chaincode_deploy_spec = _ccProto.ChaincodeDeploymentSpec.decode(chaincode_deploy_spec_bytes);
     chaincode_deployment_spec.chaincode_spec = decodeChaincodeSpec(proto_chaincode_deploy_spec.getChaincodeSpec());
-    let timestamp = timeStampToDate(proto_chaincode_deploy_spec.getEffectiveDate());
-    if (timestamp) {
-        chaincode_deployment_spec.effective_date = timestamp.toString();
-    } else {
-        chaincode_deployment_spec.effective_date = '';
-    }
+    chaincode_deployment_spec.effective_date = timeStampToDate(proto_chaincode_deploy_spec.getEffectiveDate());
     chaincode_deployment_spec.code_package = proto_chaincode_deploy_spec.getCodePackage().toBuffer().toString('hex');
     switch(proto_chaincode_deploy_spec.getExecEnv()) {
         case 0:
