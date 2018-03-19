@@ -1090,7 +1090,7 @@ function decodeChannelHeader(header_bytes) {
 	var channel_header = {};
 	var proto_channel_header = _commonProto.ChannelHeader.decode(header_bytes);
 	channel_header.type = HeaderType[proto_channel_header.getType()];
-	channel_header.version = decodeVersion(proto_channel_header.getType());
+	channel_header.version = decodeVersion(proto_channel_header.getVersion());
 	channel_header.timestamp = timeStampToDate(proto_channel_header.getTimestamp()).toString();
 	channel_header.channel_id = proto_channel_header.getChannelId();
 	channel_header.tx_id = proto_channel_header.getTxId();
@@ -1102,6 +1102,10 @@ function decodeChannelHeader(header_bytes) {
 };
 
 function timeStampToDate(time_stamp) {
+    if (!time_stamp) {
+        return null;
+    }
+
 	var millis = time_stamp.seconds * 1000 + time_stamp.nanos / 1000000;
 	var date = new Date(millis);
 
@@ -1139,6 +1143,7 @@ function decodeChaincodeInvocationSpec(chaincode_invocation_spec_bytes) {
     chaincode_invocation_spec.sender_spec = decodeSenderSpec(proto_chaincode_invocation_spec.getSenderSpec());
     return chaincode_invocation_spec;
 }
+
 function decodeSenderSpec(sender_spec_) {
     if(sender_spec_ == null) {
         return null;
@@ -1165,6 +1170,7 @@ function decodeSenderSpec(sender_spec_) {
 
     return sender_spec;
 }
+
 function decodeChaincodeSpec(chaincode_spec_) {
     let chaincode_spec = {};
     switch(chaincode_spec_.type) {
@@ -1189,12 +1195,45 @@ function decodeChaincodeSpec(chaincode_spec_) {
     chaincode_spec.input = {
         args:[]
     };
-    for(let arg in args) {
-        chaincode_spec.input.args.push(args[arg].toBuffer().toString());
-    }
+    // detail check file Channel.js func: _sendChaincodeProposal
+    if (args.length === 4 && args[0].toBuffer().toString() === 'deploy') {
+        chaincode_spec.input.args.push('deploy');
+        chaincode_spec.input.args.push(args[1].toBuffer().toString());
+        chaincode_spec.input.args.push(decodeChaincodeDeploymentSpec(args[2]));
+        chaincode_spec.input.args.push(decodeSignaturePolicyEnvelope(args[3]));
+	} else {
+        for(let arg in args) {
+            chaincode_spec.input.args.push(args[arg].toBuffer().toString());
+        }
+	}
+
     chaincode_spec.timeout = chaincode_spec_.timeout;
     return chaincode_spec;
 }
+
+function decodeChaincodeDeploymentSpec(chaincode_deploy_spec_bytes) {
+    let chaincode_deployment_spec = {};
+    let proto_chaincode_deploy_spec = _ccProto.ChaincodeDeploymentSpec.decode(chaincode_deploy_spec_bytes);
+    chaincode_deployment_spec.chaincode_spec = decodeChaincodeSpec(proto_chaincode_deploy_spec.getChaincodeSpec());
+    let timestamp = timeStampToDate(proto_chaincode_deploy_spec.getEffectiveDate());
+    if (timestamp) {
+        chaincode_deployment_spec.effective_date = timestamp.toString();
+    } else {
+        chaincode_deployment_spec.effective_date = '';
+    }
+    chaincode_deployment_spec.code_package = proto_chaincode_deploy_spec.getCodePackage().toBuffer().toString('hex');
+    switch(proto_chaincode_deploy_spec.getExecEnv()) {
+        case 0:
+            chaincode_deployment_spec.exec_env = 'DOCKER';
+            break;
+        case 1:
+            chaincode_deployment_spec.exec_env = 'SYSTEM';
+            break;
+    }
+
+    return chaincode_deployment_spec;
+}
+
 function decodeChaincodeEndorsedAction(proto_chaincode_endorsed_action) {
 	var action = {};
 	action.proposal_response_payload = decodeProposalResponsePayload(proto_chaincode_endorsed_action.getProposalResponsePayload());
