@@ -34,6 +34,7 @@ var hashPrimitives = require('./hash.js');
 var MSPManager = require('./msp/msp-manager.js');
 var Policy = require('./Policy.js');
 var Constants = require('./Constants.js');
+var sizeof = require('object-sizeof');
 
 var _ccProto = grpc.load(__dirname + '/protos/peer/chaincode.proto').protos;
 var _transProto = grpc.load(__dirname + '/protos/peer/transaction.proto').protos;
@@ -864,6 +865,7 @@ var Channel = class {
 					if(response.response) {
 						logger.debug('queryBlockByHash - response status %d:', response.response.status);
 						var block = BlockDecoder.decode(response.response.payload);
+                        block.blockSize = sizeof(results);
 						logger.debug('queryBlockByHash - looking at block :: %s',block.header.number);
 						return Promise.resolve(block);
 					}
@@ -928,6 +930,7 @@ var Channel = class {
 					if(response.response) {
 						logger.debug('queryBlock - response status %d:', response.response.status);
 						var block = BlockDecoder.decode(response.response.payload);
+                        block.blockSize = sizeof(results);
 						logger.debug('queryBlockByHash - looking at block :: %s',block.header.number);
 						return Promise.resolve(block);
 					}
@@ -944,6 +947,61 @@ var Channel = class {
 		);
 	}
 
+    queryBlockWithHash(blockNumber, target) {
+        logger.debug('queryBlockWithHash - start blockNumber %s',blockNumber);
+        var block_number = null;
+        if(Number.isInteger(blockNumber) && blockNumber >= 0) {
+            block_number = blockNumber.toString();
+        } else {
+            return Promise.reject( new Error('Block number must be a positive integer'));
+        }
+        var peer = this._getPeerForQuery(target);
+        if (peer instanceof Error) {
+            throw peer;
+        }
+        var self = this;
+        var userContext = self._clientContext.getUserContext();
+        var txId = new TransactionID(userContext);
+        var request = {
+            targets: [peer],
+            chaincodeId : Constants.QSCC,
+            chainId: '',
+            txId: txId,
+            fcn : 'GetBlockWithHashByNumber',
+            args: [ self._name, block_number]
+        };
+        return self.sendTransactionProposal(request)
+            .then(
+                function(results) {
+                    var responses = results[0];
+                    logger.debug('queryBlockWithHash - got response');
+                    if(responses && Array.isArray(responses)) {
+                        //will only be one response as we are only querying the primary peer
+                        if(responses.length > 1) {
+                            return Promise.reject(new Error('Too many results returned'));
+                        }
+                        let response = responses[0];
+                        if(response instanceof Error ) {
+                            return Promise.reject(response);
+                        }
+                        if(response.response) {
+                            logger.debug('queryBlockWithHash - response status %d:', response.response.status);
+                            var processedBlock = BlockDecoder.decodeProcessedBlock(response.response.payload);
+                            logger.debug('queryBlockWithHash - looking at block :: %s', processedBlock.block.header.number);
+                            return Promise.resolve(processedBlock);
+                        }
+                        // no idea what we have, lets fail it and send it back
+                        return Promise.reject(response);
+                    }
+                    return Promise.reject(new Error('Payload results are missing from the query'));
+                }
+            ).catch(
+                function(err) {
+                    logger.error('Failed Query block with hash. Error: %s', err.stack ? err.stack : err);
+                    return Promise.reject(err);
+                }
+            );
+    }
 	/**
 	 * Queries the ledger on the target peer for Transaction by id.
 	 *

@@ -549,7 +549,53 @@ payload -- {}
 		processed_transaction.inkFee = proto_processed_transaction.getInkFee().toString();
 		return processed_transaction;
 	}
+
+    /**
+     * Constructs an object containing all decoded values from the
+     * protobuf encoded "ProcessedBlock" bytes
+     *
+     * @param {byte[]} processed_block_bytes - The encode bytes of a protobuf
+     *                                            message "ProcessedBlock"
+     * @returns {ProcessedBlock} A fully decoded ProcessedBlock object
+     */
+    static decodeProcessedBlock(processed_block_bytes) {
+        if (!processed_block_bytes || !(processed_block_bytes instanceof Buffer)) {
+            throw new Error('Block input data is not a byte buffer');
+        }
+        var processed_block = {};
+        try {
+            var proto_processed_block = _commonProto.ProcessedBlock.decode(processed_block_bytes);
+            processed_block.block = decodeProtoBlock(proto_processed_block.getBlock());
+            processed_block.hash = proto_processed_block.getHash().toString('hex');
+        } catch (error) {
+            logger.error('decode - ::' + error.stack ? error.stack : error);
+            throw error;
+        }
+
+        return processed_block;
+    };
 };
+
+function decodeProtoBlock(proto_block) {
+    if (!proto_block) {
+        throw new Error('Block input data is not a protobuf Block');
+    }
+    var block = {};
+    try {
+        block.header = {
+            number: proto_block.header.number,
+            previous_hash: proto_block.header.previous_hash.toString('hex'),
+            data_hash: proto_block.header.data_hash.toString('hex')
+        };
+        block.data = decodeBlockData(proto_block.data, true);
+        block.metadata = decodeBlockMetaData(proto_block.metadata);
+    } catch (error) {
+        logger.error('decode - ::' + error.stack ? error.stack : error);
+        throw error;
+    }
+
+    return block;
+}
 
 function decodeBlockHeader(proto_block_header) {
 	var block_header = {};

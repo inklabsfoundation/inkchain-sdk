@@ -253,6 +253,35 @@ var getChannels = function(peer, username, org) {
 	});
 };
 
+var getBlockWithHashByNumber = function(peer, blockNumber, username, org) {
+    var target = buildTarget(peer, org);
+    var channel = helper.getChannelForOrg(org);
+
+    return helper.getRegisteredUsers(username, org).then((member) => {
+        return channel.queryBlockWithHash(parseInt(blockNumber), target);
+    }, (err) => {
+        logger.error('Failed to get submitter "' + username + '". Error: ' + err.stack ?
+            err.stack : err);
+        throw 'Failed to get submitter \''+ username+ '\'';
+    }).then((response_payloads) => {
+        if (response_payloads) {
+            //logger.debug(response_payloads);
+            logger.debug(response_payloads);
+            return response_payloads; //response_payloads.data.data[0].buffer;
+        } else {
+            logger.error('response_payloads is null');
+            throw 'response_payloads is null';
+        }
+    }, (err) => {
+        logger.error('Failed to send query due to error: ' + err.stack ? err.stack :
+            err);
+        throw 'Failed to send query due to error: ' + err;
+    }).catch((err) => {
+        logger.error('Failed to query with error:' + err.stack ? err.stack : err);
+        throw err;
+    });
+};
+
 function buildTarget(peer, org) {
 	var target = null;
 	if (typeof peer !== 'undefined') {
@@ -270,3 +299,4 @@ exports.getBlockByHash = getBlockByHash;
 exports.getChainInfo = getChainInfo;
 exports.getInstalledChaincodes = getInstalledChaincodes;
 exports.getChannels = getChannels;
+exports.getBlockWithHashByNumber = getBlockWithHashByNumber;
