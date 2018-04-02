@@ -72,6 +72,7 @@ var instantiateChaincode = function(channelName, chaincodeName, chaincodeVersion
 			}
 			all_good = all_good & one_good;
 		}
+		all_good = true;
 		if (all_good) {
 			logger.info(util.format(
 				'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s", metadata - "%s", endorsement signature: %s',
