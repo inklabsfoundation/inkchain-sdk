@@ -987,6 +987,7 @@ var Channel = class {
                         if(response.response) {
                             logger.debug('queryBlockWithHash - response status %d:', response.response.status);
                             var processedBlock = BlockDecoder.decodeProcessedBlock(response.response.payload);
+                            processedBlock.blockSize = sizeof(results);
                             logger.debug('queryBlockWithHash - looking at block :: %s', processedBlock.block.header.number);
                             return Promise.resolve(processedBlock);
                         }
