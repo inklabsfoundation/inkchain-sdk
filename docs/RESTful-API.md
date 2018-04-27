@@ -429,6 +429,7 @@ Property | Description
 `number` | 区块高度,根据区块高度查询得到区块信息
 #### Example response
 ```json
+// 根据区块hash查询
 {
     "success":true,
     "data":{
@@ -438,8 +439,22 @@ Property | Description
         "blockSize":14096
     }
 }
+// 根据区块高度查询
+{
+    "success":true,
+    "data":{
+        "block":{
+            "header":Object{...},
+            "data":Object{...},
+            "metadata":Object{...}
+        },
+        "hash":"df4ee66b71d2f8121026c3b589a645b7489e0c5cbedec62cc579aaf28a63d552",
+        "blockSize":69074
+    }
+}
 ```
 * 联盟链区块信息组成部分主要有header，data， metadata。
+* hash：区块hash，只有根据number查询才有该字段
 * blockSize：区块大小,单位bytes
 * **详情见本文的区块解析**。
 
@@ -707,6 +722,55 @@ Property | Description
 `amounts` | 转出数量
 `datetime` | 交易生成时间
 
+### 用户转账记录分页
+#### Example request
+```curl
+curl -s -X GET http://{server_address}/transfer-record/address/{user_address}/page/{page_number}
+```
+#### Example request params
+```json
+http://localhost/transfer-record/address/i411b6f8f24f28caafe514c16e11800167f8ebd89/page/1
+```
+#### Example response
+```json
+{
+    "success":true,
+    "total":100,
+    "totalPages":10,
+    "currentPage":"1",
+    "data":[
+        {
+            "tx_id":"a249672bcc1bd73c78f3bbcd839ed1826a88c51459e3998f96fb0bde35320204",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:45.000Z"
+        },
+        {
+            "tx_id":"950b320ef5d5d2ceff3568fe927a86ea9d02c94f9b4de6018a25e48c67fd9a39",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:15.000Z"
+        }
+    ]
+}
+```
+#### Example response data
+Property | Description
+---|---
+`total` | 持有token的账户总数
+`totalPages` | 总页数
+`currentPage` | 当前页数，每页10条
+`tx_id` | 转账交易ID
+`from_address` | 转出地址
+`to_address` | 转入地址
+`token_name` | 转出的token名称
+`amounts` | 转出数量
+`datetime` | 交易生成时间
+
 ### Token转账记录
 指定token的所有转账记录
 #### Example request
@@ -751,6 +815,55 @@ Property | Description
 `amounts` | 转出数量
 `datetime` | 交易生成时间
 
+### Token转账记录分页
+#### Example request
+```curl
+curl -s -X GET http://{server_address}/transfer-record/token/{token_name}/page/{page_number}
+```
+#### Example request params
+```json
+http://localhost/transfer-record/token/INK/page/1
+```
+#### Example response
+```json
+{
+    "success":true,
+    "total":100,
+    "totalPages":10,
+    "currentPage":"2",
+    "data":[
+        {
+            "tx_id":"a249672bcc1bd73c78f3bbcd839ed1826a88c51459e3998f96fb0bde35320204",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:45.000Z"
+        },
+        {
+            "tx_id":"950b320ef5d5d2ceff3568fe927a86ea9d02c94f9b4de6018a25e48c67fd9a39",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:15.000Z"
+        }
+    ]
+}
+```
+#### Example response data
+Property | Description
+---|---
+`total` | 持有token的账户总数
+`totalPages` | 总页数
+`currentPage` | 当前页数，每页10条
+`tx_id` | 转账交易ID
+`from_address` | 转出地址
+`to_address` | 转入地址
+`token_name` | 转出的token名称
+`amounts` | 转出数量
+`datetime` | 交易生成时间
+
 ### 指定token所有持有者
 #### Example request
 ```curl
@@ -777,6 +890,35 @@ http://localhost/token-holders/token/INK
 }
 ```
 * data : 查询得到持有该通证的所有用户地址和持有量
+
+### 指定token所有持有者分页
+#### Example request
+```curl
+curl -s -X GET http://{server_address}/token-holders/token/{token_name}/page/{page_number}
+```
+#### Example request params
+```json
+http://localhost/token-holders/token/INK/page/1
+```
+#### Example response
+```json
+{
+    "success":true,
+    "total":101,
+    "totalPages":11,
+    "currentPage":"1",
+    "data":[
+        {
+            "address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "balance":"3000"
+        },
+        {
+            "address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "balance":"999999999999999999981197000"
+        }
+    ]
+}
+```
 
 ### Token持有详情分页显示
 #### Example request
