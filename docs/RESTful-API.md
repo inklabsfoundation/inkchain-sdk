@@ -2,10 +2,10 @@
 
 ### 请求响应数据
 ```
-POST/GET status_code
+POST/GET
 
-200: 成功  {"status_code":200,"data":XXX}
-500: 失败  {"status_code":500,"error":XXX}
+http status 200: {"success":true,"data":XXX}
+http status 500: {"success":false,"error":XXX}
 ```
 ### 新建应用通道
 拥有创建通道权限的组织管理员身份才能调用此接口，**该接口一般不对外开放，搭建inkchain网络时通道已经创建完成，无需调用**。
@@ -34,7 +34,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":"Channel 'mychannel' created Successfully"
 }
 ```
@@ -66,7 +66,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":"Successfully joined peers in organization org1 to the channel 'mychannel'"
 }
 ```
@@ -103,7 +103,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":"Successfully Installed chaincode on organization org1"
 }
 ```
@@ -143,7 +143,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":"Chaincode Instantiation is SUCCESS"
 }
 ```
@@ -196,7 +196,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":"60f2168e09c93a0e7dac7d95e18b8217582bc39dd59a7abbf0f7340ef688c5fe"
 }
 // data是本次交易的tx_id
@@ -246,7 +246,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":"6ab8c8561a97988b43f00a944547051198f6c0d90124921b6400fb0aa2b46063"
 }
 ```
@@ -275,8 +275,8 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code": 200,
-    "data": "1"
+    "success":true,
+    "data":"1"
 }
 ```
 * data为交易数
@@ -324,7 +324,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":"6ab8c8561a97988b43f00a944547051198f6c0d90124921b6400fb0aa2b46063"
 }
 ```
@@ -358,7 +358,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":{
         "INK":"999999999999999999993925000"
     }
@@ -380,7 +380,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":{
         "INK":"999999999999999999993925000"
     }
@@ -404,7 +404,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":{
         "INK":"999999999999999999993925000"
     }
@@ -429,8 +429,9 @@ Property | Description
 `number` | 区块高度,根据区块高度查询得到区块信息
 #### Example response
 ```json
+// 根据区块hash查询
 {
-    "status_code":200,
+    "success":true,
     "data":{
         "header":Object{...},
         "data":Object{...},
@@ -438,8 +439,22 @@ Property | Description
         "blockSize":14096
     }
 }
+// 根据区块高度查询
+{
+    "success":true,
+    "data":{
+        "block":{
+            "header":Object{...},
+            "data":Object{...},
+            "metadata":Object{...}
+        },
+        "hash":"df4ee66b71d2f8121026c3b589a645b7489e0c5cbedec62cc579aaf28a63d552",
+        "blockSize":69074
+    }
+}
 ```
 * 联盟链区块信息组成部分主要有header，data， metadata。
+* hash：区块hash，只有根据number查询才有该字段
 * blockSize：区块大小,单位bytes
 * **详情见本文的区块解析**。
 
@@ -458,7 +473,7 @@ Property | Description
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":{
         "validationCode":0,
         "transactionEnvelope":Object{...},
@@ -497,7 +512,7 @@ curl -s -X GET http://{server_address}/chaincodes
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         "name: token, version: 1.0, path: github.com/token"
     ]
@@ -513,7 +528,7 @@ curl -s -X GET http://{server_address}/block-heigth
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":4
 }
 ```
@@ -528,7 +543,7 @@ curl -s -X GET http://{server_address}/transaction-count
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":4
 }
 ```
@@ -542,7 +557,7 @@ curl -s -X GET http://{server_address}/block-list
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "block_hash":"73f9d70ecad3a6e568d187570c5c18c60400db093c963b66a035eb07b22af048",
@@ -576,7 +591,7 @@ curl -s -X GET http://{server_address}/tx-list
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "tx_id":"e310b6a3a7dfe0fc4b63e55187b54a6b38ede1479de5407e73349c65205935d1",
@@ -613,7 +628,7 @@ curl -s -X GET http://{server_address}/tx-history
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "datetime":"2018-03-24T16:00:00.000Z",
@@ -633,7 +648,7 @@ curl -s -X GET http://{server_address}/token-count
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":3
 }
 ```
@@ -647,7 +662,7 @@ curl -s -X GET http://{server_address}/token-holders
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
@@ -676,7 +691,7 @@ http://localhost/transfer-record/address/i411b6f8f24f28caafe514c16e11800167f8ebd
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "tx_id":"a249672bcc1bd73c78f3bbcd839ed1826a88c51459e3998f96fb0bde35320204",
@@ -700,6 +715,55 @@ http://localhost/transfer-record/address/i411b6f8f24f28caafe514c16e11800167f8ebd
 #### Example response data
 Property | Description
 ---|---
+`tx_id` | 转账交易ID
+`from_address` | 转出地址
+`to_address` | 转入地址
+`token_name` | 转出的token名称
+`amounts` | 转出数量
+`datetime` | 交易生成时间
+
+### 用户转账记录分页
+#### Example request
+```curl
+curl -s -X GET http://{server_address}/transfer-record/address/{user_address}/page/{page_number}
+```
+#### Example request params
+```json
+http://localhost/transfer-record/address/i411b6f8f24f28caafe514c16e11800167f8ebd89/page/1
+```
+#### Example response
+```json
+{
+    "success":true,
+    "total":100,
+    "totalPages":10,
+    "currentPage":"1",
+    "data":[
+        {
+            "tx_id":"a249672bcc1bd73c78f3bbcd839ed1826a88c51459e3998f96fb0bde35320204",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:45.000Z"
+        },
+        {
+            "tx_id":"950b320ef5d5d2ceff3568fe927a86ea9d02c94f9b4de6018a25e48c67fd9a39",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:15.000Z"
+        }
+    ]
+}
+```
+#### Example response data
+Property | Description
+---|---
+`total` | 持有token的账户总数
+`totalPages` | 总页数
+`currentPage` | 当前页数，每页10条
 `tx_id` | 转账交易ID
 `from_address` | 转出地址
 `to_address` | 转入地址
@@ -720,7 +784,7 @@ http://localhost/transfer-record/token/INK
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "tx_id":"a249672bcc1bd73c78f3bbcd839ed1826a88c51459e3998f96fb0bde35320204",
@@ -751,6 +815,55 @@ Property | Description
 `amounts` | 转出数量
 `datetime` | 交易生成时间
 
+### Token转账记录分页
+#### Example request
+```curl
+curl -s -X GET http://{server_address}/transfer-record/token/{token_name}/page/{page_number}
+```
+#### Example request params
+```json
+http://localhost/transfer-record/token/INK/page/1
+```
+#### Example response
+```json
+{
+    "success":true,
+    "total":100,
+    "totalPages":10,
+    "currentPage":"2",
+    "data":[
+        {
+            "tx_id":"a249672bcc1bd73c78f3bbcd839ed1826a88c51459e3998f96fb0bde35320204",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:45.000Z"
+        },
+        {
+            "tx_id":"950b320ef5d5d2ceff3568fe927a86ea9d02c94f9b4de6018a25e48c67fd9a39",
+            "from_address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "to_address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "token_name":"INK",
+            "amounts":1000,
+            "datetime":"2018-04-20T12:13:15.000Z"
+        }
+    ]
+}
+```
+#### Example response data
+Property | Description
+---|---
+`total` | 持有token的账户总数
+`totalPages` | 总页数
+`currentPage` | 当前页数，每页10条
+`tx_id` | 转账交易ID
+`from_address` | 转出地址
+`to_address` | 转入地址
+`token_name` | 转出的token名称
+`amounts` | 转出数量
+`datetime` | 交易生成时间
+
 ### 指定token所有持有者
 #### Example request
 ```curl
@@ -763,7 +876,7 @@ http://localhost/token-holders/token/INK
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
@@ -778,6 +891,35 @@ http://localhost/token-holders/token/INK
 ```
 * data : 查询得到持有该通证的所有用户地址和持有量
 
+### 指定token所有持有者分页
+#### Example request
+```curl
+curl -s -X GET http://{server_address}/token-holders/token/{token_name}/page/{page_number}
+```
+#### Example request params
+```json
+http://localhost/token-holders/token/INK/page/1
+```
+#### Example response
+```json
+{
+    "success":true,
+    "total":101,
+    "totalPages":11,
+    "currentPage":"1",
+    "data":[
+        {
+            "address":"i3c97f146e8de9807ef723538521fcecd5f64c79a",
+            "balance":"3000"
+        },
+        {
+            "address":"i411b6f8f24f28caafe514c16e11800167f8ebd89",
+            "balance":"999999999999999999981197000"
+        }
+    ]
+}
+```
+
 ### Token持有详情分页显示
 #### Example request
 ```curl
@@ -790,7 +932,7 @@ http://localhost/token-holders/page/1
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "total":24302,
     "totalPages":2431,
     "currentPage":"1",
@@ -825,7 +967,7 @@ curl -s -X GET http://{server_address}/asset
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "data":[
         {
             "symbol":"AAA",
@@ -872,7 +1014,7 @@ http://localhost/token-holders/token/INK
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "total":3201,
     "totalPages":1,
     "currentPage":"1",
@@ -915,7 +1057,7 @@ http://localhost/tx-page/1
 #### Example response
 ```json
 {
-    "status_code":200,
+    "success":true,
     "total":45000,
     "totalPages":4500,
     "currentPage":"1",
@@ -952,7 +1094,7 @@ Property | Description
 ## 区块解析
 ```
 {
-　　"status_code":200,
+　　"success":true,
 　　"data":{
 　　　　"header":Object{...},
 　　　　"data":Object{...},
@@ -987,7 +1129,7 @@ Property | Description
 ## 交易解析
 ```
 {
-　　"status_code":200,
+　　"success":true,
 　　"data":{
 　　　　"validationCode":0,
 　　　　"transactionEnvelope":Object{...},
@@ -1246,7 +1388,7 @@ http://localhost:8081/transfer
 
 // 成功返回
 {
-	"status_code": 200,
+	"success":true,
 	"data": "d5904cb74d5b5f2ceb436a27c70e92c16e4c1bb7d040e47ccafda6e6a1323330"
 }
 ```
@@ -1273,7 +1415,7 @@ http://localhost:8081/invoke
 
 // 成功返回
 {
-	"status_code": 200,
+	"success":true,
 	"data": "d5904cb74d5b5f2ceb436a27c70e92c16e4c1bb7d040e47ccafda6e6a1323330"
 }
 ```
