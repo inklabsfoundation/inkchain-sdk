@@ -306,6 +306,54 @@ var Channel = class {
 		return this._orderers;
 	}
 
+    /**
+     * Add the eventhub object to the channel object, this is a client-side-only operation.
+     * An application may add more than one eventhub object to the channel object, however
+     * the SDK only uses the first one in the list to send event messages to the
+     * eventhub backend.
+     *
+     * @param {Eventhub} eh - An instance of the Eventhub class.
+     */
+    addEventHub(eh) {
+        let url = eh.getPeerAddr();
+        for (let i = 0; i < this._ehs.length; i++) {
+            if (this._ehs[i].getPeerAddr() === url) {
+                let error = new Error();
+                error.name = 'DuplicateEventhub';
+                error.message = 'Eventhub with URL ' + url + ' already exists';
+                logger.error(error.message);
+                throw error;
+            }
+        }
+        this._ehs.push(eh);
+    }
+
+    /**
+     * Remove the first eventhub object in the channel object's list of orderers
+     * whose endpoint url property matches the url of the eventhub that is
+     * passed in.
+     *
+     * @param {Eventhub} eh - An instance of the Orderer class.
+     */
+    removeEventhub(eh) {
+        let url = eh.getPeerAddr();
+        for (let i = 0; i < this._ehs.length; i++) {
+            if (this._ehs[i].getPeerAddr() === url) {
+                this._ehs.splice(i, 1);
+                logger.debug('Removed eventhub with url "%s".', url);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Returns the eventhubs of this channel object.
+     * @returns {Eventhub[]} The list of eventhubs in the channel object
+     */
+    getEventhubs() {
+        return this._ehs;
+    }
+
 	/**
 	 * @typedef {Object} OrdererRequest
 	 * @property {TransactionId} txId
