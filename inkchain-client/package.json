@@ -1,6 +1,6 @@
 {
   "name": "inkchain-client",
-  "version": "0.0.23",
+  "version": "0.0.26",
   "main": "index.js",
   "repository": {
     "type": "git",
