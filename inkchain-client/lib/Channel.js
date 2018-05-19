@@ -107,6 +107,7 @@ var Channel = class {
 		this._anchor_peers = [];
 		this._orderers = [];
 		this._kafka_brokers = [];
+        this._ehs = [];
 
 		this._clientContext = clientContext;
 
@@ -335,7 +336,7 @@ var Channel = class {
      *
      * @param {Eventhub} eh - An instance of the Orderer class.
      */
-    removeEventhub(eh) {
+    removeEventHub(eh) {
         let url = eh.getPeerAddr();
         for (let i = 0; i < this._ehs.length; i++) {
             if (this._ehs[i].getPeerAddr() === url) {
@@ -350,7 +351,7 @@ var Channel = class {
      * Returns the eventhubs of this channel object.
      * @returns {Eventhub[]} The list of eventhubs in the channel object
      */
-    getEventhubs() {
+    getEventHubs() {
         return this._ehs;
     }
 
