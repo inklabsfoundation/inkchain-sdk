@@ -1,6 +1,6 @@
 {
   "name": "inkchain-client",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "elliptic": "^6.2.3",
     "fs": "0.0.2",
     "fs-extra": ">=0.30.0 <0.31.0",
-    "grpc": "^1.9.1",
+    "grpc": "~1.10.1",
     "js-sha3": "^0.5.1",
     "jsrsasign": "6.2.2",
     "jssha": "^2.1.0",
